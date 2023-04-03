@@ -1,0 +1,34 @@
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../../firebase";
+import LoginPage from "@/components/auth/LoginPage";
+import { useRouter } from "next/router";
+import { useToast } from "@chakra-ui/react";
+import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
+
+const Login = () => {
+	const toast = useToast();
+	const router = useRouter();
+	const [user, loading, error] = useAuthState(auth);
+
+	if (loading) {
+		return <PageLoadingSpinner />;
+	}
+	if (error) {
+		return <PageLoadingSpinner />;
+	}
+	if (user) {
+		router.push("/");
+		if (!toast.isActive("login")) {
+			toast({
+				title: `You are already logged in`,
+				status: "info",
+				isClosable: true,
+				id: "login",
+			});
+		}
+		return <PageLoadingSpinner />;
+	}
+	return <LoginPage />;
+};
+
+export default Login;
