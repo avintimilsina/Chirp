@@ -1,9 +1,9 @@
+import LoginPage from "@/components/auth/LoginPage";
+import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
+import { useToast } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../../firebase";
-import LoginPage from "@/components/auth/LoginPage";
-import { useRouter } from "next/router";
-import { useToast } from "@chakra-ui/react";
-import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
 
 const Login = () => {
 	const toast = useToast();

@@ -92,9 +92,9 @@ const VerifyEmailPage = ({ user }: VerifyEmailPageProps) => {
 					Already Verified?
 				</Button>
 				<Stack spacing={6}>
-					<Stack pt={6}>
+					<Stack>
 						<Text align={"center"}>
-							Didn`t receive a email?{" "}
+							Didn&apos;t receive a email?{" "}
 							<Button
 								variant={"link"}
 								onClick={async () => {

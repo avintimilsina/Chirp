@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js";
 import {
 	Box,
 	Flex,
@@ -7,7 +8,6 @@ import {
 	useColorModeValue,
 } from "@chakra-ui/react";
 import RegisterForm from "./RegisterForm";
-import { Link } from "@chakra-ui/next-js";
 
 const RegisterPage = () => {
 	return (
@@ -31,7 +31,7 @@ const RegisterPage = () => {
 				>
 					<Stack spacing={4}>
 						<RegisterForm />
-						<Stack pt={6}>
+						<Stack>
 							<Text align={"center"}>
 								Already a user?{" "}
 								<Link href="/auth/login" color={"blue.400"}>

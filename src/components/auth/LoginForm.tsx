@@ -7,6 +7,7 @@ import {
 	FormLabel,
 	Input,
 	Stack,
+	VStack,
 	useToast,
 } from "@chakra-ui/react";
 import { Field, Form, Formik, FormikProps } from "formik";
@@ -34,7 +35,6 @@ const LoginForm = () => {
 					values.email,
 					values.password
 				);
-				console.log(response);
 				if (response) {
 					if (!toast.isActive("login")) {
 						toast({
@@ -45,15 +45,13 @@ const LoginForm = () => {
 						});
 					}
 				} else {
-					if (error) {
-						if (!toast.isActive("login")) {
-							toast({
-								title: error.message,
-								status: "error",
-								isClosable: true,
-								id: "login",
-							});
-						}
+					if (!toast.isActive("login")) {
+						toast({
+							title: error?.message ?? "Invalid email or password",
+							status: "error",
+							isClosable: true,
+							id: "login",
+						});
 					}
 				}
 				actions.setSubmitting(false);
@@ -61,50 +59,54 @@ const LoginForm = () => {
 		>
 			{(props: FormikProps<any>) => (
 				<Form>
-					<Field name="email">
-						{({ field, form }: any) => (
-							<FormControl isInvalid={form.errors.email && form.touched.email}>
-								<FormLabel>Email</FormLabel>
-								<Input {...field} type="email" placeholder="Email" />
-								<FormErrorMessage>{form.errors.email}</FormErrorMessage>
-							</FormControl>
-						)}
-					</Field>
-					<Field name="password">
-						{({ field, form }: any) => (
-							<FormControl
-								isInvalid={form.errors.password && form.touched.password}
-							>
-								<FormLabel>Password</FormLabel>
-								<Input {...field} type="password" placeholder="Password" />
-								<FormErrorMessage>{form.errors.password}</FormErrorMessage>
-							</FormControl>
-						)}
-					</Field>
+					<VStack gap={2}>
+						<Field name="email">
+							{({ field, form }: any) => (
+								<FormControl
+									isInvalid={form.errors.email && form.touched.email}
+								>
+									<FormLabel>Email</FormLabel>
+									<Input {...field} type="email" placeholder="Email" />
+									<FormErrorMessage>{form.errors.email}</FormErrorMessage>
+								</FormControl>
+							)}
+						</Field>
+						<Field name="password">
+							{({ field, form }: any) => (
+								<FormControl
+									isInvalid={form.errors.password && form.touched.password}
+								>
+									<FormLabel>Password</FormLabel>
+									<Input {...field} type="password" placeholder="Password" />
+									<FormErrorMessage>{form.errors.password}</FormErrorMessage>
+								</FormControl>
+							)}
+						</Field>
 
-					<Stack spacing={10}>
-						<Stack
-							direction={{ base: "column", sm: "row" }}
-							align={"start"}
-							justify={"space-between"}
-						>
-							<Checkbox>Remember me</Checkbox>
-							<Link href="/auth/forget-password" color={"blue.400"}>
-								Forgot password?
-							</Link>
+						<Stack spacing={10} width={"full"}>
+							<Stack
+								direction={{ base: "column", sm: "row" }}
+								align={"start"}
+								justify={"space-between"}
+							>
+								<Checkbox>Remember me</Checkbox>
+								<Link href="/auth/forgot-password" color={"blue.400"}>
+									Forgot password?
+								</Link>
+							</Stack>
+							<Button
+								bg={"blue.400"}
+								color={"white"}
+								isLoading={props.isSubmitting}
+								type="submit"
+								_hover={{
+									bg: "blue.500",
+								}}
+							>
+								Sign in
+							</Button>
 						</Stack>
-						<Button
-							bg={"blue.400"}
-							color={"white"}
-							isLoading={props.isSubmitting}
-							type="submit"
-							_hover={{
-								bg: "blue.500",
-							}}
-						>
-							Sign in
-						</Button>
-					</Stack>
+					</VStack>
 				</Form>
 			)}
 		</Formik>

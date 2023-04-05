@@ -1,9 +1,11 @@
+import { Link } from "@chakra-ui/next-js";
 import {
 	Box,
 	Button,
 	Flex,
 	Heading,
 	Stack,
+	Text,
 	useColorModeValue,
 } from "@chakra-ui/react";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
@@ -44,6 +46,14 @@ const LoginPage = () => {
 						>
 							Sign-in with Google
 						</Button>
+						<Stack pt={1}>
+							<Text align={"center"}>
+								Don&apos;t have an account?{" "}
+								<Link href="/auth/register" color={"blue.400"}>
+									Register
+								</Link>
+							</Text>
+						</Stack>
 					</Stack>
 				</Box>
 			</Stack>

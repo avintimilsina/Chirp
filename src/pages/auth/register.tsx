@@ -1,9 +1,9 @@
 import RegisterPage from "@/components/auth/RegisterPage";
+import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
 import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../../firebase";
-import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
 
 const Register = () => {
 	const toast = useToast();
