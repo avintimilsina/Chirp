@@ -1,91 +1,93 @@
-import { Flex, HStack, Box, Image, Text } from "@chakra-ui/react";
+import { Box, Card, Flex, HStack, Image, Text } from "@chakra-ui/react";
 
-import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { FaSuitcase, FaMapPin, FaEnvelope } from "react-icons/fa";
+import { FaEnvelope } from "react-icons/fa";
+import { FiMapPin } from "react-icons/fi";
 import { auth } from "../../firebase";
+import { GoCalendar } from "react-icons/go";
 
 const ProfilePage = () => {
 	const [currentUser, loading] = useAuthState(auth);
+	console.log(currentUser);
 
 	return (
-		<Flex
-			shadow="lg"
-			rounded="lg"
-			bg="#edf3f8"
-			_dark={{ bg: "gray.800" }}
-			mb={8}
-			direction="column"
-			alignItems="center"
-			justifyContent="center"
-		>
-			<Box
-				bg="#edf3f8"
-				_dark={{ bg: "#3e3e3e" }}
-				style={{
-					backgroundImage:
-						"url(https://images.unsplash.com/photo-1666795599746-0f62dfa29a07?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80)",
-					backgroundSize: "cover",
-					backgroundPosition: "center",
-					backgroundRepeat: "no-repeat",
-				}}
-				height="100%"
-				width="100%"
-				borderRadius="lg"
-				p={8}
-				display="flex"
-				alignItems="left"
+		<Card width={"full"} maxW={"2xl"}>
+			<Flex
+				mb={8}
+				direction="column"
+				alignItems="center"
+				justifyContent="center"
 			>
-				<Image
-					src={currentUser?.photoURL || "https://picsum.photos/200/300"}
-					alt="Profile Picture"
-					borderRadius="full"
-					boxSize="150px"
-					shadow="lg"
-					border="5px solid"
-					mb={-20}
-					borderColor="gray.800"
-					_dark={{ borderColor: "gray.200" }}
-				/>
-			</Box>
-			<Box
-				gridColumn="span 8"
-				p={8}
-				width="full"
-				height="full"
-				borderRadius="lg"
-				textAlign="left"
-				mt={10}
-			>
-				<Text
-					fontSize="4xl"
-					fontWeight="bold"
-					color="gray.800"
-					_dark={{ color: "white" }}
+				<Box
+					bg="#edf3f8"
+					_dark={{ bg: "#3e3e3e" }}
+					style={{
+						backgroundImage: "url(https://picsum.photos/200/300)",
+						backgroundSize: "cover",
+						backgroundPosition: "center",
+						backgroundRepeat: "no-repeat",
+					}}
+					height="100%"
+					width="100%"
+					borderRadius="lg"
+					p={8}
+					display="flex"
+					alignItems="left"
 				>
-					{currentUser?.displayName}
-				</Text>
-				<HStack spacing={3} color="gray.800" _dark={{ color: "gray.200" }}>
-					<FaSuitcase size={24} />
+					<Image
+						src={currentUser?.photoURL || "https://picsum.photos/200/300"}
+						alt="Profile Picture"
+						borderRadius="full"
+						boxSize="150px"
+						shadow="lg"
+						border="5px solid"
+						mb={-20}
+						borderColor="gray.800"
+						_dark={{ borderColor: "gray.200" }}
+					/>
+				</Box>
+				<Box
+					gridColumn="span 8"
+					p={8}
+					width="full"
+					height="full"
+					borderRadius="lg"
+					textAlign="left"
+					mt={5}
+				>
 					<Text
-						fontSize="2xl"
+						fontSize="3xl"
 						fontWeight="bold"
 						color="gray.800"
-						_dark={{ color: "gray.200" }}
+						_dark={{ color: "white" }}
 					>
-						Photographer
+						{currentUser?.displayName}
 					</Text>
-				</HStack>
-				<HStack spacing={3} color="gray.700" _dark={{ color: "gray.200" }}>
-					<FaMapPin size={20} />
-					<Text fontSize="lg">Germany</Text>
-				</HStack>
-				<HStack spacing={3} color="gray.700" _dark={{ color: "gray.200" }}>
-					<FaEnvelope size={20} />
-					<Text fontSize="lg">chris@buehner.com</Text>
-				</HStack>
-			</Box>
-		</Flex>
+					<HStack spacing={3} color="gray.800" _dark={{ color: "gray.200" }}>
+						<Text
+							fontSize="lg"
+							fontWeight="semi-bold"
+							color="gray.800"
+							_dark={{ color: "gray.200" }}
+						>
+							@{currentUser?.email?.split("@")[0]}
+						</Text>
+					</HStack>
+					<HStack spacing={3} color="gray.700" _dark={{ color: "gray.200" }}>
+						<FiMapPin size={20} />
+						<Text fontSize="medium">Sinamangal, Kathmandu</Text>
+					</HStack>
+					<HStack spacing={3} color="gray.700" _dark={{ color: "gray.200" }}>
+						<FaEnvelope size={20} />
+						<Text fontSize="medium">{currentUser?.email}</Text>
+					</HStack>
+					<HStack spacing={3} color="gray.700" _dark={{ color: "gray.200" }}>
+						<GoCalendar size={20} />
+						<Text fontSize="medium">{currentUser?.metadata.creationTime}</Text>
+					</HStack>
+				</Box>
+			</Flex>
+		</Card>
 	);
 };
 

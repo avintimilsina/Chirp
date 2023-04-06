@@ -161,6 +161,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 	const [currentUser, loading] = useAuthState(auth);
 	const [signOut] = useSignOut(auth);
 	const toast = useToast();
+
 	return (
 		<Flex
 			ml={{ base: 0, md: 60 }}
@@ -197,68 +198,83 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 					aria-label="open menu"
 					icon={<FiBell />}
 				/>
+
 				<Flex alignItems={"center"}>
-					<Menu>
-						<MenuButton
-							py={2}
-							transition="all 0.3s"
-							_focus={{ boxShadow: "none" }}
-						>
-							<HStack>
-								<Avatar
-									size={"sm"}
-									src={currentUser?.photoURL ?? "https://picsum.photos/200/300"}
-								/>
-								<VStack
-									display={{ base: "none", md: "flex" }}
-									alignItems="flex-start"
-									spacing="1px"
-									ml="2"
-								>
-									<Text fontSize="sm">{currentUser?.displayName}</Text>
-									<Text fontSize="xs" color="gray.600">
-										@{currentUser?.email?.split("@")[0]}
-									</Text>
-								</VStack>
-								<Box display={{ base: "none", md: "flex" }}>
-									<FiChevronDown />
-								</Box>
-							</HStack>
-						</MenuButton>
-						<MenuList
-							bg={useColorModeValue("white", "gray.900")}
-							borderColor={useColorModeValue("gray.200", "gray.700")}
-						>
-							<MenuItem as={Link} href={"/profile"}>
-								Profile
-							</MenuItem>
-							<MenuItem as={Link} href={"/test"}>
-								Settings
-							</MenuItem>
-							<MenuItem as={Link} href={"/test"}>
-								Billing
-							</MenuItem>
-							<MenuDivider />
-							<MenuItem
-								as={Button}
-								onClick={async () => {
-									const success = await signOut();
-									if (success) {
-										if (!toast.isActive("login")) {
-											toast({
-												title: `Logged out`,
-												status: "success",
-												isClosable: true,
-												id: "login",
-											});
-										}
-									}
-								}}
+					{!currentUser ? (
+						<HStack>
+							<Button as={Link} variant="ghost" href="/auth/login">
+								Login
+							</Button>
+							<Button
+								as={Link}
+								variant="solid"
+								colorScheme="blue"
+								href="/auth/register"
 							>
-								Sign out
-							</MenuItem>
-						</MenuList>
-					</Menu>
+								Sign Up
+							</Button>
+						</HStack>
+					) : (
+						<Menu>
+							<MenuButton
+								py={2}
+								transition="all 0.3s"
+								_focus={{ boxShadow: "none" }}
+							>
+								<HStack>
+									<Avatar
+										size={"sm"}
+										src={
+											currentUser?.photoURL ?? "https://picsum.photos/200/300"
+										}
+									/>
+									<VStack
+										display={{ base: "none", md: "flex" }}
+										alignItems="flex-start"
+										spacing="1px"
+										ml="2"
+									>
+										<Text fontSize="sm">{currentUser?.displayName}</Text>
+										<Text fontSize="xs" color="gray.600">
+											@{currentUser?.email?.split("@")[0]}
+										</Text>
+									</VStack>
+									<Box display={{ base: "none", md: "flex" }}>
+										<FiChevronDown />
+									</Box>
+								</HStack>
+							</MenuButton>
+							<MenuList>
+								<MenuItem as={Link} href={"/profile"}>
+									Profile
+								</MenuItem>
+								<MenuItem as={Link} href={"/test"}>
+									Settings
+								</MenuItem>
+								<MenuDivider />
+								<MenuItem
+									as={Button}
+									variant="ghost"
+									colorScheme="red"
+									onClick={async () => {
+										const success = await signOut();
+										if (success) {
+											if (!toast.isActive("login")) {
+												toast({
+													title: `Logged out`,
+													status: "success",
+													isClosable: true,
+													id: "login",
+												});
+											}
+										}
+									}}
+								>
+									Sign out
+								</MenuItem>
+							</MenuList>
+						</Menu>
+					)}
 				</Flex>
 			</HStack>
 		</Flex>

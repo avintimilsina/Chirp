@@ -1,6 +1,4 @@
-import React from "react";
-import { Box, Flex, HStack, Image, Text } from "@chakra-ui/react";
-import { FaEnvelope, FaMapPin, FaSuitcase } from "react-icons/fa";
+import { Flex } from "@chakra-ui/react";
 
 const ProfileDashboard = () => {
 	return (
