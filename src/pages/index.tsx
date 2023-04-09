@@ -8,7 +8,7 @@ import { db } from "../../firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
 
-interface Tweet {
+export interface Tweet {
 	id: string;
 	images: string[];
 	content: string;
@@ -36,7 +36,7 @@ const HomePage: NextPage = () => {
 	return (
 		<Box width={"full"} maxW={"2xl"}>
 			<CreateTweet />
-			<VStack width={"full"} alignItems={"flex-start"}>
+			<VStack width={"full"} alignItems={"flex-start"} gap={2}>
 				{values?.map((tweet) => (
 					<TweetCard key={tweet.id} tweet={tweet as Tweet} />
 				))}
