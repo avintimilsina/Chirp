@@ -23,21 +23,12 @@ import {
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import { ReactNode } from "react";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { IconType } from "react-icons";
-import {
-	FiBell,
-	FiChevronDown,
-	FiCompass,
-	FiHome,
-	FiMenu,
-	FiSettings,
-	FiStar,
-	FiTrendingUp,
-} from "react-icons/fi";
+import { FiBell, FiChevronDown, FiHome, FiMenu } from "react-icons/fi";
 import { auth } from "../../../firebase";
+import { Logo } from "../logo";
 
 interface LinkItemProps {
 	name: string;
@@ -46,10 +37,10 @@ interface LinkItemProps {
 }
 const LinkItems: Array<LinkItemProps> = [
 	{ name: "Home", icon: FiHome, href: "/" },
-	{ name: "Trending", icon: FiTrendingUp, href: "/" },
-	{ name: "Explore", icon: FiCompass, href: "/" },
-	{ name: "Favourites", icon: FiStar, href: "/" },
-	{ name: "Settings", icon: FiSettings, href: "/" },
+	// { name: "Trending", icon: FiTrendingUp, href: "/" },
+	// { name: "Explore", icon: FiCompass, href: "/" },
+	// { name: "Favourites", icon: FiStar, href: "/" },
+	// { name: "Settings", icon: FiSettings, href: "/" },
 ];
 
 export default function SideBar({ children }: { children: ReactNode }) {
@@ -99,9 +90,10 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 			{...rest}
 		>
 			<Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-				<Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-					Logo
-				</Text>
+				<Box>
+					<Logo h="12" iconColor="blue.500" />
+				</Box>
+
 				<CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
 			</Flex>
 			{LinkItems.map((link) => (
@@ -182,22 +174,15 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 				icon={<FiMenu />}
 			/>
 
-			<Text
-				display={{ base: "flex", md: "none" }}
-				fontSize="2xl"
-				fontFamily="monospace"
-				fontWeight="bold"
-			>
-				Logo
-			</Text>
+			<Logo h="8" iconColor="blue.500" display={{ base: "flex", md: "none" }} />
 
 			<HStack spacing={{ base: "0", md: "6" }}>
-				<IconButton
+				{/* <IconButton
 					size="lg"
 					variant="ghost"
 					aria-label="open menu"
 					icon={<FiBell />}
-				/>
+				/> */}
 
 				<Flex alignItems={"center"}>
 					{!currentUser ? (
@@ -248,7 +233,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 								<MenuItem as={Link} href={"/profile"}>
 									Profile
 								</MenuItem>
-								<MenuItem as={Link} href={"/test"}>
+								<MenuItem as={Link} href={"/setting"}>
 									Settings
 								</MenuItem>
 								<MenuDivider />
