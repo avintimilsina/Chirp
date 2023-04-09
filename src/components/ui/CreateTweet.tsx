@@ -6,7 +6,6 @@ import {
 	FormLabel,
 	HStack,
 	Textarea,
-	useToast,
 } from "@chakra-ui/react";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -14,8 +13,8 @@ import * as Yup from "yup";
 import { auth } from "../../../firebase";
 
 const CreateTweet = () => {
-	const [currentUser, loading, error] = useAuthState(auth);
-	const toast = useToast();
+	const [currentUser] = useAuthState(auth);
+
 	return (
 		<Formik
 			initialValues={{ content: "" }}

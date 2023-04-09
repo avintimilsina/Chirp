@@ -11,7 +11,7 @@ const ProfilePage = () => {
 	console.log(currentUser);
 
 	return (
-		<Card width={"full"} maxW={"2xl"}>
+		<Card width={"full"} maxW={"3xl"}>
 			<Flex
 				mb={8}
 				direction="column"
