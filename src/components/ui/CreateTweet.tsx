@@ -6,14 +6,17 @@ import {
 	FormLabel,
 	HStack,
 	Textarea,
+	useToast,
 } from "@chakra-ui/react";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useAuthState } from "react-firebase-hooks/auth";
 import * as Yup from "yup";
-import { auth } from "../../../firebase";
+import { auth, db } from "../../../firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 const CreateTweet = () => {
 	const [currentUser] = useAuthState(auth);
+	const toast = useToast();
 
 	return (
 		<Formik
@@ -24,8 +27,31 @@ const CreateTweet = () => {
 					.max(280, "Chirp is too long"),
 			})}
 			onSubmit={async (values, actions) => {
-				console.log(values);
+				const docRef = await addDoc(collection(db, "chirps"), {
+					author: {
+						userId: currentUser?.uid,
+						name: currentUser?.displayName,
+						photoURL: currentUser?.photoURL,
+						username: currentUser?.email?.split("@")[0],
+					},
+					content: values.content,
+					createdAt: serverTimestamp(),
+				});
+				if (docRef.id) {
+					toast({
+						title: "Chirp created",
+						status: "success",
+						isClosable: true,
+					});
+				} else {
+					toast({
+						title: "Chirp failed to create",
+						status: "error",
+						isClosable: true,
+					});
+				}
 				actions.setSubmitting(false);
+				actions.resetForm();
 			}}
 		>
 			{(props: FormikProps<any>) => (

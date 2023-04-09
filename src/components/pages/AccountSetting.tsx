@@ -95,29 +95,56 @@ export const AccountSetting = ({ currentUser }: AccountSettingProps) => {
 						</FieldGroup>
 
 						<FieldGroup title="Profile Photo">
-							<Stack direction="row" spacing="6" align="center" width="full">
-								<Avatar
-									size="xl"
-									name="Alyssa Mall"
-									src={currentUser?.photoURL ?? "https://picsum.photos/200/300"}
-								/>
-								<Box>
-									<HStack spacing="5">
-										<Button leftIcon={<HiCloudUpload />}>Change photo</Button>
-										<Button variant="ghost" colorScheme="red">
-											Delete
-										</Button>
-									</HStack>
-									<Text
-										fontSize="sm"
-										mt="3"
-										// color={useColorModeValue("gray.500", "whiteAlpha.600")}
-									>
-										.jpg, .gif, or .png. Max file size 700K.
-									</Text>
-								</Box>
-							</Stack>
+							<VStack gap={4}>
+								<Stack direction="row" spacing="6" align="center" width="full">
+									<Avatar
+										size="xl"
+										name="Alyssa Mall"
+										src={
+											currentUser?.photoURL ?? "https://picsum.photos/200/300"
+										}
+									/>
+									<Box>
+										<HStack spacing="5">
+											<Button leftIcon={<HiCloudUpload />}>Change photo</Button>
+											<Button variant="ghost" colorScheme="red">
+												Delete
+											</Button>
+										</HStack>
+										<Text
+											fontSize="sm"
+											mt="3"
+											// color={useColorModeValue("gray.500", "whiteAlpha.600")}
+										>
+											.jpg, .gif, or .png. Max file size 700K.
+										</Text>
+									</Box>
+								</Stack>
+								<Stack direction="row" spacing="6" align="center" width="full">
+									<Avatar
+										size="xl"
+										name="Alyssa Mall"
+										src={"https://picsum.photos/200/300"}
+									/>
+									<Box>
+										<HStack spacing="5">
+											<Button leftIcon={<HiCloudUpload />}>Change photo</Button>
+											<Button variant="ghost" colorScheme="red">
+												Delete
+											</Button>
+										</HStack>
+										<Text
+											fontSize="sm"
+											mt="3"
+											// color={useColorModeValue("gray.500", "whiteAlpha.600")}
+										>
+											.jpg, .gif, or .png. Max file size 700K.
+										</Text>
+									</Box>
+								</Stack>
+							</VStack>
 						</FieldGroup>
+
 						<FieldGroup title="Language">
 							<VStack width="full" spacing="6">
 								<LanguageSelect />
