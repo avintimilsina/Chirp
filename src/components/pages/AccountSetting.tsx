@@ -20,24 +20,40 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import { User } from "firebase/auth";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { Field, Form, Formik, FormikProps } from "formik";
+import { useRouter } from "next/router";
+import { useAuthState, useUpdateProfile } from "react-firebase-hooks/auth";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { HiCloudUpload } from "react-icons/hi";
 import * as Yup from "yup";
-import { db } from "../../../firebase";
+import { auth, db } from "../../../firebase";
+import PageLoadingSpinner from "../ui/PageLoadingSpinner";
 
-interface AccountSettingProps {
-	currentUser: User | null | undefined;
-}
-export const AccountSetting = ({ currentUser }: AccountSettingProps) => {
+export const AccountSetting = () => {
+	const [currentUser, userLoading, userError] = useAuthState(auth);
+	const [updateProfile, updating, updateError] = useUpdateProfile(auth);
 	const toast = useToast();
+	const router = useRouter();
+	const [value, loading, bioError, snapshot] = useDocumentData(
+		doc(db, "users", currentUser?.uid ?? "-"),
+		{
+			snapshotListenOptions: { includeMetadataChanges: true },
+		}
+	);
+	if (loading || userLoading) {
+		return <PageLoadingSpinner />;
+	}
+	if (bioError || userError || updateError) {
+		return <PageLoadingSpinner />;
+	}
 	return (
 		<Formik
 			initialValues={{
 				name: currentUser?.displayName,
 				email: currentUser?.email,
-				bio: "",
+				bio: value?.bio ?? "",
 				profilePhoto: currentUser?.photoURL,
 				coverPhoto: "https://picsum.photos/200/300",
 			}}
@@ -46,29 +62,18 @@ export const AccountSetting = ({ currentUser }: AccountSettingProps) => {
 				email: Yup.string().email("Invalid email address").required("Required"),
 			})}
 			onSubmit={async (values, actions) => {
-				//updating account setting
-				//make the pictures work
-				console.log(values);
-				const docRef = doc(db, "accountSetting", currentUser?.uid ?? "-");
-				await updateDoc(docRef, {
-					name: values.name,
-					email: values.email,
-					bio: values.bio,
-					profilePhoto: values.profilePhoto,
-					coverPhoto: values.coverPhoto,
-				});
-				if (docRef.id) {
-					toast({
-						title: "Updated account setting",
-						status: "success",
-						isClosable: true,
+				if (values.name !== currentUser?.displayName) {
+					const success = await updateProfile({ displayName: values.name });
+					if (success) {
+						router.push("/profile");
+					}
+				}
+				if (values.bio !== value?.bio) {
+					await setDoc(doc(db, "users", currentUser?.uid ?? ""), {
+						bio: values.bio,
 					});
-				} else {
-					toast({
-						title: "Failed to update account setting",
-						status: "error",
-						isClosable: true,
-					});
+
+					router.push("/profile");
 				}
 				actions.setSubmitting(false);
 				actions.resetForm();
@@ -101,6 +106,7 @@ export const AccountSetting = ({ currentUser }: AccountSettingProps) => {
 										<FormControl>
 											<FormLabel>Email</FormLabel>
 											<Input
+												isDisabled={true}
 												{...field}
 												type="email"
 												placeholder="your-email@example.com"
@@ -208,6 +214,7 @@ export const AccountSetting = ({ currentUser }: AccountSettingProps) => {
 								type="submit"
 								colorScheme="blue"
 								isLoading={props.isSubmitting}
+								isDisabled={!props.dirty}
 							>
 								Save Changes
 							</Button>

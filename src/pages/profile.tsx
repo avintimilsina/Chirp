@@ -22,7 +22,6 @@ const ProfilePage = () => {
 			snapshotListenOptions: { includeMetadataChanges: true },
 		}
 	);
-	console.log(values);
 	if (loading || userloading) {
 		return <PageLoadingSpinner />;
 	}
