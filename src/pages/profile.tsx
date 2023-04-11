@@ -1,18 +1,36 @@
-import { Box, Card, Flex, HStack, Image, Text, VStack } from "@chakra-ui/react";
+import {
+	Box,
+	Card,
+	Flex,
+	HStack,
+	Image,
+	Stack,
+	Text,
+	VStack,
+} from "@chakra-ui/react";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaEnvelope } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
 import { auth, db } from "../../firebase";
 import { GoCalendar } from "react-icons/go";
-import { collection, query, where } from "firebase/firestore";
+import { collection, doc, query, where } from "firebase/firestore";
 import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import {
+	useCollectionData,
+	useDocumentData,
+} from "react-firebase-hooks/firestore";
 import TweetCard from "@/components/ui/TweetCard";
 import { Tweet } from ".";
 
 const ProfilePage = () => {
 	const [currentUser, userloading] = useAuthState(auth);
+	const [value, bioLoading, bioError, snapshot] = useDocumentData(
+		doc(db, "users", currentUser?.uid ?? "-"),
+		{
+			snapshotListenOptions: { includeMetadataChanges: true },
+		}
+	);
 	const [values, loading, error] = useCollectionData(
 		query(
 			collection(db, "chirps"),
@@ -83,30 +101,58 @@ const ProfilePage = () => {
 						>
 							{currentUser?.displayName}
 						</Text>
-						<HStack spacing={3} color="gray.800" _dark={{ color: "gray.200" }}>
-							<Text
-								fontSize="lg"
-								fontWeight="semi-bold"
+						<Stack>
+							<HStack
+								spacing={3}
 								color="gray.800"
 								_dark={{ color: "gray.200" }}
 							>
-								@{currentUser?.email?.split("@")[0]}
-							</Text>
-						</HStack>
-						<HStack spacing={3} color="gray.700" _dark={{ color: "gray.200" }}>
-							<FiMapPin size={20} />
-							<Text fontSize="medium">Sinamangal, Kathmandu</Text>
-						</HStack>
-						<HStack spacing={3} color="gray.700" _dark={{ color: "gray.200" }}>
-							<FaEnvelope size={20} />
-							<Text fontSize="medium">{currentUser?.email}</Text>
-						</HStack>
-						<HStack spacing={3} color="gray.700" _dark={{ color: "gray.200" }}>
-							<GoCalendar size={20} />
-							<Text fontSize="medium">
-								{currentUser?.metadata.creationTime}
-							</Text>
-						</HStack>
+								<Text
+									fontSize="lg"
+									fontWeight="semi-bold"
+									color="gray.800"
+									_dark={{ color: "gray.200" }}
+								>
+									@{currentUser?.email?.split("@")[0]}
+								</Text>
+							</HStack>
+							{value?.bio && (
+								<HStack
+									spacing={3}
+									color="gray.700"
+									_dark={{ color: "gray.200" }}
+									my={3}
+								>
+									<Text fontSize="medium">{value.bio}</Text>
+								</HStack>
+							)}
+							<HStack
+								spacing={3}
+								color="gray.700"
+								_dark={{ color: "gray.200" }}
+							>
+								<FiMapPin size={20} />
+								<Text fontSize="medium">Sinamangal, Kathmandu</Text>
+							</HStack>
+							<HStack
+								spacing={3}
+								color="gray.700"
+								_dark={{ color: "gray.200" }}
+							>
+								<FaEnvelope size={20} />
+								<Text fontSize="medium">{currentUser?.email}</Text>
+							</HStack>
+							<HStack
+								spacing={3}
+								color="gray.700"
+								_dark={{ color: "gray.200" }}
+							>
+								<GoCalendar size={20} />
+								<Text fontSize="medium">
+									{currentUser?.metadata.creationTime}
+								</Text>
+							</HStack>
+						</Stack>
 					</Box>
 				</Flex>
 			</Card>
