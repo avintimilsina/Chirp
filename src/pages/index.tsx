@@ -1,12 +1,11 @@
-import { TWEETS } from "@/components/data/tweets";
 import CreateTweet from "@/components/ui/CreateTweet";
+import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
 import TweetCard from "@/components/ui/TweetCard";
 import { Box, VStack } from "@chakra-ui/react";
 import { collection, orderBy, query } from "firebase/firestore";
 import { NextPage } from "next";
-import { db } from "../../firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
+import { db } from "../../firebase";
 
 export interface Tweet {
 	id: string;

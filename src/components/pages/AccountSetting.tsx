@@ -17,31 +17,61 @@ import {
 	Text,
 	Textarea,
 	VStack,
+	useToast,
 } from "@chakra-ui/react";
 import { User } from "firebase/auth";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { HiCloudUpload } from "react-icons/hi";
 import * as Yup from "yup";
+import { db } from "../../../firebase";
 
 interface AccountSettingProps {
 	currentUser: User | null | undefined;
 }
 export const AccountSetting = ({ currentUser }: AccountSettingProps) => {
+	const toast = useToast();
 	return (
 		<Formik
 			initialValues={{
 				name: currentUser?.displayName,
 				email: currentUser?.email,
 				bio: "",
+				profilePhoto: currentUser?.photoURL,
+				coverPhoto: "https://picsum.photos/200/300",
 			}}
 			validationSchema={Yup.object({
 				name: Yup.string().required("Required"),
 				email: Yup.string().email("Invalid email address").required("Required"),
 			})}
 			onSubmit={async (values, actions) => {
+				//updating account setting
+				//make the pictures work
 				console.log(values);
+				const docRef = doc(db, "accountSetting", currentUser?.uid ?? "-");
+				await updateDoc(docRef, {
+					name: values.name,
+					email: values.email,
+					bio: values.bio,
+					profilePhoto: values.profilePhoto,
+					coverPhoto: values.coverPhoto,
+				});
+				if (docRef.id) {
+					toast({
+						title: "Updated account setting",
+						status: "success",
+						isClosable: true,
+					});
+				} else {
+					toast({
+						title: "Failed to update account setting",
+						status: "error",
+						isClosable: true,
+					});
+				}
 				actions.setSubmitting(false);
+				actions.resetForm();
 			}}
 		>
 			{(props: FormikProps<any>) => (
@@ -81,7 +111,7 @@ export const AccountSetting = ({ currentUser }: AccountSettingProps) => {
 								</Field>
 								<Field name="bio">
 									{({ field, form }: any) => (
-										<FormControl id="bio">
+										<FormControl>
 											<FormLabel>Bio</FormLabel>
 											<Textarea {...field} rows={5} />
 											<FormHelperText>
@@ -99,7 +129,7 @@ export const AccountSetting = ({ currentUser }: AccountSettingProps) => {
 								<Stack direction="row" spacing="6" align="center" width="full">
 									<Avatar
 										size="xl"
-										name="Alyssa Mall"
+										name={currentUser?.displayName ?? "-"}
 										src={
 											currentUser?.photoURL ?? "https://picsum.photos/200/300"
 										}
@@ -174,7 +204,11 @@ export const AccountSetting = ({ currentUser }: AccountSettingProps) => {
 					</Stack>
 					<FieldGroup mt="8">
 						<HStack width="full">
-							<Button type="submit" colorScheme="blue">
+							<Button
+								type="submit"
+								colorScheme="blue"
+								isLoading={props.isSubmitting}
+							>
 								Save Changes
 							</Button>
 							<Button variant="outline">Cancel</Button>
