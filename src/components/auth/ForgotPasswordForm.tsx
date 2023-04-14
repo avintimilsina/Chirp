@@ -14,8 +14,7 @@ import * as Yup from "yup";
 import { auth } from "../../../firebase";
 
 const ForgotPasswordForm = () => {
-	const [sendPasswordResetEmail, sending, error] =
-		useSendPasswordResetEmail(auth);
+	const [sendPasswordResetEmail] = useSendPasswordResetEmail(auth);
 	const toast = useToast();
 	const router = useRouter();
 	return (
@@ -27,7 +26,6 @@ const ForgotPasswordForm = () => {
 			onSubmit={async (values, actions) => {
 				const success = await sendPasswordResetEmail(values.email);
 				actions.setSubmitting(false);
-				console.log("submitted");
 				if (success) {
 					router.push("/auth/login");
 					if (!toast.isActive("login")) {
@@ -58,11 +56,11 @@ const ForgotPasswordForm = () => {
 								</FormControl>
 							)}
 						</Field>
-						<Stack spacing={6} width={"full"}>
+						<Stack spacing={6} width="full">
 							<Button
 								type="submit"
-								bg={"blue.400"}
-								color={"white"}
+								bg="blue.400"
+								color="white"
 								isLoading={props.isSubmitting}
 								_hover={{
 									bg: "blue.500",

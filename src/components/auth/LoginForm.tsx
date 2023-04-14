@@ -16,7 +16,7 @@ import * as Yup from "yup";
 import { auth } from "../../../firebase";
 
 const LoginForm = () => {
-	const [signInWithEmailAndPassword, user, loading, error] =
+	const [signInWithEmailAndPassword, , , error] =
 		useSignInWithEmailAndPassword(auth);
 	const toast = useToast();
 
@@ -44,15 +44,13 @@ const LoginForm = () => {
 							id: "login",
 						});
 					}
-				} else {
-					if (!toast.isActive("login")) {
-						toast({
-							title: error?.message ?? "Invalid email or password",
-							status: "error",
-							isClosable: true,
-							id: "login",
-						});
-					}
+				} else if (!toast.isActive("login")) {
+					toast({
+						title: error?.message ?? "Invalid email or password",
+						status: "error",
+						isClosable: true,
+						id: "login",
+					});
 				}
 				actions.setSubmitting(false);
 			}}
@@ -83,20 +81,20 @@ const LoginForm = () => {
 							)}
 						</Field>
 
-						<Stack spacing={10} width={"full"}>
+						<Stack spacing={10} width="full">
 							<Stack
 								direction={{ base: "column", sm: "row" }}
-								align={"start"}
-								justify={"space-between"}
+								align="start"
+								justify="space-between"
 							>
 								<Checkbox>Remember me</Checkbox>
-								<Link href="/auth/forgot-password" color={"blue.400"}>
+								<Link href="/auth/forgot-password" color="blue.400">
 									Forgot password?
 								</Link>
 							</Stack>
 							<Button
-								bg={"blue.400"}
-								color={"white"}
+								bg="blue.400"
+								color="white"
 								isLoading={props.isSubmitting}
 								type="submit"
 								_hover={{

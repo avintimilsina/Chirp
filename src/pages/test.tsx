@@ -1,3 +1,4 @@
+import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
 import {
 	Button,
 	Input,
@@ -12,12 +13,11 @@ import {
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
-import { uploadBytesResumable, getDownloadURL, ref } from "firebase/storage";
-import React, { useState } from "react";
-import { auth, storage } from "../../firebase";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { nanoid } from "nanoid";
+import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
+import { auth, storage } from "../../firebase";
 
 const TestPage = () => {
 	const {
@@ -28,11 +28,11 @@ const TestPage = () => {
 	const [fileUploadProgress, setFileUploadProgress] = useState(0);
 	const [selectedFile, setSelectedFile] = useState<File | undefined>();
 	const toast = useToast();
-	const [currentUser, loading, error] = useAuthState(auth);
+	const [currentUser, loading, userError] = useAuthState(auth);
 	if (loading) {
 		return <PageLoadingSpinner />;
 	}
-	if (error) {
+	if (userError) {
 		return <PageLoadingSpinner />;
 	}
 	return (
@@ -62,14 +62,14 @@ const TestPage = () => {
 					<ModalFooter>
 						<Button
 							colorScheme="red"
-							variant={"outline"}
+							variant="outline"
 							mr={3}
 							onClick={onUploadFileModalClose}
 						>
 							Close
 						</Button>
 						<Button
-							colorScheme={"green"}
+							colorScheme="green"
 							onClick={async () => {
 								const imageRef = `images/profile/${
 									currentUser?.uid ?? nanoid()

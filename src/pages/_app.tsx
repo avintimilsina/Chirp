@@ -1,5 +1,5 @@
 import SideBar from "@/components/ui/SideBar";
-import { theme } from "@/config/theme";
+import theme from "@/config/theme";
 import "@/styles/globals.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
@@ -11,7 +11,7 @@ Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
-export default function App({ Component, pageProps }: AppProps) {
+const App = ({ Component, pageProps }: AppProps) => {
 	const router = useRouter();
 	return (
 		<ChakraProvider theme={theme}>
@@ -24,4 +24,5 @@ export default function App({ Component, pageProps }: AppProps) {
 			)}
 		</ChakraProvider>
 	);
-}
+};
+export default App;

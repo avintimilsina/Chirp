@@ -12,7 +12,6 @@ import {
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaEnvelope } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
-import { auth, db } from "../../firebase";
 import { GoCalendar } from "react-icons/go";
 import { collection, doc, query, where } from "firebase/firestore";
 import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
@@ -21,16 +20,14 @@ import {
 	useDocumentData,
 } from "react-firebase-hooks/firestore";
 import TweetCard from "@/components/ui/TweetCard";
+import { auth, db } from "../../firebase";
 import { Tweet } from ".";
 
 const ProfilePage = () => {
 	const [currentUser, userloading] = useAuthState(auth);
-	const [value, bioLoading, bioError, snapshot] = useDocumentData(
-		doc(db, "users", currentUser?.uid ?? "-"),
-		{
-			snapshotListenOptions: { includeMetadataChanges: true },
-		}
-	);
+	const [value] = useDocumentData(doc(db, "users", currentUser?.uid ?? "-"), {
+		snapshotListenOptions: { includeMetadataChanges: true },
+	});
 	const [values, loading, error] = useCollectionData(
 		query(
 			collection(db, "chirps"),
@@ -49,7 +46,7 @@ const ProfilePage = () => {
 
 	return (
 		<>
-			<Card width={"full"} maxW={"3xl"} mb={3}>
+			<Card width="full" maxW="3xl" mb={3}>
 				<Flex
 					mb={8}
 					direction="column"
@@ -156,7 +153,7 @@ const ProfilePage = () => {
 					</Box>
 				</Flex>
 			</Card>
-			<VStack width={"full"} alignItems={"flex-start"} gap={2}>
+			<VStack width="full" alignItems="flex-start" gap={2}>
 				{values?.map((tweet) => (
 					<TweetCard key={tweet.id} tweet={tweet as Tweet} />
 				))}

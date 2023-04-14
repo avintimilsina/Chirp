@@ -22,7 +22,7 @@ import { auth } from "../../../firebase";
 const RegisterForm = () => {
 	const router = useRouter();
 	const toast = useToast();
-	const [createUserWithEmailAndPassword, user, loading, error] =
+	const [createUserWithEmailAndPassword, , , error] =
 		useCreateUserWithEmailAndPassword(auth);
 	const [updateProfile] = useUpdateProfile(auth);
 	const [sendEmailVerification] = useSendEmailVerification(auth);
@@ -60,16 +60,14 @@ const RegisterForm = () => {
 						}
 						router.push("/auth/verify-email");
 					}
-				} else {
-					if (error) {
-						if (!toast.isActive("register")) {
-							toast({
-								title: error.message,
-								status: "error",
-								isClosable: true,
-								id: "register",
-							});
-						}
+				} else if (error) {
+					if (!toast.isActive("register")) {
+						toast({
+							title: error.message,
+							status: "error",
+							isClosable: true,
+							id: "register",
+						});
 					}
 				}
 				actions.setSubmitting(false);
@@ -125,11 +123,11 @@ const RegisterForm = () => {
 							)}
 						</Field>
 
-						<Stack spacing={10} width={"full"}>
+						<Stack spacing={10} width="full">
 							<Button
-								width={"full"}
-								bg={"blue.400"}
-								color={"white"}
+								width="full"
+								bg="blue.400"
+								color="white"
 								isLoading={props.isSubmitting}
 								type="submit"
 								_hover={{

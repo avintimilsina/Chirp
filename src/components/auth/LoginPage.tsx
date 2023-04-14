@@ -18,19 +18,19 @@ const LoginPage = () => {
 
 	return (
 		<Flex
-			minH={"100vh"}
-			align={"center"}
-			justify={"center"}
+			minH="100vh"
+			align="center"
+			justify="center"
 			bg={useColorModeValue("gray.50", "gray.800")}
 		>
-			<Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-				<Stack align={"center"}>
-					<Heading fontSize={"4xl"}>Sign in to your account</Heading>
+			<Stack spacing={8} mx="auto" maxW="lg" py={12} px={6}>
+				<Stack align="center">
+					<Heading fontSize="4xl">Sign in to your account</Heading>
 				</Stack>
 				<Box
-					rounded={"lg"}
+					rounded="lg"
 					bg={useColorModeValue("white", "gray.700")}
-					boxShadow={"lg"}
+					boxShadow="lg"
 					p={8}
 				>
 					<Stack spacing={4}>
@@ -47,9 +47,9 @@ const LoginPage = () => {
 							Sign-in with Google
 						</Button>
 						<Stack pt={1}>
-							<Text align={"center"}>
+							<Text align="center">
 								Don&apos;t have an account?{" "}
-								<Link href="/auth/register" color={"blue.400"}>
+								<Link href="/auth/register" color="blue.400">
 									Register
 								</Link>
 							</Text>

@@ -11,8 +11,8 @@ import {
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useAuthState } from "react-firebase-hooks/auth";
 import * as Yup from "yup";
-import { auth, db } from "../../../firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { auth, db } from "../../../firebase";
 
 const CreateTweet = () => {
 	const [currentUser] = useAuthState(auth);
@@ -56,9 +56,9 @@ const CreateTweet = () => {
 		>
 			{(props: FormikProps<any>) => (
 				<Form>
-					<HStack gap={2} alignItems={"flex-start"} my={2}>
+					<HStack gap={2} alignItems="flex-start" my={2}>
 						<Avatar
-							size={"lg"}
+							size="lg"
 							name={currentUser?.displayName ?? "User"}
 							src={currentUser?.photoURL ?? "https://picsum.photos/200/300"}
 						/>
@@ -74,28 +74,28 @@ const CreateTweet = () => {
 										id="createTweet"
 										{...field}
 										placeholder="Chirp Away!"
-										variant={"flushed"}
+										variant="flushed"
 										rows={6}
-										bg={"white"}
+										bg="white"
 										p={4}
-										fontSize={"lg"}
-										borderBottom={"none"}
+										fontSize="lg"
+										borderBottom="none"
 										focusBorderColor="transparent"
-										borderRadius={"lg"}
+										borderRadius="lg"
 									/>
 								</FormControl>
 							)}
 						</Field>
 					</HStack>
-					<Flex width={"full"} justifyContent={"flex-end"}>
+					<Flex width="full" justifyContent="flex-end">
 						<Button
 							colorScheme="teal"
-							color={"white"}
+							color="white"
 							isLoading={props.isSubmitting}
 							type="submit"
 							mt={2}
 							mb={5}
-							borderRadius={"3xl"}
+							borderRadius="3xl"
 						>
 							Chirp
 						</Button>

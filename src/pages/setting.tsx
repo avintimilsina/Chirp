@@ -1,7 +1,5 @@
 import { AccountSetting } from "@/components/pages/AccountSetting";
 
-const Setting = () => {
-	return <AccountSetting />;
-};
+const Setting = () => <AccountSetting />;
 
 export default Setting;

@@ -9,4 +9,5 @@ const colors = {
 	},
 };
 
-export const theme = extendTheme({ colors, initalColorMode: "dark" });
+const theme = extendTheme({ colors, initalColorMode: "dark" });
+export default theme;

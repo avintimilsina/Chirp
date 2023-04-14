@@ -17,9 +17,7 @@ import {
 	Text,
 	Textarea,
 	VStack,
-	useToast,
 } from "@chakra-ui/react";
-import { User } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useRouter } from "next/router";
@@ -31,12 +29,11 @@ import * as Yup from "yup";
 import { auth, db } from "../../../firebase";
 import PageLoadingSpinner from "../ui/PageLoadingSpinner";
 
-export const AccountSetting = () => {
+const AccountSetting = () => {
 	const [currentUser, userLoading, userError] = useAuthState(auth);
-	const [updateProfile, updating, updateError] = useUpdateProfile(auth);
-	const toast = useToast();
+	const [updateProfile, , updateError] = useUpdateProfile(auth);
 	const router = useRouter();
-	const [value, loading, bioError, snapshot] = useDocumentData(
+	const [value, loading, bioError] = useDocumentData(
 		doc(db, "users", currentUser?.uid ?? "-"),
 		{
 			snapshotListenOptions: { includeMetadataChanges: true },
@@ -84,14 +81,14 @@ export const AccountSetting = () => {
 					<Stack
 						spacing="4"
 						divider={<StackDivider />}
-						maxWidth={"3xl"}
+						maxWidth="3xl"
 						marginLeft={6}
 					>
 						<Heading size="lg" as="h1" paddingBottom="4">
 							Account Settings
 						</Heading>
 						<FieldGroup title="Personal Info">
-							<VStack spacing="4" width={"full"}>
+							<VStack spacing="4" width="full">
 								<Field name="name">
 									{({ field, form }: any) => (
 										<FormControl>
@@ -106,7 +103,7 @@ export const AccountSetting = () => {
 										<FormControl>
 											<FormLabel>Email</FormLabel>
 											<Input
-												isDisabled={true}
+												isDisabled
 												{...field}
 												type="email"
 												placeholder="your-email@example.com"
@@ -116,7 +113,7 @@ export const AccountSetting = () => {
 									)}
 								</Field>
 								<Field name="bio">
-									{({ field, form }: any) => (
+									{({ field }: any) => (
 										<FormControl>
 											<FormLabel>Bio</FormLabel>
 											<Textarea {...field} rows={5} />
@@ -160,7 +157,7 @@ export const AccountSetting = () => {
 									<Avatar
 										size="xl"
 										name="Alyssa Mall"
-										src={"https://picsum.photos/200/300"}
+										src="https://picsum.photos/200/300"
 									/>
 									<Box>
 										<HStack spacing="5">
@@ -226,6 +223,7 @@ export const AccountSetting = () => {
 		</Formik>
 	);
 };
+export default AccountSetting;
 
 interface FieldGroupProps extends StackProps {
 	title?: string;
@@ -250,6 +248,9 @@ const FieldGroup = (props: FieldGroupProps) => {
 			{children}
 		</Stack>
 	);
+};
+FieldGroup.defaultProps = {
+	title: "",
 };
 
 const LanguageSelect = (props: SelectProps) => (

@@ -20,7 +20,7 @@ export interface Tweet {
 	};
 }
 const HomePage: NextPage = () => {
-	const [values, loading, error, snapshot] = useCollectionData(
+	const [values, loading, error] = useCollectionData(
 		query(collection(db, "chirps"), orderBy("createdAt", "desc")),
 		{
 			snapshotListenOptions: { includeMetadataChanges: true },
@@ -33,9 +33,9 @@ const HomePage: NextPage = () => {
 		return <PageLoadingSpinner />;
 	}
 	return (
-		<Box width={"full"} maxW={"2xl"}>
+		<Box width="full" maxW="2xl">
 			<CreateTweet />
-			<VStack width={"full"} alignItems={"flex-start"} gap={2}>
+			<VStack width="full" alignItems="flex-start" gap={2}>
 				{values?.map((tweet) => (
 					<TweetCard key={tweet.id} tweet={tweet as Tweet} />
 				))}

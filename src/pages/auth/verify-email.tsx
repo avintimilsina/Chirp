@@ -50,18 +50,18 @@ const VerifyEmailPage = ({ user }: VerifyEmailPageProps) => {
 
 	return (
 		<Flex
-			minH={"100vh"}
-			align={"center"}
-			justify={"center"}
+			minH="100vh"
+			align="center"
+			justify="center"
 			bg={useColorModeValue("gray.50", "gray.800")}
 		>
 			<Stack
 				spacing={4}
-				w={"full"}
-				maxW={"sm"}
+				w="full"
+				maxW="sm"
 				bg={useColorModeValue("white", "gray.700")}
-				rounded={"xl"}
-				boxShadow={"lg"}
+				rounded="xl"
+				boxShadow="lg"
 				p={6}
 				my={10}
 			>
@@ -93,10 +93,10 @@ const VerifyEmailPage = ({ user }: VerifyEmailPageProps) => {
 				</Button>
 				<Stack spacing={6}>
 					<Stack>
-						<Text align={"center"}>
+						<Text align="center">
 							Didn&apos;t receive a email?{" "}
 							<Button
-								variant={"link"}
+								variant="link"
 								onClick={async () => {
 									const emailVerification = await sendEmailVerification();
 									if (emailVerification) {
