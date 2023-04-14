@@ -1,4 +1,4 @@
-import { AccountSetting } from "@/components/pages/AccountSetting";
+import AccountSetting from "@/components/pages/AccountSetting";
 
 const Setting = () => <AccountSetting />;
 
