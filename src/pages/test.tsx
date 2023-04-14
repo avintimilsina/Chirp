@@ -99,6 +99,7 @@ const TestPage = () => {
 									async () => {
 										await getDownloadURL(ref(storage, imageRef)).then(
 											(downloadURL) => {
+												// eslint-disable-next-line no-console
 												console.log(downloadURL);
 												onUploadFileModalClose();
 											}
