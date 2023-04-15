@@ -6,7 +6,6 @@ import {
 	Checkbox,
 	FormControl,
 	FormErrorMessage,
-	FormHelperText,
 	FormLabel,
 	HStack,
 	Heading,
@@ -122,10 +121,6 @@ const AccountSetting = () => {
 										<FormControl>
 											<FormLabel>Bio</FormLabel>
 											<Textarea {...field} rows={5} />
-											<FormHelperText>
-												Brief description for your profile. URLs are
-												hyperlinked.
-											</FormHelperText>
 										</FormControl>
 									)}
 								</Field>
@@ -143,7 +138,6 @@ const AccountSetting = () => {
 										}
 									/>
 									<Box>
-										{/* <HStack spacing="5"> */}
 										<FileUploadModal
 											onUpload={async (url) => {
 												await updateProfile({ photoURL: url });
@@ -152,10 +146,6 @@ const AccountSetting = () => {
 												currentUser?.uid ?? nanoid()
 											}`}
 										/>
-										{/* <Button variant="outline" colorScheme="red">
-												Delete
-											</Button> */}
-										{/* </HStack> */}
 									</Box>
 								</Stack>
 								<Stack direction="row" spacing="6" align="center" width="full">
@@ -166,17 +156,12 @@ const AccountSetting = () => {
 									/>
 
 									<Box>
-										{/* <HStack spacing="5"> */}
 										<FileUploadModal
 											onUpload={async (url) => {
 												props.setFieldValue("coverPhoto", url);
 											}}
 											imageRef={`images/cover/${currentUser?.uid ?? nanoid()}`}
 										/>
-										{/* <Button variant="outline" colorScheme="red">
-												Delete
-											</Button> */}
-										{/* </HStack> */}
 									</Box>
 								</Stack>
 							</VStack>

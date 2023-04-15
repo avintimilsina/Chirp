@@ -1,27 +1,27 @@
 import {
+	Avatar,
 	Box,
 	Card,
 	Flex,
 	HStack,
-	Image,
 	Stack,
 	Text,
 	VStack,
 } from "@chakra-ui/react";
 
-import { useAuthState } from "react-firebase-hooks/auth";
-import { FaEnvelope } from "react-icons/fa";
-import { FiMapPin } from "react-icons/fi";
-import { GoCalendar } from "react-icons/go";
-import { collection, doc, query, where } from "firebase/firestore";
 import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
+import TweetCard from "@/components/ui/TweetCard";
+import { collection, doc, query, where } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 import {
 	useCollectionData,
 	useDocumentData,
 } from "react-firebase-hooks/firestore";
-import TweetCard from "@/components/ui/TweetCard";
-import { auth, db } from "../../firebase";
+import { FaEnvelope } from "react-icons/fa";
+import { FiMapPin } from "react-icons/fi";
+import { GoCalendar } from "react-icons/go";
 import { Tweet } from ".";
+import { auth, db } from "../../firebase";
 
 const ProfilePage = () => {
 	const [currentUser, userloading] = useAuthState(auth);
@@ -64,16 +64,17 @@ const ProfilePage = () => {
 							backgroundPosition: "center",
 							backgroundRepeat: "no-repeat",
 						}}
-						height="100%"
+						height="300px"
 						width="100%"
 						borderRadius="lg"
-						p={8}
+						pt={200}
+						px={4}
 						display="flex"
 						alignItems="left"
 					>
-						<Image
+						<Avatar
 							src={currentUser?.photoURL || "https://picsum.photos/200/300"}
-							alt="Profile Picture"
+							name="Profile Picture"
 							borderRadius="full"
 							boxSize="150px"
 							shadow="lg"
