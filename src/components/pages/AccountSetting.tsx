@@ -290,8 +290,6 @@ const LanguageSelect = (props: SelectProps) => (
 		<FormLabel>Display Language</FormLabel>
 		<Select maxW="2xs" {...props}>
 			<option>English</option>
-			<option>Hebrew</option>
-			<option>Arabic</option>
 		</Select>
 	</FormControl>
 );
