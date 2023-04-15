@@ -40,8 +40,5 @@ const Logo = (props: HTMLChakraProps<"svg">) => (
 		</chakra.svg>
 	</Link>
 );
-Logo.defaultProps = {
-	iconColor: undefined,
-};
 
 export default Logo;

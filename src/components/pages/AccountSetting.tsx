@@ -9,6 +9,7 @@ import {
 	FormLabel,
 	HStack,
 	Heading,
+	IconButton,
 	Input,
 	Select,
 	Stack,
@@ -22,6 +23,7 @@ import { nanoid } from "nanoid";
 import { useRouter } from "next/router";
 import { useAuthState, useUpdateProfile } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
+import { BiCurrentLocation } from "react-icons/bi";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import * as Yup from "yup";
 import { auth, db } from "../../../firebase";
@@ -38,6 +40,7 @@ const AccountSetting = () => {
 			snapshotListenOptions: { includeMetadataChanges: true },
 		}
 	);
+
 	if (loading || userLoading) {
 		return <PageLoadingSpinner />;
 	}
@@ -52,6 +55,7 @@ const AccountSetting = () => {
 				bio: value?.bio ?? "",
 				profilePhoto: currentUser?.photoURL,
 				coverPhoto: value?.coverPhoto ?? "https://picsum.photos/200/300",
+				location: value?.location ?? "",
 			}}
 			validationSchema={Yup.object({
 				name: Yup.string().required("Required"),
@@ -66,11 +70,13 @@ const AccountSetting = () => {
 				}
 				if (
 					values.bio !== value?.bio ||
-					values.coverPhoto !== value?.coverPhoto
+					values.coverPhoto !== value?.coverPhoto ||
+					values.location !== value?.location
 				) {
 					await setDoc(doc(db, "users", currentUser?.uid ?? ""), {
 						bio: values.bio,
 						coverPhoto: values.coverPhoto,
+						location: values.location,
 					});
 
 					router.push("/profile");
@@ -166,10 +172,47 @@ const AccountSetting = () => {
 								</Stack>
 							</VStack>
 						</FieldGroup>
-
-						<FieldGroup title="Language">
-							<VStack width="full" spacing="6">
+						<FieldGroup title="Preference">
+							<VStack width="full" spacing="6" alignItems="flex-start">
 								<LanguageSelect />
+								<HStack
+									width="full"
+									alignItems="flex-end"
+									justifyContent="flex-start"
+									maxW="xs"
+								>
+									<Field name="location">
+										{({ field, form }: any) => (
+											<FormControl>
+												<FormLabel>Location</FormLabel>
+												<Input {...field} type="text" maxLength={255} />
+												<FormErrorMessage>
+													{form.errors.location}
+												</FormErrorMessage>
+											</FormControl>
+										)}
+									</Field>
+									<IconButton
+										aria-label="locate"
+										icon={<BiCurrentLocation size="24" />}
+										onClick={() => {
+											if (navigator?.geolocation) {
+												navigator.geolocation.getCurrentPosition(
+													async (location) => {
+														if (location)
+															props.setFieldValue(
+																"location",
+																await getCityName(
+																	location.coords.latitude,
+																	location.coords.longitude
+																)
+															);
+													}
+												);
+											}
+										}}
+									/>
+								</HStack>
 							</VStack>
 						</FieldGroup>
 						<FieldGroup title="Notifications">
@@ -252,3 +295,11 @@ const LanguageSelect = (props: SelectProps) => (
 		</Select>
 	</FormControl>
 );
+
+const getCityName = async (lat: number, lng: number) => {
+	const res = await fetch(
+		`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
+	);
+	const data = await res.json();
+	return ` ${data.locality}`;
+};

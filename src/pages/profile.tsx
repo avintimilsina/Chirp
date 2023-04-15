@@ -20,6 +20,7 @@ import {
 import { FaEnvelope } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
 import { GoCalendar } from "react-icons/go";
+import dayjs from "dayjs";
 import { Tweet } from ".";
 import { auth, db } from "../../firebase";
 
@@ -132,7 +133,9 @@ const ProfilePage = () => {
 								_dark={{ color: "gray.200" }}
 							>
 								<FiMapPin size={20} />
-								<Text fontSize="medium">Sinamangal, Kathmandu</Text>
+								<Text fontSize="medium">
+									{value?.location ?? "Some where in Earth"}
+								</Text>
 							</HStack>
 							<HStack
 								spacing={3}
@@ -149,7 +152,8 @@ const ProfilePage = () => {
 							>
 								<GoCalendar size={20} />
 								<Text fontSize="medium">
-									{currentUser?.metadata.creationTime}
+									Joined{" "}
+									{dayjs(currentUser?.metadata.creationTime).format("MMM YYYY")}
 								</Text>
 							</HStack>
 						</Stack>
