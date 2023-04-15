@@ -14,19 +14,19 @@ import {
 	Select,
 	Stack,
 	StackDivider,
-	Text,
 	Textarea,
 	VStack,
 } from "@chakra-ui/react";
 import { doc, setDoc } from "firebase/firestore";
 import { Field, Form, Formik, FormikProps } from "formik";
+import { nanoid } from "nanoid";
 import { useRouter } from "next/router";
 import { useAuthState, useUpdateProfile } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { FaGithub, FaGoogle } from "react-icons/fa";
-import { HiCloudUpload } from "react-icons/hi";
 import * as Yup from "yup";
 import { auth, db } from "../../../firebase";
+import FileUploadModal from "../ui/FileUploadModal";
 import PageLoadingSpinner from "../ui/PageLoadingSpinner";
 
 const AccountSetting = () => {
@@ -52,7 +52,7 @@ const AccountSetting = () => {
 				email: currentUser?.email,
 				bio: value?.bio ?? "",
 				profilePhoto: currentUser?.photoURL,
-				coverPhoto: "https://picsum.photos/200/300",
+				coverPhoto: value?.coverPhoto ?? "https://picsum.photos/200/300",
 			}}
 			validationSchema={Yup.object({
 				name: Yup.string().required("Required"),
@@ -65,13 +65,18 @@ const AccountSetting = () => {
 						router.push("/profile");
 					}
 				}
-				if (values.bio !== value?.bio) {
+				if (
+					values.bio !== value?.bio ||
+					values.coverPhoto !== value?.coverPhoto
+				) {
 					await setDoc(doc(db, "users", currentUser?.uid ?? ""), {
 						bio: values.bio,
+						coverPhoto: values.coverPhoto,
 					});
 
 					router.push("/profile");
 				}
+
 				actions.setSubmitting(false);
 				actions.resetForm();
 			}}
@@ -138,41 +143,40 @@ const AccountSetting = () => {
 										}
 									/>
 									<Box>
-										<HStack spacing="5">
-											<Button leftIcon={<HiCloudUpload />}>Change photo</Button>
-											<Button variant="ghost" colorScheme="red">
+										{/* <HStack spacing="5"> */}
+										<FileUploadModal
+											onUpload={async (url) => {
+												await updateProfile({ photoURL: url });
+											}}
+											imageRef={`images/profile/${
+												currentUser?.uid ?? nanoid()
+											}`}
+										/>
+										{/* <Button variant="outline" colorScheme="red">
 												Delete
-											</Button>
-										</HStack>
-										<Text
-											fontSize="sm"
-											mt="3"
-											// color={useColorModeValue("gray.500", "whiteAlpha.600")}
-										>
-											.jpg, .gif, or .png. Max file size 700K.
-										</Text>
+											</Button> */}
+										{/* </HStack> */}
 									</Box>
 								</Stack>
 								<Stack direction="row" spacing="6" align="center" width="full">
 									<Avatar
 										size="xl"
-										name="Alyssa Mall"
-										src="https://picsum.photos/200/300"
+										name={currentUser?.displayName ?? "-"}
+										src={props.values.coverPhoto}
 									/>
+
 									<Box>
-										<HStack spacing="5">
-											<Button leftIcon={<HiCloudUpload />}>Change photo</Button>
-											<Button variant="ghost" colorScheme="red">
+										{/* <HStack spacing="5"> */}
+										<FileUploadModal
+											onUpload={async (url) => {
+												props.setFieldValue("coverPhoto", url);
+											}}
+											imageRef={`images/cover/${currentUser?.uid ?? nanoid()}`}
+										/>
+										{/* <Button variant="outline" colorScheme="red">
 												Delete
-											</Button>
-										</HStack>
-										<Text
-											fontSize="sm"
-											mt="3"
-											// color={useColorModeValue("gray.500", "whiteAlpha.600")}
-										>
-											.jpg, .gif, or .png. Max file size 700K.
-										</Text>
+											</Button> */}
+										{/* </HStack> */}
 									</Box>
 								</Stack>
 							</VStack>

@@ -57,7 +57,9 @@ const ProfilePage = () => {
 						bg="#edf3f8"
 						_dark={{ bg: "#3e3e3e" }}
 						style={{
-							backgroundImage: "url(https://picsum.photos/200/300)",
+							backgroundImage: `url(${
+								value?.coverPhoto || "https://picsum.photos/200/300"
+							})`,
 							backgroundSize: "cover",
 							backgroundPosition: "center",
 							backgroundRepeat: "no-repeat",

@@ -1,4 +1,3 @@
-import { HiCloudUpload } from "react-icons/hi";
 import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
 import {
 	Button,
@@ -15,12 +14,16 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { nanoid } from "nanoid";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, storage } from "../../firebase";
+import { HiCloudUpload } from "react-icons/hi";
+import { auth, storage } from "../../../firebase";
 
-const TestPage = () => {
+interface FileUploadModalProps {
+	onUpload: (url: string) => void;
+	imageRef: string;
+}
+const FileUploadModal = ({ onUpload, imageRef }: FileUploadModalProps) => {
 	const {
 		isOpen: isUploadFileModalOpen,
 		onOpen: onUploadFileModalOpen,
@@ -29,7 +32,7 @@ const TestPage = () => {
 	const [fileUploadProgress, setFileUploadProgress] = useState(0);
 	const [selectedFile, setSelectedFile] = useState<File | undefined>();
 	const toast = useToast();
-	const [currentUser, loading, userError] = useAuthState(auth);
+	const [, loading, userError] = useAuthState(auth);
 	if (loading) {
 		return <PageLoadingSpinner />;
 	}
@@ -75,9 +78,6 @@ const TestPage = () => {
 						<Button
 							colorScheme="green"
 							onClick={async () => {
-								const imageRef = `images/profile/${
-									currentUser?.uid ?? nanoid()
-								}`;
 								const uploadTask = uploadBytesResumable(
 									ref(storage, imageRef),
 									selectedFile!
@@ -103,8 +103,7 @@ const TestPage = () => {
 									async () => {
 										await getDownloadURL(ref(storage, imageRef)).then(
 											(downloadURL) => {
-												// eslint-disable-next-line no-console
-												console.log(downloadURL);
+												onUpload(downloadURL);
 												onUploadFileModalClose();
 											}
 										);
@@ -121,4 +120,4 @@ const TestPage = () => {
 	);
 };
 
-export default TestPage;
+export default FileUploadModal;
