@@ -1,16 +1,15 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/avin-t/chirp">
+  <a href="https://chirpyy.vercel.app">
     <img src="./public/logo.svg" alt="Logo" width="160" height="80">
   </a>
 
   <h3 align="center">Chirp</h3>
 
   <p align="center">
-    Chirp away your thoughts!
+    Chirp away your thoughts 🕊️
     <br />
-    <a href="https://chirpyy.vercel.app"></a>
 
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-typescript.svg)](https://forthebadge.com)
@@ -22,7 +21,7 @@
 
 ## About The Project
 
-Chirp is a social media platform where you can share your thoughts with the world. You can also follow other users and see their chirps.
+Chirp is a social media platform where you can share your thoughts with the world. You can view other people's chirps and like them. You can also follow other people to see their chirps on your feed.
 
 ## Built With
 
@@ -44,7 +43,7 @@ To get a local copy up and running follow these simple example steps.
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/avin-t/chirp.git
+   git clone https://github.com/avintimilsina/chirp.git
    ```
 2. Install the project dependencies
 
