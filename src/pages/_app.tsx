@@ -33,6 +33,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 						providerData: currentUser?.providerData,
 						emailVerified: currentUser?.emailVerified,
 						username: currentUser?.email?.split("@")[0],
+						createdAt: currentUser?.metadata?.creationTime,
 					},
 					{ merge: true }
 				);

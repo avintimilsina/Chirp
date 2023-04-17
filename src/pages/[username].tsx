@@ -27,7 +27,7 @@ import { auth, db } from "../../firebase";
 const ProfilePage = () => {
 	const router = useRouter();
 	const { username } = router.query;
-	const [currentUser, userloading] = useAuthState(auth);
+	const [, userloading] = useAuthState(auth);
 	const [value] = useCollectionData(
 		query(collection(db, "users"), where("username", "==", username)),
 		{
@@ -37,7 +37,7 @@ const ProfilePage = () => {
 	const [values, loading, error] = useCollectionData(
 		query(
 			collection(db, "chirps"),
-			where("author.userId", "==", currentUser?.uid ?? "-")
+			where("author.userId", "==", value?.[0].uid ?? "-")
 		),
 		{
 			snapshotListenOptions: { includeMetadataChanges: true },
@@ -111,7 +111,7 @@ const ProfilePage = () => {
 						alignItems="left"
 					>
 						<Avatar
-							src={currentUser?.photoURL || "https://picsum.photos/200/300"}
+							src={value?.[0].photoURL || "https://picsum.photos/200/300"}
 							name="Profile Picture"
 							borderRadius="full"
 							boxSize="150px"
@@ -137,7 +137,7 @@ const ProfilePage = () => {
 							color="gray.800"
 							_dark={{ color: "white" }}
 						>
-							{currentUser?.displayName}
+							{value?.[0].displayName}
 						</Text>
 						<Stack>
 							<HStack
@@ -151,7 +151,7 @@ const ProfilePage = () => {
 									color="gray.800"
 									_dark={{ color: "gray.200" }}
 								>
-									@{currentUser?.email?.split("@")[0]}
+									@{value?.[0].email?.split("@")[0]}
 								</Text>
 							</HStack>
 							{value?.[0].bio && (
@@ -180,7 +180,7 @@ const ProfilePage = () => {
 								_dark={{ color: "gray.200" }}
 							>
 								<FaEnvelope size={20} />
-								<Text fontSize="medium">{currentUser?.email}</Text>
+								<Text fontSize="medium">{value?.[0].email}</Text>
 							</HStack>
 							<HStack
 								spacing={3}
@@ -190,7 +190,7 @@ const ProfilePage = () => {
 								<GoCalendar size={20} />
 								<Text fontSize="medium">
 									Joined{" "}
-									{dayjs(currentUser?.metadata.creationTime).format("MMM YYYY")}
+									{dayjs(value?.[0].metadata?.creationTime).format("MMM YYYY")}
 								</Text>
 							</HStack>
 						</Stack>
