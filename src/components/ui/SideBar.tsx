@@ -24,6 +24,7 @@ import {
 	ModalHeader,
 	ModalOverlay,
 	Spacer,
+	Spinner,
 	Text,
 	VStack,
 	useColorModeValue,
@@ -37,8 +38,8 @@ import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { IconType } from "react-icons";
 import { BiLogOut } from "react-icons/bi";
 import { BsThreeDots } from "react-icons/bs";
-import { FaRegPaperPlane } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
+import { FaRegPaperPlane } from "react-icons/fa";
 import { FiHome, FiMenu } from "react-icons/fi";
 import { MdOutlineManageAccounts } from "react-icons/md";
 import { auth } from "../../../firebase";
@@ -93,9 +94,6 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
-	const [currentUser] = useAuthState(auth);
-	const [signOut] = useSignOut(auth);
-	const toast = useToast();
 	const router = useRouter();
 	const { isOpen, onOpen, onClose: modalOnClose } = useDisclosure();
 
@@ -160,95 +158,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 			</Modal>
 			<Spacer />
 			<Box mb="5">
-				{!currentUser ? (
-					<VStack>
-						<Button
-							as={Link}
-							variant="ghost"
-							href="/auth/login"
-							w="full"
-							style={{ textDecoration: "none" }}
-						>
-							Login
-						</Button>
-						<Button
-							as={Link}
-							variant="solid"
-							colorScheme="blue"
-							href="/auth/register"
-							w="full"
-							style={{ textDecoration: "none" }}
-						>
-							Sign Up
-						</Button>
-					</VStack>
-				) : (
-					<Flex mx="6">
-						<Menu placement="top">
-							<MenuButton
-								py={2}
-								transition="all 0.3s"
-								_focus={{ boxShadow: "none" }}
-							>
-								<HStack>
-									<Avatar
-										size="md"
-										src={
-											currentUser?.photoURL ?? "https://picsum.photos/200/300"
-										}
-									/>
-									<VStack
-										display={{ base: "none", md: "flex" }}
-										alignItems="flex-start"
-										spacing="1px"
-										ml="2"
-									>
-										<Text fontSize="lg" fontWeight="semibold">
-											{currentUser?.displayName}
-										</Text>
-										<Text fontSize="xs" color="gray.600">
-											@{currentUser?.email?.split("@")[0]}
-										</Text>
-									</VStack>
-									<Box display={{ base: "none", md: "flex" }}>
-										<BsThreeDots />
-									</Box>
-								</HStack>
-							</MenuButton>
-							<MenuList
-								p="0"
-								m="0"
-								minW="0"
-								w="200px"
-								borderColor="red.500"
-								textColor="red.500"
-							>
-								<MenuItem
-									as={Button}
-									p="0"
-									leftIcon={<BiLogOut />}
-									colorScheme="red"
-									variant="ghost"
-									onClick={async () => {
-										const success = await signOut();
-										if (success) {
-											if (!toast.isActive("login")) {
-												toast({
-													title: `Logged out`,
-													status: "success",
-													isClosable: true,
-													id: "login",
-												});
-											}
-										}
-									}}
-								>
-									Sign out
-								</MenuItem>
-							</MenuList>
-						</Menu>
-					</Flex>
-				)}
+				<SideBarProfile />
 			</Box>
 		</Flex>
 	);
@@ -330,3 +240,113 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => (
 		<Box />
 	</Flex>
 );
+
+const SideBarProfile = () => {
+	const [currentUser, loading, error] = useAuthState(auth);
+	const [signOut] = useSignOut(auth);
+	const toast = useToast();
+	if (loading) {
+		return (
+			<Flex justifyContent="center">
+				<Spinner />
+			</Flex>
+		);
+	}
+	if (error) {
+		return (
+			<Flex justifyContent="center">
+				<Spinner />
+			</Flex>
+		);
+	}
+	if (currentUser) {
+		return (
+			<Flex mx="6">
+				<Menu placement="top">
+					<MenuButton
+						py={2}
+						transition="all 0.3s"
+						_focus={{ boxShadow: "none" }}
+					>
+						<HStack>
+							<Avatar
+								size="md"
+								src={currentUser?.photoURL ?? "https://picsum.photos/200/300"}
+							/>
+							<VStack
+								display={{ base: "none", md: "flex" }}
+								alignItems="flex-start"
+								spacing="1px"
+								ml="2"
+							>
+								<Text fontSize="lg" fontWeight="semibold">
+									{currentUser?.displayName}
+								</Text>
+								<Text fontSize="xs" color="gray.600">
+									@{currentUser?.email?.split("@")[0]}
+								</Text>
+							</VStack>
+							<Box display={{ base: "none", md: "flex" }}>
+								<BsThreeDots />
+							</Box>
+						</HStack>
+					</MenuButton>
+					<MenuList
+						p="0"
+						m="0"
+						minW="0"
+						w="200px"
+						borderColor="red.500"
+						textColor="red.500"
+					>
+						<MenuItem
+							as={Button}
+							p="0"
+							leftIcon={<BiLogOut />}
+							colorScheme="red"
+							variant="ghost"
+							onClick={async () => {
+								const success = await signOut();
+								if (success) {
+									if (!toast.isActive("login")) {
+										toast({
+											title: `Logged out`,
+											status: "success",
+											isClosable: true,
+											id: "login",
+										});
+									}
+								}
+							}}
+						>
+							Sign out
+						</MenuItem>
+					</MenuList>
+				</Menu>
+			</Flex>
+		);
+	}
+	return (
+		<VStack>
+			<Button
+				as={Link}
+				variant="ghost"
+				href="/auth/login"
+				w="full"
+				style={{ textDecoration: "none" }}
+			>
+				Login
+			</Button>
+			<Button
+				as={Link}
+				variant="solid"
+				colorScheme="blue"
+				href="/auth/register"
+				w="full"
+				style={{ textDecoration: "none" }}
+			>
+				Sign Up
+			</Button>
+		</VStack>
+	);
+};
