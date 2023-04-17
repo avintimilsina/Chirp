@@ -65,7 +65,7 @@ const AccountSetting = () => {
 				if (values.name !== currentUser?.displayName) {
 					const success = await updateProfile({ displayName: values.name });
 					if (success) {
-						router.push("/profile");
+						router.push(`/${currentUser?.email?.split("@")[0]}`);
 					}
 				}
 				if (
@@ -73,11 +73,15 @@ const AccountSetting = () => {
 					values.coverPhoto !== value?.coverPhoto ||
 					values.location !== value?.location
 				) {
-					await setDoc(doc(db, "users", currentUser?.uid ?? ""), {
-						bio: values.bio,
-						coverPhoto: values.coverPhoto,
-						location: values.location,
-					});
+					await setDoc(
+						doc(db, "users", currentUser?.uid ?? ""),
+						{
+							bio: values.bio,
+							coverPhoto: values.coverPhoto,
+							location: values.location,
+						},
+						{ merge: true }
+					);
 
 					router.push("/profile");
 				}

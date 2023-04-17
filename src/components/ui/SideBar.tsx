@@ -53,7 +53,6 @@ interface LinkItemProps {
 }
 const LinkItems: Array<LinkItemProps> = [
 	{ name: "Home", icon: FiHome, href: "/" },
-	{ name: "Profile", icon: CgProfile, href: "/profile" },
 	{ name: "Account", icon: MdOutlineManageAccounts, href: "/setting" },
 ];
 
@@ -96,6 +95,7 @@ interface SidebarProps extends BoxProps {
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 	const router = useRouter();
 	const { isOpen, onOpen, onClose: modalOnClose } = useDisclosure();
+	const [currentUser] = useAuthState(auth);
 
 	return (
 		<Flex
@@ -132,6 +132,15 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 						{link.name}
 					</NavItem>
 				))}
+				<NavItem
+					label="Profile"
+					key="Profile"
+					icon={CgProfile}
+					href={`/${currentUser?.email?.split("@")[0]}`}
+					isActive={router.asPath === `/${currentUser?.email?.split("@")[0]}`}
+				>
+					Profile
+				</NavItem>
 			</VStack>
 			<Button
 				onClick={onOpen}

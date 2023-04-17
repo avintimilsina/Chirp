@@ -1,9 +1,11 @@
 import {
 	Avatar,
 	Box,
+	Button,
 	Card,
 	Flex,
 	HStack,
+	Heading,
 	Stack,
 	Text,
 	VStack,
@@ -11,24 +13,27 @@ import {
 
 import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
 import TweetCard from "@/components/ui/TweetCard";
-import { collection, doc, query, where } from "firebase/firestore";
+import dayjs from "dayjs";
+import { collection, query, where } from "firebase/firestore";
+import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
-import {
-	useCollectionData,
-	useDocumentData,
-} from "react-firebase-hooks/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 import { FaEnvelope } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
 import { GoCalendar } from "react-icons/go";
-import dayjs from "dayjs";
 import { Tweet } from ".";
 import { auth, db } from "../../firebase";
 
 const ProfilePage = () => {
+	const router = useRouter();
+	const { username } = router.query;
 	const [currentUser, userloading] = useAuthState(auth);
-	const [value] = useDocumentData(doc(db, "users", currentUser?.uid ?? "-"), {
-		snapshotListenOptions: { includeMetadataChanges: true },
-	});
+	const [value] = useCollectionData(
+		query(collection(db, "users"), where("username", "==", username)),
+		{
+			snapshotListenOptions: { includeMetadataChanges: true },
+		}
+	);
 	const [values, loading, error] = useCollectionData(
 		query(
 			collection(db, "chirps"),
@@ -44,7 +49,39 @@ const ProfilePage = () => {
 	if (error) {
 		return <PageLoadingSpinner />;
 	}
+	if (value?.length === 0) {
+		return (
+			<Box textAlign="center" py={10} px={6}>
+				<Heading
+					display="inline-block"
+					as="h2"
+					size="2xl"
+					bgGradient="linear(to-r, teal.400, teal.600)"
+					backgroundClip="text"
+				>
+					404
+				</Heading>
+				<Text fontSize="18px" mt={3} mb={2}>
+					User Not Found
+				</Text>
+				<Text color="gray.500" mb={6}>
+					The user you&apos;re looking for does not seem to exist.
+				</Text>
 
+				<Button
+					colorScheme="teal"
+					bgGradient="linear(to-r, teal.400, teal.500, teal.600)"
+					color="white"
+					variant="solid"
+					onClick={() => {
+						router.push("/");
+					}}
+				>
+					Go to Home
+				</Button>
+			</Box>
+		);
+	}
 	return (
 		<>
 			<Card width="full" maxW="3xl" mb={3}>
@@ -59,7 +96,7 @@ const ProfilePage = () => {
 						_dark={{ bg: "#3e3e3e" }}
 						style={{
 							backgroundImage: `url(${
-								value?.coverPhoto || "https://picsum.photos/200/300"
+								value?.[0].coverPhoto || "https://picsum.photos/200/300"
 							})`,
 							backgroundSize: "cover",
 							backgroundPosition: "center",
@@ -117,14 +154,14 @@ const ProfilePage = () => {
 									@{currentUser?.email?.split("@")[0]}
 								</Text>
 							</HStack>
-							{value?.bio && (
+							{value?.[0].bio && (
 								<HStack
 									spacing={3}
 									color="gray.700"
 									_dark={{ color: "gray.200" }}
 									my={3}
 								>
-									<Text fontSize="medium">{value.bio}</Text>
+									<Text fontSize="medium">{value?.[0].bio}</Text>
 								</HStack>
 							)}
 							<HStack
@@ -134,7 +171,7 @@ const ProfilePage = () => {
 							>
 								<FiMapPin size={20} />
 								<Text fontSize="medium">
-									{value?.location ?? "Some where in Earth"}
+									{value?.[0].location ?? "Some where in Earth"}
 								</Text>
 							</HStack>
 							<HStack
