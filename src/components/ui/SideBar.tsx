@@ -17,6 +17,12 @@ import {
 	MenuButton,
 	MenuItem,
 	MenuList,
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalHeader,
+	ModalOverlay,
 	Spacer,
 	Text,
 	VStack,
@@ -24,18 +30,20 @@ import {
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
-import { ReactNode } from "react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { ReactNode } from "react";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { IconType } from "react-icons";
-import { BsThreeDots } from "react-icons/bs";
-import { CgProfile } from "react-icons/cg";
-import { useRouter } from "next/router";
-import { FiHome, FiMenu } from "react-icons/fi";
 import { BiLogOut } from "react-icons/bi";
+import { BsThreeDots } from "react-icons/bs";
+import { FaRegPaperPlane } from "react-icons/fa";
+import { CgProfile } from "react-icons/cg";
+import { FiHome, FiMenu } from "react-icons/fi";
 import { MdOutlineManageAccounts } from "react-icons/md";
 import { auth } from "../../../firebase";
 import Logo from "../logo";
+import CreateTweet from "./CreateTweet";
 
 interface LinkItemProps {
 	name: string;
@@ -89,6 +97,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 	const [signOut] = useSignOut(auth);
 	const toast = useToast();
 	const router = useRouter();
+	const { isOpen, onOpen, onClose: modalOnClose } = useDisclosure();
 
 	return (
 		<Flex
@@ -103,6 +112,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 			pos="fixed"
 			top={0}
 			h="100vh"
+			gap={4}
 			{...rest}
 		>
 			<Flex alignItems="center" m="6" justifyContent="space-between">
@@ -125,6 +135,29 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 					</NavItem>
 				))}
 			</VStack>
+			<Button
+				onClick={onOpen}
+				leftIcon={<FaRegPaperPlane />}
+				variant="solid"
+				colorScheme="teal"
+				rounded="3xl"
+				size="lg"
+			>
+				Chirp
+			</Button>
+
+			<Modal isOpen={isOpen} onClose={modalOnClose} size="xl">
+				<ModalOverlay />
+				<ModalContent>
+					<ModalHeader>
+						<ModalCloseButton />
+					</ModalHeader>
+
+					<ModalBody>
+						<CreateTweet />
+					</ModalBody>
+				</ModalContent>
+			</Modal>
 			<Spacer />
 			<Box mb="5">
 				{!currentUser ? (

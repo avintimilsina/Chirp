@@ -74,7 +74,7 @@ const CreateTweet = () => {
 										id="createTweet"
 										{...field}
 										placeholder="Chirp Away!"
-										variant="flushed"
+										variant="unstyled"
 										rows={6}
 										bg="white"
 										p={4}
