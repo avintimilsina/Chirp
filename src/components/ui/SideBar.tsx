@@ -27,6 +27,8 @@ import { ReactNode } from "react";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { IconType } from "react-icons";
 import { FiChevronDown, FiHome, FiMenu } from "react-icons/fi";
+import { CgProfile } from "react-icons/cg";
+import { MdOutlineManageAccounts } from "react-icons/md";
 import { auth } from "../../../firebase";
 import Logo from "../logo";
 
@@ -37,8 +39,8 @@ interface LinkItemProps {
 }
 const LinkItems: Array<LinkItemProps> = [
 	{ name: "Home", icon: FiHome, href: "/" },
-	// { name: "Trending", icon: FiTrendingUp, href: "/" },
-	// { name: "Explore", icon: FiCompass, href: "/" },
+	{ name: "Profile", icon: CgProfile, href: "/profile" },
+	{ name: "Account", icon: MdOutlineManageAccounts, href: "/setting" },
 	// { name: "Favourites", icon: FiStar, href: "/" },
 	// { name: "Settings", icon: FiSettings, href: "/" },
 ];
@@ -84,14 +86,14 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => (
 		bg={useColorModeValue("white", "gray.900")}
 		borderRight="1px"
 		borderRightColor={useColorModeValue("gray.200", "gray.700")}
-		w={{ base: "full", md: 60 }}
+		w={{ base: "full", md: "56" }}
 		pos="fixed"
 		h="full"
 		{...rest}
 	>
-		<Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+		<Flex h="100" alignItems="center" mx="6" justifyContent="space-between">
 			<Box>
-				<Logo h="12" />
+				<Logo h="16" />
 			</Box>
 
 			<CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
@@ -114,6 +116,12 @@ const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => (
 		href={href || "/"}
 		style={{ textDecoration: "none" }}
 		_focus={{ boxShadow: "none" }}
+		py={2}
+		px={3}
+		borderRadius="md"
+		transition="all 0.3s"
+		fontWeight="semibold"
+		lineHeight="1.5rem"
 	>
 		<Flex
 			align="center"
@@ -131,7 +139,7 @@ const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => (
 			{icon && (
 				<Icon
 					mr="4"
-					fontSize="16"
+					fontSize="24"
 					_groupHover={{
 						color: "white",
 					}}
