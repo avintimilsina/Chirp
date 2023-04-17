@@ -83,7 +83,7 @@ const AccountSetting = () => {
 						{ merge: true }
 					);
 
-					router.push("/profile");
+					router.push(`/${currentUser?.email?.split("@")[0]}`);
 				}
 
 				actions.setSubmitting(false);
