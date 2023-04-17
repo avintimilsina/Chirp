@@ -12,10 +12,12 @@ import {
 	HStack,
 	Icon,
 	IconButton,
+	LinkProps,
 	Menu,
 	MenuButton,
 	MenuItem,
 	MenuList,
+	Spacer,
 	Text,
 	VStack,
 	useColorModeValue,
@@ -23,10 +25,12 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
+import NextLink from "next/link";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { IconType } from "react-icons";
 import { BsThreeDots } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
+import { useRouter } from "next/router";
 import { FiHome, FiMenu } from "react-icons/fi";
 import { BiLogOut } from "react-icons/bi";
 import { MdOutlineManageAccounts } from "react-icons/md";
@@ -42,17 +46,15 @@ const LinkItems: Array<LinkItemProps> = [
 	{ name: "Home", icon: FiHome, href: "/" },
 	{ name: "Profile", icon: CgProfile, href: "/profile" },
 	{ name: "Account", icon: MdOutlineManageAccounts, href: "/setting" },
-	// { name: "Favourites", icon: FiStar, href: "/" },
-	// { name: "Settings", icon: FiSettings, href: "/" },
 ];
 
 const SideBar = ({ children }: { children: ReactNode }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	return (
-		<Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+		<HStack minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
 			<SidebarContent
 				onClose={() => onClose}
-				display={{ base: "none", md: "block" }}
+				display={{ base: "none", md: "flex" }}
 			/>
 			<Drawer
 				autoFocus={false}
@@ -61,18 +63,19 @@ const SideBar = ({ children }: { children: ReactNode }) => {
 				onClose={onClose}
 				returnFocusOnClose={false}
 				onOverlayClick={onClose}
-				size="full"
+				size="xs"
 			>
 				<DrawerContent>
 					<SidebarContent onClose={onClose} />
 				</DrawerContent>
 			</Drawer>
-			{/* mobilenav */}
-			<MobileNav onOpen={onOpen} />
-			<Box ml={{ base: 0, md: 60 }} p="4">
-				{children}
+			<Box width="full">
+				<MobileNav onOpen={onOpen} />
+				<Box ml={{ base: 0, md: 60 }} p="4">
+					{children}
+				</Box>
 			</Box>
-		</Box>
+		</HStack>
 	);
 };
 export default SideBar;
@@ -85,41 +88,69 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 	const [currentUser] = useAuthState(auth);
 	const [signOut] = useSignOut(auth);
 	const toast = useToast();
+	const router = useRouter();
 
 	return (
-		<Flex direction="column" height="100%">
-			<Box
-				transition="3s ease"
-				bg={useColorModeValue("white", "gray.900")}
-				borderRight="1px"
-				p={2}
-				borderRightColor={useColorModeValue("gray.200", "gray.700")}
-				w={{ base: "full", md: "56" }}
-				pos="fixed"
-				h="full"
-				{...rest}
-			>
-				<Flex h="100" alignItems="center" mx="6" justifyContent="space-between">
-					<Box>
-						<Logo h="16" />
-					</Box>
+		<Flex
+			direction="column"
+			transition="3s ease"
+			bg={useColorModeValue("white", "gray.900")}
+			borderRight="1px"
+			px={4}
+			py={2}
+			borderRightColor={useColorModeValue("gray.200", "gray.700")}
+			w={{ base: "full", md: "60" }}
+			pos="fixed"
+			top={0}
+			h="100vh"
+			{...rest}
+		>
+			<Flex alignItems="center" m="6" justifyContent="space-between">
+				<Box>
+					<Logo h="16" />
+				</Box>
 
-					<CloseButton
-						display={{ base: "flex", md: "none" }}
-						onClick={onClose}
-					/>
-				</Flex>
-
+				<CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
+			</Flex>
+			<VStack w="full">
 				{LinkItems.map((link) => (
-					<NavItem key={link.name} icon={link.icon} href={link.href}>
+					<NavItem
+						label={link.name}
+						key={link.name}
+						icon={link.icon}
+						href={link.href}
+						isActive={router.pathname === link.href}
+					>
 						{link.name}
 					</NavItem>
 				))}
+			</VStack>
+			<Spacer />
+			<Box mb="5">
 				{!currentUser ? (
-					""
+					<VStack>
+						<Button
+							as={Link}
+							variant="ghost"
+							href="/auth/login"
+							w="full"
+							style={{ textDecoration: "none" }}
+						>
+							Login
+						</Button>
+						<Button
+							as={Link}
+							variant="solid"
+							colorScheme="blue"
+							href="/auth/register"
+							w="full"
+							style={{ textDecoration: "none" }}
+						>
+							Sign Up
+						</Button>
+					</VStack>
 				) : (
-					//! USE SPACER INSTEAD OF MARGIN
-					<Flex mx="6" mt="72">
+					<Flex mx="6">
 						<Menu placement="top">
 							<MenuButton
 								py={2}
@@ -189,152 +220,80 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 		</Flex>
 	);
 };
-
-interface NavItemProps extends FlexProps {
-	icon: IconType;
-	children: ReactNode;
+interface NavItemProps extends LinkProps {
+	isActive?: boolean;
 	href: string;
+	label: string;
+	icon: any;
 }
-const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => (
-	// const router = useRouter();
-	<Link
-		href={href ?? "/"}
-		style={{ textDecoration: "none" }}
-		_focus={{ boxShadow: "none" }}
-		display="block"
-		m={3}
-		p={5}
-		borderRadius="lg"
-		transition="all 0.3s"
-		fontSize="lg"
-		fontWeight="semibold"
-		lineHeight="1.5rem"
-		role="group"
-		cursor="pointer"
-		_hover={{
-			bg: "cyan.400",
-			color: "white",
-		}}
-		// isActive={router.pathname === link.href}
-		{...rest}
-	>
-		<HStack spacing={4}>
-			<Icon as={icon} boxSize="20px" />
-			<Text as="span">{children}</Text>
-		</HStack>
-	</Link>
-);
+
+const NavItem = (props: NavItemProps) => {
+	const { icon, isActive, label, href, ...rest } = props;
+	return (
+		<Link
+			style={{ textDecoration: "none" }}
+			_focus={{ boxShadow: "none" }}
+			p={5}
+			borderRadius="lg"
+			transition="all 0.3s"
+			fontSize="lg"
+			fontWeight="semibold"
+			lineHeight="1.5rem"
+			role="group"
+			cursor="pointer"
+			w="full"
+			_hover={{
+				bg: useColorModeValue("blue.500", "blue.300"),
+				color: useColorModeValue("white", "black"),
+			}}
+			as={NextLink}
+			href={href}
+			display="block"
+			aria-current={isActive ? "page" : undefined}
+			color={useColorModeValue("blackAlpha.800", "whiteAlpha.800")}
+			_activeLink={{
+				bg: useColorModeValue("blue.500", "blue.300"),
+				color: useColorModeValue("white", "black"),
+			}}
+			{...rest}
+		>
+			<HStack spacing={4}>
+				<Icon as={icon} boxSize="20px" />
+				<Text as="span">{label}</Text>
+			</HStack>
+		</Link>
+	);
+};
+NavItem.defaultProps = {
+	isActive: false,
+};
 
 interface MobileProps extends FlexProps {
 	onOpen: () => void;
 }
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
-	const [currentUser] = useAuthState(auth);
-	// const [signOut] = useSignOut(auth);
-	// const toast = useToast();
+const MobileNav = ({ onOpen, ...rest }: MobileProps) => (
+	<Flex
+		ml={{ base: 0, md: 56 }}
+		px={{ base: 4, md: 4 }}
+		height="20"
+		alignItems="center"
+		bg={useColorModeValue("white", "gray.900")}
+		borderBottomWidth="1px"
+		borderBottomColor={useColorModeValue("gray.200", "gray.700")}
+		justifyContent={{ base: "space-between", md: "flex-end" }}
+		display={{ base: "flex", md: "none" }}
+		{...rest}
+	>
+		<IconButton
+			display={{ base: "flex", md: "none" }}
+			onClick={onOpen}
+			variant="outline"
+			aria-label="open menu"
+			icon={<FiMenu />}
+		/>
 
-	return (
-		<Flex
-			ml={{ base: 0, md: 56 }}
-			px={{ base: 4, md: 4 }}
-			height="20"
-			alignItems="center"
-			bg={useColorModeValue("white", "gray.900")}
-			borderBottomWidth="1px"
-			borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-			justifyContent={{ base: "space-between", md: "flex-end" }}
-			{...rest}
-		>
-			<IconButton
-				display={{ base: "flex", md: "none" }}
-				onClick={onOpen}
-				variant="outline"
-				aria-label="open menu"
-				icon={<FiMenu />}
-			/>
+		<Logo h="8" display={{ base: "flex", md: "none" }} />
 
-			<Logo h="8" display={{ base: "flex", md: "none" }} />
-
-			<HStack spacing={{ base: "0", md: "6" }}>
-				<Flex alignItems="center">
-					{!currentUser ? (
-						<HStack>
-							<Button as={Link} variant="ghost" href="/auth/login">
-								Login
-							</Button>
-							<Button
-								as={Link}
-								variant="solid"
-								colorScheme="blue"
-								href="/auth/register"
-							>
-								Sign Up
-							</Button>
-						</HStack>
-					) : (
-						""
-						// <Menu>
-						// 	<MenuButton
-						// 		py={2}
-						// 		transition="all 0.3s"
-						// 		_focus={{ boxShadow: "none" }}
-						// 	>
-						// 		<HStack>
-						// 			<Avatar
-						// 				size="sm"
-						// 				src={
-						// 					currentUser?.photoURL ?? "https://picsum.photos/200/300"
-						// 				}
-						// 			/>
-						// 			<VStack
-						// 				display={{ base: "none", md: "flex" }}
-						// 				alignItems="flex-start"
-						// 				spacing="1px"
-						// 				ml="2"
-						// 			>
-						// 				<Text fontSize="sm">{currentUser?.displayName}</Text>
-						// 				<Text fontSize="xs" color="gray.600">
-						// 					@{currentUser?.email?.split("@")[0]}
-						// 				</Text>
-						// 			</VStack>
-						// 			<Box display={{ base: "none", md: "flex" }}>
-						// 				<FiChevronDown />
-						// 			</Box>
-						// 		</HStack>
-						// 	</MenuButton>
-						// 	<MenuList>
-						// 		<MenuItem as={Link} href="/profile">
-						// 			Profile
-						// 		</MenuItem>
-						// 		<MenuItem as={Link} href="/setting">
-						// 			Settings
-						// 		</MenuItem>
-						// 		<MenuDivider />
-						// 		<MenuItem
-						// 			as={Button}
-						// 			variant="ghost"
-						// 			colorScheme="red"
-						// 			onClick={async () => {
-						// 				const success = await signOut();
-						// 				if (success) {
-						// 					if (!toast.isActive("login")) {
-						// 						toast({
-						// 							title: `Logged out`,
-						// 							status: "success",
-						// 							isClosable: true,
-						// 							id: "login",
-						// 						});
-						// 					}
-						// 				}
-						// 			}}
-						// 		>
-						// 			Sign out
-						// 		</MenuItem>
-						// 	</MenuList>
-						// </Menu>
-					)}
-				</Flex>
-			</HStack>
-		</Flex>
-	);
-};
+		<Box />
+	</Flex>
+);
