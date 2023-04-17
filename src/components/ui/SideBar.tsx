@@ -14,7 +14,6 @@ import {
 	IconButton,
 	Menu,
 	MenuButton,
-	MenuDivider,
 	MenuItem,
 	MenuList,
 	Text,
@@ -26,8 +25,10 @@ import {
 import { ReactNode } from "react";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { IconType } from "react-icons";
+import { BsThreeDots } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
-import { FiChevronDown, FiHome, FiMenu } from "react-icons/fi";
+import { FiHome, FiMenu } from "react-icons/fi";
+import { BiLogOut } from "react-icons/bi";
 import { MdOutlineManageAccounts } from "react-icons/md";
 import { auth } from "../../../firebase";
 import Logo from "../logo";
@@ -80,32 +81,114 @@ interface SidebarProps extends BoxProps {
 	onClose: () => void;
 }
 
-const SidebarContent = ({ onClose, ...rest }: SidebarProps) => (
-	<Box
-		transition="3s ease"
-		bg={useColorModeValue("white", "gray.900")}
-		borderRight="1px"
-		p={2}
-		borderRightColor={useColorModeValue("gray.200", "gray.700")}
-		w={{ base: "full", md: "56" }}
-		pos="fixed"
-		h="full"
-		{...rest}
-	>
-		<Flex h="100" alignItems="center" mx="6" justifyContent="space-between">
-			<Box>
-				<Logo h="16" />
-			</Box>
+const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+	const [currentUser] = useAuthState(auth);
+	const [signOut] = useSignOut(auth);
+	const toast = useToast();
 
-			<CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
+	return (
+		<Flex direction="column" height="100%">
+			<Box
+				transition="3s ease"
+				bg={useColorModeValue("white", "gray.900")}
+				borderRight="1px"
+				p={2}
+				borderRightColor={useColorModeValue("gray.200", "gray.700")}
+				w={{ base: "full", md: "56" }}
+				pos="fixed"
+				h="full"
+				{...rest}
+			>
+				<Flex h="100" alignItems="center" mx="6" justifyContent="space-between">
+					<Box>
+						<Logo h="16" />
+					</Box>
+
+					<CloseButton
+						display={{ base: "flex", md: "none" }}
+						onClick={onClose}
+					/>
+				</Flex>
+
+				{LinkItems.map((link) => (
+					<NavItem key={link.name} icon={link.icon} href={link.href}>
+						{link.name}
+					</NavItem>
+				))}
+				{!currentUser ? (
+					""
+				) : (
+					//! USE SPACER INSTEAD OF MARGIN
+					<Flex mx="6" mt="72">
+						<Menu placement="top">
+							<MenuButton
+								py={2}
+								transition="all 0.3s"
+								_focus={{ boxShadow: "none" }}
+							>
+								<HStack>
+									<Avatar
+										size="md"
+										src={
+											currentUser?.photoURL ?? "https://picsum.photos/200/300"
+										}
+									/>
+									<VStack
+										display={{ base: "none", md: "flex" }}
+										alignItems="flex-start"
+										spacing="1px"
+										ml="2"
+									>
+										<Text fontSize="lg" fontWeight="semibold">
+											{currentUser?.displayName}
+										</Text>
+										<Text fontSize="xs" color="gray.600">
+											@{currentUser?.email?.split("@")[0]}
+										</Text>
+									</VStack>
+									<Box display={{ base: "none", md: "flex" }}>
+										<BsThreeDots />
+									</Box>
+								</HStack>
+							</MenuButton>
+							<MenuList
+								p="0"
+								m="0"
+								minW="0"
+								w="200px"
+								borderColor="red.500"
+								textColor="red.500"
+							>
+								<MenuItem
+									as={Button}
+									p="0"
+									leftIcon={<BiLogOut />}
+									colorScheme="red"
+									variant="ghost"
+									onClick={async () => {
+										const success = await signOut();
+										if (success) {
+											if (!toast.isActive("login")) {
+												toast({
+													title: `Logged out`,
+													status: "success",
+													isClosable: true,
+													id: "login",
+												});
+											}
+										}
+									}}
+								>
+									Sign out
+								</MenuItem>
+							</MenuList>
+						</Menu>
+					</Flex>
+				)}
+			</Box>
 		</Flex>
-		{LinkItems.map((link) => (
-			<NavItem key={link.name} icon={link.icon} href={link.href}>
-				{link.name}
-			</NavItem>
-		))}
-	</Box>
-);
+	);
+};
 
 interface NavItemProps extends FlexProps {
 	icon: IconType;
@@ -115,7 +198,7 @@ interface NavItemProps extends FlexProps {
 const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => (
 	// const router = useRouter();
 	<Link
-		href={href || "/"}
+		href={href ?? "/"}
 		style={{ textDecoration: "none" }}
 		_focus={{ boxShadow: "none" }}
 		display="block"
@@ -147,8 +230,8 @@ interface MobileProps extends FlexProps {
 }
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 	const [currentUser] = useAuthState(auth);
-	const [signOut] = useSignOut(auth);
-	const toast = useToast();
+	// const [signOut] = useSignOut(auth);
+	// const toast = useToast();
 
 	return (
 		<Flex
@@ -173,13 +256,6 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 			<Logo h="8" display={{ base: "flex", md: "none" }} />
 
 			<HStack spacing={{ base: "0", md: "6" }}>
-				{/* <IconButton
-					size="lg"
-					variant="ghost"
-					aria-label="open menu"
-					icon={<FiBell />}
-				/> */}
-
 				<Flex alignItems="center">
 					{!currentUser ? (
 						<HStack>
@@ -196,65 +272,66 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 							</Button>
 						</HStack>
 					) : (
-						<Menu>
-							<MenuButton
-								py={2}
-								transition="all 0.3s"
-								_focus={{ boxShadow: "none" }}
-							>
-								<HStack>
-									<Avatar
-										size="sm"
-										src={
-											currentUser?.photoURL ?? "https://picsum.photos/200/300"
-										}
-									/>
-									<VStack
-										display={{ base: "none", md: "flex" }}
-										alignItems="flex-start"
-										spacing="1px"
-										ml="2"
-									>
-										<Text fontSize="sm">{currentUser?.displayName}</Text>
-										<Text fontSize="xs" color="gray.600">
-											@{currentUser?.email?.split("@")[0]}
-										</Text>
-									</VStack>
-									<Box display={{ base: "none", md: "flex" }}>
-										<FiChevronDown />
-									</Box>
-								</HStack>
-							</MenuButton>
-							<MenuList>
-								<MenuItem as={Link} href="/profile">
-									Profile
-								</MenuItem>
-								<MenuItem as={Link} href="/setting">
-									Settings
-								</MenuItem>
-								<MenuDivider />
-								<MenuItem
-									as={Button}
-									variant="ghost"
-									colorScheme="red"
-									onClick={async () => {
-										const success = await signOut();
-										if (success) {
-											if (!toast.isActive("login")) {
-												toast({
-													title: `Logged out`,
-													status: "success",
-													isClosable: true,
-													id: "login",
-												});
-											}
-										}
-									}}
-								>
-									Sign out
-								</MenuItem>
-							</MenuList>
-						</Menu>
+						""
+						// <Menu>
+						// 	<MenuButton
+						// 		py={2}
+						// 		transition="all 0.3s"
+						// 		_focus={{ boxShadow: "none" }}
+						// 	>
+						// 		<HStack>
+						// 			<Avatar
+						// 				size="sm"
+						// 				src={
+						// 					currentUser?.photoURL ?? "https://picsum.photos/200/300"
+						// 				}
+						// 			/>
+						// 			<VStack
+						// 				display={{ base: "none", md: "flex" }}
+						// 				alignItems="flex-start"
+						// 				spacing="1px"
+						// 				ml="2"
+						// 			>
+						// 				<Text fontSize="sm">{currentUser?.displayName}</Text>
+						// 				<Text fontSize="xs" color="gray.600">
+						// 					@{currentUser?.email?.split("@")[0]}
+						// 				</Text>
+						// 			</VStack>
+						// 			<Box display={{ base: "none", md: "flex" }}>
+						// 				<FiChevronDown />
+						// 			</Box>
+						// 		</HStack>
+						// 	</MenuButton>
+						// 	<MenuList>
+						// 		<MenuItem as={Link} href="/profile">
+						// 			Profile
+						// 		</MenuItem>
+						// 		<MenuItem as={Link} href="/setting">
+						// 			Settings
+						// 		</MenuItem>
+						// 		<MenuDivider />
+						// 		<MenuItem
+						// 			as={Button}
+						// 			variant="ghost"
+						// 			colorScheme="red"
+						// 			onClick={async () => {
+						// 				const success = await signOut();
+						// 				if (success) {
+						// 					if (!toast.isActive("login")) {
+						// 						toast({
+						// 							title: `Logged out`,
+						// 							status: "success",
+						// 							isClosable: true,
+						// 							id: "login",
+						// 						});
+						// 					}
+						// 				}
+						// 			}}
+						// 		>
+						// 			Sign out
+						// 		</MenuItem>
+						// 	</MenuList>
+						// </Menu>
 					)}
 				</Flex>
 			</HStack>
