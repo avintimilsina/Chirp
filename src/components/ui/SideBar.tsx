@@ -26,8 +26,8 @@ import {
 import { ReactNode } from "react";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { IconType } from "react-icons";
-import { FiChevronDown, FiHome, FiMenu } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
+import { FiChevronDown, FiHome, FiMenu } from "react-icons/fi";
 import { MdOutlineManageAccounts } from "react-icons/md";
 import { auth } from "../../../firebase";
 import Logo from "../logo";
@@ -85,6 +85,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => (
 		transition="3s ease"
 		bg={useColorModeValue("white", "gray.900")}
 		borderRight="1px"
+		p={2}
 		borderRightColor={useColorModeValue("gray.200", "gray.700")}
 		w={{ base: "full", md: "56" }}
 		pos="fixed"
@@ -112,42 +113,32 @@ interface NavItemProps extends FlexProps {
 	href: string;
 }
 const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => (
+	// const router = useRouter();
 	<Link
 		href={href || "/"}
 		style={{ textDecoration: "none" }}
 		_focus={{ boxShadow: "none" }}
-		py={2}
-		px={3}
-		borderRadius="md"
+		display="block"
+		m={3}
+		p={5}
+		borderRadius="lg"
 		transition="all 0.3s"
+		fontSize="lg"
 		fontWeight="semibold"
 		lineHeight="1.5rem"
+		role="group"
+		cursor="pointer"
+		_hover={{
+			bg: "cyan.400",
+			color: "white",
+		}}
+		// isActive={router.pathname === link.href}
+		{...rest}
 	>
-		<Flex
-			align="center"
-			p="4"
-			mx="4"
-			borderRadius="lg"
-			role="group"
-			cursor="pointer"
-			_hover={{
-				bg: "cyan.400",
-				color: "white",
-			}}
-			{...rest}
-		>
-			{icon && (
-				<Icon
-					mr="4"
-					fontSize="24"
-					_groupHover={{
-						color: "white",
-					}}
-					as={icon}
-				/>
-			)}
-			{children}
-		</Flex>
+		<HStack spacing={4}>
+			<Icon as={icon} boxSize="20px" />
+			<Text as="span">{children}</Text>
+		</HStack>
 	</Link>
 );
 
@@ -161,7 +152,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 
 	return (
 		<Flex
-			ml={{ base: 0, md: 60 }}
+			ml={{ base: 0, md: 56 }}
 			px={{ base: 4, md: 4 }}
 			height="20"
 			alignItems="center"
