@@ -76,6 +76,7 @@ const FileUploadModal = ({ onUpload, imageRef }: FileUploadModalProps) => {
 							Close
 						</Button>
 						<Button
+							isLoading={fileUploadProgress > 0}
 							colorScheme="green"
 							onClick={async () => {
 								const uploadTask = uploadBytesResumable(
@@ -105,6 +106,8 @@ const FileUploadModal = ({ onUpload, imageRef }: FileUploadModalProps) => {
 											(downloadURL) => {
 												onUpload(downloadURL);
 												onUploadFileModalClose();
+												setSelectedFile(undefined);
+												setFileUploadProgress(0);
 											}
 										);
 									}

@@ -164,16 +164,18 @@ const ProfilePage = () => {
 									<Text fontSize="medium">{value?.[0].bio}</Text>
 								</HStack>
 							)}
-							<HStack
-								spacing={3}
-								color="gray.700"
-								_dark={{ color: "gray.200" }}
-							>
-								<FiMapPin size={20} />
-								<Text fontSize="medium">
-									{value?.[0].location ?? "Some where in Earth"}
-								</Text>
-							</HStack>
+							{value?.[0].location && (
+								<HStack
+									spacing={3}
+									color="gray.700"
+									_dark={{ color: "gray.200" }}
+								>
+									<FiMapPin size={20} />
+									<Text fontSize="medium">
+										{value?.[0].location ?? "Some where in Earth"}
+									</Text>
+								</HStack>
+							)}
 							<HStack
 								spacing={3}
 								color="gray.700"

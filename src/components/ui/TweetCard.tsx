@@ -11,6 +11,7 @@ import {
 	IconButton,
 	Text,
 } from "@chakra-ui/react";
+import Link from "next/link";
 import { BiChat, BiLike, BiShare } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
@@ -32,7 +33,14 @@ const TweetCard = ({ tweet }: TweetCardProps) => (
 	<Card maxW="3xl" width="full">
 		<CardHeader>
 			<Flex gap={4}>
-				<Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
+				<Flex
+					as={Link}
+					href={`/${tweet.author.username}`}
+					flex="1"
+					gap="4"
+					alignItems="center"
+					flexWrap="wrap"
+				>
 					<Avatar name={tweet.author.name} src={tweet.author.photoURL} />
 
 					<Box>

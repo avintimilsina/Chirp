@@ -8,10 +8,11 @@ import {
 	Textarea,
 	useToast,
 } from "@chakra-ui/react";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { FaRegPaperPlane } from "react-icons/fa";
 import * as Yup from "yup";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 
 const CreateTweet = () => {
@@ -95,7 +96,9 @@ const CreateTweet = () => {
 							type="submit"
 							mt={2}
 							mb={5}
+							px={8}
 							borderRadius="3xl"
+							leftIcon={<FaRegPaperPlane />}
 						>
 							Chirp
 						</Button>
