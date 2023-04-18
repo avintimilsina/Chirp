@@ -56,7 +56,7 @@ const TweetCard = ({ tweet }: TweetCardProps) => (
 				/>
 			</Flex>
 		</CardHeader>
-		<CardBody>
+		<CardBody py="0">
 			<Text>{tweet.content}</Text>
 		</CardBody>
 		{/* <Image

@@ -17,6 +17,7 @@ import {
 	Textarea,
 	VStack,
 } from "@chakra-ui/react";
+import { GithubAuthProvider, GoogleAuthProvider } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { nanoid } from "nanoid";
@@ -24,13 +25,17 @@ import { useRouter } from "next/router";
 import { useAuthState, useUpdateProfile } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { BiCurrentLocation } from "react-icons/bi";
-import { FaGithub, FaGoogle } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import * as Yup from "yup";
 import { auth, db } from "../../../firebase";
+import ServiceLink from "../auth/ServiceLink";
 import FileUploadModal from "../ui/FileUploadModal";
 import PageLoadingSpinner from "../ui/PageLoadingSpinner";
 
 const AccountSetting = () => {
+	const googleProvider = new GoogleAuthProvider();
+	const githubProvider = new GithubAuthProvider();
 	const [currentUser, userLoading, userError] = useAuthState(auth);
 	const [updateProfile, , updateError] = useUpdateProfile(auth);
 	const router = useRouter();
@@ -40,7 +45,6 @@ const AccountSetting = () => {
 			snapshotListenOptions: { includeMetadataChanges: true },
 		}
 	);
-
 	if (loading || userLoading) {
 		return <PageLoadingSpinner />;
 	}
@@ -229,15 +233,18 @@ const AccountSetting = () => {
 						</FieldGroup>
 						<FieldGroup title="Connect accounts">
 							<HStack width="full">
-								<Button variant="outline" leftIcon={<FaGithub />}>
-									Connect Github
-								</Button>
-								<Button
-									variant="outline"
-									leftIcon={<Box as={FaGoogle} color="red.400" />}
-								>
-									Connect Google
-								</Button>
+								<ServiceLink
+									providerId="github.com"
+									serviceProvider={githubProvider}
+									serviceName="GitHub"
+									serviceIcon={FaGithub}
+								/>
+								<ServiceLink
+									providerId="google.com"
+									serviceProvider={googleProvider}
+									serviceName="Google"
+									serviceIcon={FcGoogle}
+								/>
 							</HStack>
 						</FieldGroup>
 					</Stack>
