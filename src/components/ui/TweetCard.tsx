@@ -8,12 +8,18 @@ import {
 	CardHeader,
 	Flex,
 	Heading,
+	Icon,
 	IconButton,
 	Text,
 } from "@chakra-ui/react";
+import { collection, doc, query, setDoc, where } from "firebase/firestore";
 import Link from "next/link";
-import { BiChat, BiLike, BiShare } from "react-icons/bi";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { BiChat, BiShare } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { FiFeather } from "react-icons/fi";
+import { auth, db } from "../../../firebase";
 
 interface TweetCardProps {
 	tweet: {
@@ -29,62 +35,92 @@ interface TweetCardProps {
 		};
 	};
 }
-const TweetCard = ({ tweet }: TweetCardProps) => (
-	<Card maxW="3xl" width="full">
-		<CardHeader>
-			<Flex gap={4}>
-				<Flex
-					as={Link}
-					href={`/${tweet.author.username}`}
-					flex="1"
-					gap="4"
-					alignItems="center"
-					flexWrap="wrap"
-				>
-					<Avatar name={tweet.author.name} src={tweet.author.photoURL} />
+const TweetCard = ({ tweet }: TweetCardProps) => {
+	const [currentUser] = useAuthState(auth);
+	const [value] = useCollectionData(
+		query(collection(db, "feathers"), where("postId", "==", tweet.id)),
+		{
+			snapshotListenOptions: { includeMetadataChanges: true },
+		}
+	);
+	return (
+		<Card maxW="3xl" width="full">
+			<CardHeader>
+				<Flex gap={4}>
+					<Flex
+						as={Link}
+						href={`/${tweet.author.username}`}
+						flex="1"
+						gap="4"
+						alignItems="center"
+						flexWrap="wrap"
+					>
+						<Avatar name={tweet.author.name} src={tweet.author.photoURL} />
 
-					<Box>
-						<Heading size="sm">{tweet.author.name}</Heading>
-						<Text>@{tweet.author.username}</Text>
-					</Box>
+						<Box>
+							<Heading size="sm">{tweet.author.name}</Heading>
+							<Text>@{tweet.author.username}</Text>
+						</Box>
+					</Flex>
+					<IconButton
+						variant="ghost"
+						colorScheme="gray"
+						aria-label="See menu"
+						icon={<BsThreeDotsVertical />}
+					/>
 				</Flex>
-				<IconButton
-					variant="ghost"
-					colorScheme="gray"
-					aria-label="See menu"
-					icon={<BsThreeDotsVertical />}
-				/>
-			</Flex>
-		</CardHeader>
-		<CardBody py="0">
-			<Text>{tweet.content}</Text>
-		</CardBody>
-		{/* <Image
+			</CardHeader>
+			<CardBody py="0">
+				<Text>{tweet.content}</Text>
+			</CardBody>
+			{/* <Image
 				objectFit="cover"
 				src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
 				alt="Chakra UI"
 			/> */}
 
-		<CardFooter
-			justify="space-between"
-			flexWrap="wrap"
-			sx={{
-				"& > button": {
-					minW: "136px",
-				},
-			}}
-		>
-			<Button flex="1" variant="ghost" leftIcon={<BiLike />}>
-				Like
-			</Button>
-			<Button flex="1" variant="ghost" leftIcon={<BiChat />}>
-				Comment
-			</Button>
-			<Button flex="1" variant="ghost" leftIcon={<BiShare />}>
-				Share
-			</Button>
-		</CardFooter>
-	</Card>
-);
-
+			<CardFooter
+				justify="space-between"
+				flexWrap="wrap"
+				sx={{
+					"& > button": {
+						minW: "136px",
+					},
+				}}
+			>
+				<Button
+					flex="1"
+					variant="ghost"
+					leftIcon={
+						<Icon
+							as={FiFeather}
+							color={
+								value?.map((item) => item.userId)?.includes(currentUser?.uid)
+									? "blue.500"
+									: "gray.500"
+							}
+						/>
+					}
+					onClick={async () => {
+						await setDoc(
+							doc(db, "feathers", `${tweet.id}-${currentUser?.uid}`),
+							{
+								postId: tweet.id,
+								userId: currentUser?.uid,
+							}
+						);
+					}}
+				>
+					{value?.length ? value.length : 0}
+				</Button>
+				<Button flex="1" variant="ghost" leftIcon={<BiChat />}>
+					Comment
+				</Button>
+				<Button flex="1" variant="ghost" leftIcon={<BiShare />}>
+					Share
+				</Button>
+			</CardFooter>
+		</Card>
+	);
+};
 export default TweetCard;

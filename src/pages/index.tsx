@@ -2,7 +2,15 @@ import CreateTweet from "@/components/ui/CreateTweet";
 import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
 import TweetCard from "@/components/ui/TweetCard";
 import { Box, VStack } from "@chakra-ui/react";
-import { collection, orderBy, query } from "firebase/firestore";
+import {
+	DocumentData,
+	FirestoreDataConverter,
+	QueryDocumentSnapshot,
+	SnapshotOptions,
+	collection,
+	orderBy,
+	query,
+} from "firebase/firestore";
 import { NextPage } from "next";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
@@ -19,13 +27,35 @@ export interface Tweet {
 		username: string;
 	};
 }
+const postConverter: FirestoreDataConverter<Tweet> = {
+	toFirestore(): DocumentData {
+		return {};
+	},
+	fromFirestore(
+		snapshot: QueryDocumentSnapshot,
+		options: SnapshotOptions
+	): Tweet {
+		const data = snapshot.data(options);
+		return {
+			id: snapshot.id,
+			images: data.images,
+			content: data.content,
+			createdAt: data.createdAt,
+			author: data.author,
+		};
+	},
+};
 const HomePage: NextPage = () => {
 	const [values, loading, error] = useCollectionData(
-		query(collection(db, "chirps"), orderBy("createdAt", "desc")),
+		query(
+			collection(db, "chirps").withConverter(postConverter),
+			orderBy("createdAt", "desc")
+		),
 		{
 			snapshotListenOptions: { includeMetadataChanges: true },
 		}
 	);
+
 	if (loading) {
 		return <PageLoadingSpinner />;
 	}
