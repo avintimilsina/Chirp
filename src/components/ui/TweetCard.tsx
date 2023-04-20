@@ -12,7 +12,14 @@ import {
 	IconButton,
 	Text,
 } from "@chakra-ui/react";
-import { collection, doc, query, setDoc, where } from "firebase/firestore";
+import {
+	collection,
+	deleteDoc,
+	doc,
+	query,
+	setDoc,
+	where,
+} from "firebase/firestore";
 import Link from "next/link";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -43,6 +50,7 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 			snapshotListenOptions: { includeMetadataChanges: true },
 		}
 	);
+	const userWhoLiked = value?.map((item) => item.userId);
 	return (
 		<Card maxW="3xl" width="full">
 			<CardHeader>
@@ -95,20 +103,26 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 						<Icon
 							as={FiFeather}
 							color={
-								value?.map((item) => item.userId)?.includes(currentUser?.uid)
+								userWhoLiked?.includes(currentUser?.uid)
 									? "blue.500"
 									: "gray.500"
 							}
 						/>
 					}
 					onClick={async () => {
-						await setDoc(
-							doc(db, "feathers", `${tweet.id}-${currentUser?.uid}`),
-							{
-								postId: tweet.id,
-								userId: currentUser?.uid,
-							}
-						);
+						if (userWhoLiked?.includes(currentUser?.uid)) {
+							await deleteDoc(
+								doc(db, "feathers", `${tweet.id}-${currentUser?.uid}`)
+							);
+						} else {
+							await setDoc(
+								doc(db, "feathers", `${tweet.id}-${currentUser?.uid}`),
+								{
+									postId: tweet.id,
+									userId: currentUser?.uid,
+								}
+							);
+						}
 					}}
 				>
 					{value?.length ? value.length : 0}
