@@ -59,7 +59,11 @@ const LinkItems: Array<LinkItemProps> = [
 const SideBar = ({ children }: { children: ReactNode }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	return (
-		<HStack minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+		<HStack
+			minH="100vh"
+			bg={useColorModeValue("gray.100", "gray.900")}
+			alignItems="flex-start"
+		>
 			<SidebarContent
 				onClose={() => onClose}
 				display={{ base: "none", md: "flex" }}

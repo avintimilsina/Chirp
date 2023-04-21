@@ -22,6 +22,7 @@ import {
 	where,
 } from "firebase/firestore";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { BiChat, BiShare } from "react-icons/bi";
@@ -45,6 +46,7 @@ interface TweetCardProps {
 }
 const TweetCard = ({ tweet }: TweetCardProps) => {
 	const [currentUser] = useAuthState(auth);
+	const router = useRouter();
 	const [value, valueLoading] = useCollectionData(
 		query(collection(db, "feathers"), where("postId", "==", tweet.id)),
 		{
@@ -79,8 +81,10 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 					/>
 				</Flex>
 			</CardHeader>
-			<CardBody py="0">
-				<Text>{tweet.content}</Text>
+			<CardBody py="0" as={Link} legacyBehavior href={`/post/${tweet.id}`}>
+				<Text px="6" mb="4">
+					{tweet.content}
+				</Text>
 			</CardBody>
 			{/* <Image
 				objectFit="cover"
@@ -134,7 +138,14 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 						{value?.length ? value.length : 0}
 					</Button>
 				)}
-				<Button flex="1" variant="ghost" leftIcon={<BiChat />}>
+				<Button
+					flex="1"
+					variant="ghost"
+					leftIcon={<BiChat />}
+					onClick={() => {
+						router.push(`/post/${tweet.id}`);
+					}}
+				>
 					Comment
 				</Button>
 				<Button flex="1" variant="ghost" leftIcon={<BiShare />}>
