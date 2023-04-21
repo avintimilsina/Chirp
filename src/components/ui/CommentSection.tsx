@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js";
 import {
 	Avatar,
 	Box,
@@ -107,7 +108,13 @@ interface CommentProps {
 }
 const Comment = ({ comment }: CommentProps) => (
 	<HStack alignItems="flex-start">
-		<Avatar name="Avin" src={comment.author.photoURL} size="sm" />
+		<Avatar
+			name="Avin"
+			src={comment.author.photoURL}
+			size="sm"
+			as={Link}
+			href={`/${comment.author.username}`}
+		/>
 		<Box>
 			<Stack
 				divider={<Text>·</Text>}
@@ -115,10 +122,20 @@ const Comment = ({ comment }: CommentProps) => (
 				alignItems="center"
 				gap="2"
 			>
-				<Heading size="sm" textTransform="uppercase">
+				<Heading
+					size="sm"
+					textTransform="uppercase"
+					as={Link}
+					href={`/${comment.author.username}`}
+				>
 					{comment.author.name}
 				</Heading>
-				<Text fontSize="sm" color="blackAlpha.700">
+				<Text
+					fontSize="sm"
+					color="blackAlpha.700"
+					as={Link}
+					href={`/${comment.author.username}`}
+				>
 					@{comment.author.username}
 				</Text>
 				<Text fontSize="sm" color="blackAlpha.700">

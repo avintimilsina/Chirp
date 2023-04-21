@@ -19,14 +19,17 @@ import {
 } from "@chakra-ui/react";
 import {
 	collection,
+	collectionGroup,
 	deleteDoc,
 	doc,
+	getCountFromServer,
 	query,
 	setDoc,
 	where,
 } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
 	useCollectionData,
@@ -38,6 +41,7 @@ import { FiFeather } from "react-icons/fi";
 import { auth, db } from "../../../firebase";
 
 const PostPage = () => {
+	const [commentCount, setCommentCount] = useState(0);
 	const router = useRouter();
 	const { id } = router.query;
 	const [currentUser] = useAuthState(auth);
@@ -57,6 +61,19 @@ const PostPage = () => {
 		}
 	);
 	const userWhoLiked = feathers?.map((item) => item.userId);
+	useEffect(() => {
+		const callThisNow = async () => {
+			const snapshot = await getCountFromServer(
+				query(
+					collectionGroup(db, "comments"),
+					where("postId", "==", (id as string) ?? "-")
+				)
+			);
+			setCommentCount(snapshot.data().count);
+		};
+		callThisNow();
+	}, [id]);
+
 	if (chirpLoading) {
 		return <PageLoadingSpinner />;
 	}
@@ -94,13 +111,8 @@ const PostPage = () => {
 				</CardHeader>
 				<CardBody py="0">
 					<Text>{value?.content}</Text>
+					{/* <Text>{value?.createdAt.seconds * 1000}</Text> */}
 				</CardBody>
-				{/* <Image
-				objectFit="cover"
-				src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-				alt="Chakra UI"
-			/> */}
-
 				<CardFooter
 					justify="space-between"
 					flexWrap="wrap"
@@ -148,7 +160,7 @@ const PostPage = () => {
 						</Button>
 					)}
 					<Button flex="1" variant="ghost" leftIcon={<BiChat />}>
-						Comment
+						{commentCount}
 					</Button>
 					<Button flex="1" variant="ghost" leftIcon={<BiShare />}>
 						Share

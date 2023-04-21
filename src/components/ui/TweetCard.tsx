@@ -15,14 +15,17 @@ import {
 } from "@chakra-ui/react";
 import {
 	collection,
+	collectionGroup,
 	deleteDoc,
 	doc,
+	getCountFromServer,
 	query,
 	setDoc,
 	where,
 } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { BiChat, BiShare } from "react-icons/bi";
@@ -46,14 +49,31 @@ interface TweetCardProps {
 }
 const TweetCard = ({ tweet }: TweetCardProps) => {
 	const [currentUser] = useAuthState(auth);
+	const [commentCount, setCommentCount] = useState(0);
 	const router = useRouter();
 	const [value, valueLoading] = useCollectionData(
-		query(collection(db, "feathers"), where("postId", "==", tweet.id)),
+		query(
+			collection(db, "feathers"),
+			where("postId", "==", (tweet.id as string) ?? "-")
+		),
 		{
 			snapshotListenOptions: { includeMetadataChanges: true },
 		}
 	);
 	const userWhoLiked = value?.map((item) => item.userId);
+	useEffect(() => {
+		const callThisNow = async () => {
+			const snapshot = await getCountFromServer(
+				query(
+					collectionGroup(db, "comments"),
+					where("postId", "==", (tweet.id as string) ?? "-")
+				)
+			);
+			setCommentCount(snapshot.data().count);
+		};
+		callThisNow();
+	}, [tweet.id]);
+
 	return (
 		<Card maxW="3xl" width="full">
 			<CardHeader>
@@ -146,7 +166,7 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 						router.push(`/post/${tweet.id}`);
 					}}
 				>
-					Comment
+					{commentCount}
 				</Button>
 				<Button flex="1" variant="ghost" leftIcon={<BiShare />}>
 					Share
