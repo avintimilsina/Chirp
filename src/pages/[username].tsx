@@ -14,7 +14,15 @@ import {
 import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
 import TweetCard from "@/components/ui/TweetCard";
 import dayjs from "dayjs";
-import { collection, query, where } from "firebase/firestore";
+import {
+	DocumentData,
+	FirestoreDataConverter,
+	QueryDocumentSnapshot,
+	SnapshotOptions,
+	collection,
+	query,
+	where,
+} from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -24,25 +32,45 @@ import { GoCalendar } from "react-icons/go";
 import { Tweet } from ".";
 import { auth, db } from "../../firebase";
 
+const postConverter: FirestoreDataConverter<Tweet> = {
+	toFirestore(): DocumentData {
+		return {};
+	},
+	fromFirestore(
+		snapshot: QueryDocumentSnapshot,
+		options: SnapshotOptions
+	): Tweet {
+		const data = snapshot.data(options);
+		return {
+			id: snapshot.id,
+			images: data.images,
+			content: data.content,
+			createdAt: data.createdAt,
+			author: data.author,
+		};
+	},
+};
+
 const ProfilePage = () => {
 	const router = useRouter();
 	const { username } = router.query;
 	const [, userloading] = useAuthState(auth);
 	const [value] = useCollectionData(
-		query(collection(db, "users"), where("username", "==", username)),
+		query(collection(db, "users"), where("username", "==", username ?? "-")),
 		{
 			snapshotListenOptions: { includeMetadataChanges: true },
 		}
 	);
 	const [values, loading, error] = useCollectionData(
 		query(
-			collection(db, "chirps"),
+			collection(db, "chirps").withConverter(postConverter),
 			where("author.userId", "==", value?.[0].uid ?? "-")
 		),
 		{
 			snapshotListenOptions: { includeMetadataChanges: true },
 		}
 	);
+
 	if (loading || userloading) {
 		return <PageLoadingSpinner />;
 	}
