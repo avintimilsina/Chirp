@@ -90,7 +90,7 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 
 						<Box>
 							<Heading size="sm">{tweet.author.name}</Heading>
-							<Text>@{tweet.author.username}</Text>
+							<Text color="blackAlpha.700">@{tweet.author.username}</Text>
 						</Box>
 					</Flex>
 					<IconButton
@@ -120,6 +120,8 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 						minW: "136px",
 					},
 				}}
+				pt="0"
+				p="4"
 			>
 				{valueLoading ? (
 					<Button flex="1" variant="ghost">

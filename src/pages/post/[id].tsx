@@ -17,6 +17,7 @@ import {
 	Text,
 	VStack,
 } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import {
 	collection,
 	collectionGroup,
@@ -98,7 +99,7 @@ const PostPage = () => {
 
 							<Box>
 								<Heading size="sm">{value?.author.name}</Heading>
-								<Text>@{value?.author.username}</Text>
+								<Text color="blackAlpha.700">@{value?.author.username}</Text>
 							</Box>
 						</Flex>
 						<IconButton
@@ -110,8 +111,16 @@ const PostPage = () => {
 					</Flex>
 				</CardHeader>
 				<CardBody py="0">
-					<Text>{value?.content}</Text>
-					{/* <Text>{value?.createdAt.seconds * 1000}</Text> */}
+					<Text pb="3" fontSize="lg">
+						{value?.content}
+					</Text>
+
+					<Text fontSize="smaller" color="blackAlpha.700" p="0">
+						{value?.createdAt &&
+							dayjs(value.createdAt.seconds * 1000).format(
+								"HH:mm A · MMM D, YYYY"
+							)}
+					</Text>
 				</CardBody>
 				<CardFooter
 					justify="space-between"
@@ -121,6 +130,8 @@ const PostPage = () => {
 							minW: "136px",
 						},
 					}}
+					pt="2"
+					p="4"
 				>
 					{featherLoading ? (
 						<Button flex="1" variant="ghost">
