@@ -2,14 +2,13 @@ import SideBar from "@/components/ui/SideBar";
 import theme from "@/config/theme";
 import "@/styles/globals.css";
 import { ChakraProvider } from "@chakra-ui/react";
+import { doc, setDoc } from "firebase/firestore";
 import type { AppProps } from "next/app";
 import { Router, useRouter } from "next/router";
 import NProgress from "nprogress";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useEffect } from "react";
-import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
-import { doc, setDoc } from "firebase/firestore";
 import "nprogress/nprogress.css";
+import { useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../firebase";
 
 Router.events.on("routeChangeStart", () => NProgress.start());
@@ -17,7 +16,7 @@ Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
 const App = ({ Component, pageProps }: AppProps) => {
-	const [currentUser, loading] = useAuthState(auth);
+	const [currentUser] = useAuthState(auth);
 	const router = useRouter();
 	useEffect(() => {
 		const setUser = async () => {
@@ -43,7 +42,6 @@ const App = ({ Component, pageProps }: AppProps) => {
 		setUser();
 	}, [currentUser]);
 
-	if (loading) return <PageLoadingSpinner />;
 	return (
 		<ChakraProvider theme={theme}>
 			{router.pathname.startsWith("/auth") ? (

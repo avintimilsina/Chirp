@@ -10,6 +10,7 @@ import {
 	Heading,
 	Icon,
 	IconButton,
+	Spinner,
 	Text,
 } from "@chakra-ui/react";
 import {
@@ -44,7 +45,7 @@ interface TweetCardProps {
 }
 const TweetCard = ({ tweet }: TweetCardProps) => {
 	const [currentUser] = useAuthState(auth);
-	const [value] = useCollectionData(
+	const [value, valueLoading] = useCollectionData(
 		query(collection(db, "feathers"), where("postId", "==", tweet.id)),
 		{
 			snapshotListenOptions: { includeMetadataChanges: true },
@@ -96,37 +97,43 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 					},
 				}}
 			>
-				<Button
-					flex="1"
-					variant="ghost"
-					leftIcon={
-						<Icon
-							as={FiFeather}
-							color={
-								userWhoLiked?.includes(currentUser?.uid)
-									? "blue.500"
-									: "gray.500"
-							}
-						/>
-					}
-					onClick={async () => {
-						if (userWhoLiked?.includes(currentUser?.uid)) {
-							await deleteDoc(
-								doc(db, "feathers", `${tweet.id}-${currentUser?.uid}`)
-							);
-						} else {
-							await setDoc(
-								doc(db, "feathers", `${tweet.id}-${currentUser?.uid}`),
-								{
-									postId: tweet.id,
-									userId: currentUser?.uid,
+				{valueLoading ? (
+					<Button flex="1" variant="ghost">
+						<Spinner size="sm" />
+					</Button>
+				) : (
+					<Button
+						flex="1"
+						variant="ghost"
+						leftIcon={
+							<Icon
+								as={FiFeather}
+								color={
+									userWhoLiked?.includes(currentUser?.uid)
+										? "blue.500"
+										: "gray.500"
 								}
-							);
+							/>
 						}
-					}}
-				>
-					{value?.length ? value.length : 0}
-				</Button>
+						onClick={async () => {
+							if (userWhoLiked?.includes(currentUser?.uid)) {
+								await deleteDoc(
+									doc(db, "feathers", `${tweet.id}-${currentUser?.uid}`)
+								);
+							} else {
+								await setDoc(
+									doc(db, "feathers", `${tweet.id}-${currentUser?.uid}`),
+									{
+										postId: tweet.id,
+										userId: currentUser?.uid,
+									}
+								);
+							}
+						}}
+					>
+						{value?.length ? value.length : 0}
+					</Button>
+				)}
 				<Button flex="1" variant="ghost" leftIcon={<BiChat />}>
 					Comment
 				</Button>
