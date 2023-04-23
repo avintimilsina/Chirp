@@ -45,6 +45,7 @@ import { MdOutlineManageAccounts } from "react-icons/md";
 import { auth } from "../../../firebase";
 import Logo from "../logo";
 import CreateTweet from "./CreateTweet";
+import Chat from "../chat/Chat";
 
 interface LinkItemProps {
 	name: string;
@@ -83,9 +84,12 @@ const SideBar = ({ children }: { children: ReactNode }) => {
 			</Drawer>
 			<Box width="full">
 				<MobileNav onOpen={onOpen} />
-				<Box ml={{ base: 0, md: 60 }} p="4">
-					{children}
-				</Box>
+				<HStack alignItems="flex-start">
+					<Box ml={{ base: 0, md: 60 }} p="4" flexGrow="1">
+						{children}
+					</Box>
+					<Chat />
+				</HStack>
 			</Box>
 		</HStack>
 	);
