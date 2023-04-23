@@ -1,11 +1,19 @@
 import { Flex, Text } from "@chakra-ui/react";
-import { useRef, useEffect } from "react";
+import { User } from "firebase/auth";
+import { DocumentReference } from "firebase/firestore";
+import { useEffect, useRef } from "react";
 
-interface MessageProps {
+export interface MessageProps {
 	messages: {
-		from: string;
+		createdAt: { seconds: number; nanoseconds: number };
+		from: DocumentReference;
+		fromId: string;
+		relation: string;
 		text: string;
+		to: DocumentReference;
+		toId: string;
 	}[];
+	currentUser: User | null | undefined;
 }
 
 const AlwaysScrollToBottom = () => {
@@ -13,17 +21,25 @@ const AlwaysScrollToBottom = () => {
 	useEffect(() => (elementRef as any)?.current?.scrollIntoView());
 	return <div ref={elementRef as any} />;
 };
-const Messages = ({ messages }: MessageProps) => (
-	<Flex w="100%" h="80%" overflowY="scroll" flexDirection="column" p="3">
+const Messages = ({ messages, currentUser }: MessageProps) => (
+	<Flex
+		w="100%"
+		h="80%"
+		overflowY="scroll"
+		flexDirection="column-reverse"
+		p="3"
+	>
 		{messages.map((message) => (
 			<Flex
 				key={message.text}
 				w="100%"
-				justify={message.from === "me" ? "flex-start" : "flex-end"}
+				justify={
+					message.fromId !== currentUser?.uid ? "flex-start" : "flex-end"
+				}
 			>
 				<Flex
-					bg={message.from === "me" ? "blue.500" : "gray.100"}
-					color={message.from === "me" ? "white" : "black"}
+					bg={message.fromId === currentUser?.uid ? "blue.500" : "gray.100"}
+					color={message.fromId === currentUser?.uid ? "white" : "black"}
 					minW="100px"
 					maxW="350px"
 					my="1"
@@ -32,7 +48,7 @@ const Messages = ({ messages }: MessageProps) => (
 					direction="column"
 					borderRadius="12"
 				>
-					<Text fontWeight="bold">{message.from}</Text>
+					<Text fontWeight="bold">{message.fromId}</Text>
 					<Text>{message.text}</Text>
 				</Flex>
 			</Flex>

@@ -43,9 +43,9 @@ import { FaRegPaperPlane } from "react-icons/fa";
 import { FiHome, FiMenu } from "react-icons/fi";
 import { MdOutlineManageAccounts } from "react-icons/md";
 import { auth } from "../../../firebase";
+import ChatBox from "../chat/ChatBox";
 import Logo from "../logo";
 import CreateTweet from "./CreateTweet";
-import Chat from "../chat/Chat";
 
 interface LinkItemProps {
 	name: string;
@@ -88,7 +88,11 @@ const SideBar = ({ children }: { children: ReactNode }) => {
 					<Box ml={{ base: 0, md: 60 }} p="4" flexGrow="1">
 						{children}
 					</Box>
-					<Chat />
+					<ChatBox />
+					{/* <VStack>
+
+					<Chat reciever="hyMaHGxcBZa6UdJCxe4iK6TvcK33" />
+					</VStack> */}
 				</HStack>
 			</Box>
 		</HStack>
