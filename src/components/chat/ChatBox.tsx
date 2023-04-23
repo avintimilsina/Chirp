@@ -6,11 +6,6 @@ import { db } from "../../../firebase";
 import Chat from "./Chat";
 import ChatList from "./ChatList";
 
-// const AlwaysScrollToBottom = () => {
-// 	const elementRef = useRef();
-// 	useEffect(() => (elementRef as any)?.current?.scrollIntoView());
-// 	return <div ref={elementRef as any} />;
-// };
 const ChatBox = () => {
 	const router = useRouter();
 	const [values, loading, error] = useCollectionData(
@@ -51,7 +46,6 @@ const ChatBox = () => {
 					))}
 				</Box>
 			</VStack>
-			{/* <AlwaysScrollToBottom /> */}
 		</Flex>
 	);
 };

@@ -42,16 +42,13 @@ const Messages = ({ messages, currentUser, recieverValue }: MessageProps) => (
 					message.fromId !== currentUser?.uid ? "flex-start" : "flex-end"
 				}
 			>
-				<Avatar
-					mr="1"
-					src={
-						message.fromId === currentUser?.uid
-							? //! remove currentUser?.photo to see the other user's avatar
-							  currentUser.photoURL ?? "https://picsum.photos/200/300"
-							: recieverValue?.photoURL ?? "https://picsum.photos/200/300"
-					}
-					size="sm"
-				/>
+				{message.fromId !== currentUser?.uid && (
+					<Avatar
+						mr="1"
+						src={recieverValue?.photoURL ?? "https://picsum.photos/200/300"}
+						size="sm"
+					/>
+				)}
 				<Flex
 					bg={message.fromId === currentUser?.uid ? "blue.500" : "gray.100"}
 					color={message.fromId === currentUser?.uid ? "white" : "black"}
