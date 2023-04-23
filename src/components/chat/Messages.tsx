@@ -68,7 +68,9 @@ const Messages = ({ messages, currentUser, recieverValue }: MessageProps) => (
 							? currentUser.displayName
 							: recieverValue.displayName}
 					</Text> */}
-					<Text>{message.text}</Text>
+					<Text wordBreak={message.text.length > 5 ? "break-all" : "normal"}>
+						{message.text}
+					</Text>
 				</Flex>
 			</Flex>
 		))}

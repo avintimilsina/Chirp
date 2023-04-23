@@ -83,7 +83,7 @@ const Chat = ({ reciever }: ChatProps) => {
 			right="0"
 			borderLeftRadius="xl"
 		>
-			<Flex w="100%" flexDir="column">
+			<Flex w="100%" h="90%" flexDir="column">
 				<Flex w="100%">
 					<Flex flexDirection="row" mx="3" justify="center" alignItems="center">
 						<Avatar
