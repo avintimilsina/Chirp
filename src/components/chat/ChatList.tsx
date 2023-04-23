@@ -1,8 +1,9 @@
 import {
 	Avatar,
 	Box,
-	Card,
 	CardBody,
+	Divider,
+	Flex,
 	HStack,
 	Heading,
 	Stack,
@@ -19,10 +20,9 @@ interface ChatListProps {
 const ChatList = ({ photoURL, displayName, uid }: ChatListProps) => {
 	const router = useRouter();
 	return (
-		<Card
+		<Flex
 			direction={{ base: "column", sm: "row" }}
-			variant="outline"
-			maxW="xl"
+			maxW="sm"
 			onClick={() => {
 				router.push(`?chatting=${uid}`);
 			}}
@@ -31,19 +31,19 @@ const ChatList = ({ photoURL, displayName, uid }: ChatListProps) => {
 				<CardBody>
 					<HStack>
 						<Avatar
-							objectFit="cover"
 							maxW={{ base: "100%", sm: "200px" }}
 							src={photoURL ?? "https://picsum.photos/200/300"}
 						/>
 						<Box>
 							<Heading size="md">{displayName}</Heading>
 
-							<Text fontSize="sm">{uid}</Text>
+							<Text fontSize="xs">{uid}</Text>
 						</Box>
 					</HStack>
 				</CardBody>
+				<Divider />
 			</Stack>
-		</Card>
+		</Flex>
 	);
 };
 

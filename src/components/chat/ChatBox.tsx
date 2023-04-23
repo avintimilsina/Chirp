@@ -1,4 +1,4 @@
-import { VStack } from "@chakra-ui/react";
+import { Box, Card, Flex, Spinner, VStack } from "@chakra-ui/react";
 import { collection, query } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -6,6 +6,11 @@ import { db } from "../../../firebase";
 import Chat from "./Chat";
 import ChatList from "./ChatList";
 
+// const AlwaysScrollToBottom = () => {
+// 	const elementRef = useRef();
+// 	useEffect(() => (elementRef as any)?.current?.scrollIntoView());
+// 	return <div ref={elementRef as any} />;
+// };
 const ChatBox = () => {
 	const router = useRouter();
 	const [values, loading, error] = useCollectionData(
@@ -18,21 +23,36 @@ const ChatBox = () => {
 		return <Chat reciever={router.query.chatting as string} />;
 	}
 	if (loading) {
-		return <div>Loading...</div>;
+		return <Spinner />;
 	}
 	if (error) {
-		return <div>Error...</div>;
+		return <Spinner />;
 	}
 	return (
-		<VStack>
-			{values?.map((value) => (
-				<ChatList
-					displayName={value.displayName}
-					photoURL={value.photoURL}
-					uid={value.uid}
-				/>
-			))}
-		</VStack>
+		<Flex
+			as={Card}
+			p="2"
+			h="100vh"
+			justify="center"
+			align="center"
+			position="fixed"
+			top="0"
+			right="0"
+			borderLeftRadius="xl"
+		>
+			<VStack gap="1">
+				<Box>
+					{values?.map((value) => (
+						<ChatList
+							displayName={value.displayName}
+							photoURL={value.photoURL}
+							uid={value.uid}
+						/>
+					))}
+				</Box>
+			</VStack>
+			{/* <AlwaysScrollToBottom /> */}
+		</Flex>
 	);
 };
 

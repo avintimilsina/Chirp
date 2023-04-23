@@ -1,4 +1,4 @@
-import { Card, Flex, Text } from "@chakra-ui/react";
+import { Avatar, Card, Flex, Spinner, Text } from "@chakra-ui/react";
 import {
 	addDoc,
 	collection,
@@ -60,12 +60,15 @@ const Chat = ({ reciever }: ChatProps) => {
 				relation: relationGenerator(currentUser?.uid, reciever),
 			});
 		}
+		if (inputMessage) {
+			setInputMessage("");
+		}
 	};
 	if (loading || recieverLoading) {
-		return <div>Loading</div>;
+		return <Spinner />;
 	}
 	if (error || recieverError) {
-		return <div>Error</div>;
+		return <Spinner />;
 	}
 
 	return (
@@ -80,16 +83,27 @@ const Chat = ({ reciever }: ChatProps) => {
 			right="0"
 			borderLeftRadius="xl"
 		>
-			<Flex w="100%" h="90%" flexDir="column">
+			<Flex w="100%" flexDir="column">
 				<Flex w="100%">
-					<Flex flexDirection="column" mx="5" justify="center">
+					<Flex flexDirection="row" mx="3" justify="center" alignItems="center">
+						<Avatar
+							mr="2"
+							src={recieverValue?.photoURL ?? "https://picsum.photos/200/300"}
+						/>
 						<Text fontSize="lg" fontWeight="bold">
 							{recieverValue?.displayName}
 						</Text>
 					</Flex>
 				</Flex>
 				<Divider />
-				<Messages messages={values as any} currentUser={currentUser} />
+				<Messages
+					messages={values as any}
+					currentUser={currentUser}
+					recieverValue={{
+						photoURL: recieverValue?.photoURL,
+						displayName: recieverValue?.displayName,
+					}}
+				/>
 				<Divider />
 				<Footer
 					inputMessage={inputMessage}
