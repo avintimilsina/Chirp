@@ -134,10 +134,9 @@ const Comment = ({ comment }: CommentProps) => (
 
 				<Heading
 					size="sm"
-					textTransform="uppercase"
 					as={Link}
 					href={`/${comment.author.username}`}
-					style={{ textDecoration: "none" }}
+					_hover={{ textDecoration: "none" }}
 				>
 					{comment.author.name}
 				</Heading>
@@ -146,7 +145,7 @@ const Comment = ({ comment }: CommentProps) => (
 					color="blackAlpha.700"
 					as={Link}
 					href={`/${comment.author.username}`}
-					style={{ textDecoration: "none" }}
+					_hover={{ textDecoration: "none" }}
 				>
 					@{comment.author.username}
 				</Text>

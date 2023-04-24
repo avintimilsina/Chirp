@@ -129,7 +129,7 @@ const Chat = ({ reciever }: ChatProps) => {
 				/>
 				<Divider />
 
-				{/* Footer is the chat input field where the message is typed and submitted using the handleSendMessage component adn the value of the input message is updated using the setInputMessage state */}
+				{/* Footer is the chat input field where the message is typed and submitted using the handleSendMessage component and the value of the input message is updated using the setInputMessage state */}
 				<Footer
 					inputMessage={inputMessage}
 					setInputMessage={setInputMessage}

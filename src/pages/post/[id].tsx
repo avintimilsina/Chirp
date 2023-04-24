@@ -16,6 +16,7 @@ import {
 	Spinner,
 	Text,
 	VStack,
+	useClipboard,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import {
@@ -52,6 +53,7 @@ const PostPage = () => {
 			snapshotListenOptions: { includeMetadataChanges: true },
 		}
 	);
+	const { onCopy, setValue: setCopiedURL, hasCopied } = useClipboard("");
 	const [feathers, featherLoading] = useCollectionData(
 		query(
 			collection(db, "feathers"),
@@ -71,9 +73,10 @@ const PostPage = () => {
 				)
 			);
 			setCommentCount(snapshot.data().count);
+			setCopiedURL(`https://chirpyy.vercel.app/post/${id}`);
 		};
 		callThisNow();
-	}, [id]);
+	}, [id, setCopiedURL]);
 
 	if (chirpLoading) {
 		return <PageLoadingSpinner />;
@@ -173,8 +176,15 @@ const PostPage = () => {
 					<Button flex="1" variant="ghost" leftIcon={<BiChat />}>
 						{commentCount}
 					</Button>
-					<Button flex="1" variant="ghost" leftIcon={<BiShare />}>
-						Share
+					<Button
+						flex="1"
+						variant="ghost"
+						leftIcon={<BiShare />}
+						onClick={() => {
+							onCopy();
+						}}
+					>
+						{hasCopied ? "Copied!" : "Share"}
 					</Button>
 				</CardFooter>
 			</Card>

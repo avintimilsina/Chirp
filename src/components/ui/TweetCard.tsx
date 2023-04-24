@@ -12,6 +12,7 @@ import {
 	IconButton,
 	Spinner,
 	Text,
+	useClipboard,
 } from "@chakra-ui/react";
 import {
 	collection,
@@ -49,6 +50,7 @@ interface TweetCardProps {
 	};
 }
 const TweetCard = ({ tweet }: TweetCardProps) => {
+	const { onCopy, setValue: setCopiedURL, hasCopied } = useClipboard("");
 	const [currentUser] = useAuthState(auth);
 	// Counts the number of comments on a chirp.
 	const [commentCount, setCommentCount] = useState(0);
@@ -76,9 +78,10 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 				)
 			);
 			setCommentCount(snapshot.data().count);
+			setCopiedURL(`https://chirpyy.vercel.app/post/${tweet.id}`);
 		};
 		callThisNow();
-	}, [tweet.id]);
+	}, [setCopiedURL, tweet.id]);
 
 	return (
 		<Card maxW="3xl" width="full">
@@ -181,8 +184,16 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 				>
 					{commentCount}
 				</Button>
-				<Button flex="1" variant="ghost" leftIcon={<BiShare />}>
-					Share
+
+				<Button
+					flex="1"
+					variant="ghost"
+					leftIcon={<BiShare />}
+					onClick={() => {
+						onCopy();
+					}}
+				>
+					{hasCopied ? "Copied!" : "Share"}
 				</Button>
 			</CardFooter>
 		</Card>

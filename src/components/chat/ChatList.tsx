@@ -27,7 +27,11 @@ const ChatList = ({ photoURL, displayName, uid }: ChatListProps) => {
 			direction={{ base: "column", sm: "row" }}
 			maxW="sm"
 			onClick={() => {
-				router.push(`?chatting=${uid}`);
+				// router.push(`?chatting=${uid}`);
+				router.push({
+					pathname: "",
+					query: { chatting: uid },
+				});
 			}}
 		>
 			{/* Displaying information about all the users present in the database with displayName, photoURL and user id */}
