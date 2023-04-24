@@ -63,7 +63,10 @@ const CreateTweet = () => {
 						<Avatar
 							size="lg"
 							name={currentUser?.displayName ?? "User"}
-							src={currentUser?.photoURL ?? "https://picsum.photos/200/300"}
+							src={
+								currentUser?.photoURL ??
+								"https://api.dicebear.com/6.x/thumbs/svg?seed=Missy"
+							}
 						/>
 						<Field name="content">
 							{({ field, form }: any) => (

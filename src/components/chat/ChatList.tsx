@@ -34,10 +34,7 @@ const ChatList = ({ photoURL, displayName, uid }: ChatListProps) => {
 			<Stack>
 				<CardBody>
 					<HStack>
-						<Avatar
-							maxW={{ base: "100%", sm: "200px" }}
-							src={photoURL ?? "https://picsum.photos/200/300"}
-						/>
+						<Avatar maxW={{ base: "100%", sm: "200px" }} src={photoURL} />
 						<Box>
 							<Heading size="md">{displayName}</Heading>
 
