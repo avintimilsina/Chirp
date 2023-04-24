@@ -13,17 +13,26 @@ import { FcGoogle } from "react-icons/fc";
 import { auth } from "../../../firebase";
 import LoginForm from "./LoginForm";
 
-const LoginPage = () => {
+interface LoginPageProps {
+	isInModal?: boolean;
+}
+const LoginPage = ({ isInModal }: LoginPageProps) => {
 	const [signInWithGoogle] = useSignInWithGoogle(auth);
 
 	return (
 		<Flex
-			minH="100vh"
+			minH={isInModal ? undefined : "100vh"}
 			align="center"
 			justify="center"
 			bg={useColorModeValue("gray.50", "gray.800")}
 		>
-			<Stack spacing={8} mx="auto" maxW="lg" py={12} px={6}>
+			<Stack
+				spacing={isInModal ? 4 : 8}
+				mx="auto"
+				maxW="lg"
+				py={isInModal ? 6 : 12}
+				px={6}
+			>
 				<Stack align="center">
 					<Heading fontSize="4xl">Sign in to your account</Heading>
 				</Stack>
@@ -60,5 +69,7 @@ const LoginPage = () => {
 		</Flex>
 	);
 };
-
+LoginPage.defaultProps = {
+	isInModal: false,
+};
 export default LoginPage;

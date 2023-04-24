@@ -5,6 +5,7 @@ import {
 	ModalBody,
 	ModalContent,
 	ModalOverlay,
+	useColorModeValue,
 	useDisclosure,
 } from "@chakra-ui/react";
 import { FaRegPaperPlane } from "react-icons/fa";
@@ -27,10 +28,10 @@ const LoginRedirect = () => {
 			</Button>
 			<Modal isOpen={isOpen} onClose={modalOnClose} size="lg">
 				<ModalOverlay />
-				<ModalContent>
-					<ModalBody p="0" alignItems="flex-start">
+				<ModalContent bg={useColorModeValue("gray.50", "gray.800")}>
+					<ModalBody m="0">
 						<Box justify-content="center">
-							<LoginPage />
+							<LoginPage isInModal />
 						</Box>
 					</ModalBody>
 				</ModalContent>
