@@ -31,7 +31,7 @@ import * as Yup from "yup";
 import { auth, db } from "../../../firebase";
 import ServiceLink from "../auth/ServiceLink";
 import FileUploadModal from "../ui/FileUploadModal";
-import PageLoadingSpinner from "../ui/PageLoadingSpinner";
+import PageLoadingSpinner from "../shared/PageLoadingSpinner";
 
 const AccountSetting = () => {
 	// Service Links for Google and Github are from firebase/auth package and not from react-firebase hooks.
@@ -152,9 +152,7 @@ const AccountSetting = () => {
 									<Avatar
 										size="xl"
 										name={currentUser?.displayName ?? "-"}
-										src={
-											currentUser?.photoURL ?? "https://picsum.photos/200/300"
-										}
+										src={currentUser?.photoURL!}
 									/>
 									<Box>
 										{/* The FileUploadModal component is used to upload images to firebase storage for profile picture and cover picture of the currentUser */}

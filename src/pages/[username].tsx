@@ -11,7 +11,7 @@ import {
 	VStack,
 } from "@chakra-ui/react";
 
-import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
+import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
 import TweetCard from "@/components/ui/TweetCard";
 import dayjs from "dayjs";
 import {

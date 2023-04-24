@@ -1,5 +1,5 @@
 import LoginPage from "@/components/auth/LoginPage";
-import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
+import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
 import withAuthPages from "@/routes/withAuthPages";
 import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";

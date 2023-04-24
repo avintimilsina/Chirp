@@ -14,6 +14,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { FaRegPaperPlane } from "react-icons/fa";
 import * as Yup from "yup";
 import { auth, db } from "../../../firebase";
+import LoginRedirect from "../shared/LoginRedirect";
 
 interface CreateCommentProps {
 	postId: string;
@@ -97,16 +98,20 @@ const CreateComment = ({ postId }: CreateCommentProps) => {
 						</Field>
 					</HStack>
 					<Flex width="full" justifyContent="flex-end">
-						<Button
-							colorScheme="teal"
-							color="white"
-							isLoading={props.isSubmitting}
-							type="submit"
-							borderRadius="3xl"
-							leftIcon={<FaRegPaperPlane />}
-						>
-							Reply
-						</Button>
+						{currentUser ? (
+							<Button
+								colorScheme="teal"
+								color="white"
+								isLoading={props.isSubmitting}
+								type="submit"
+								borderRadius="3xl"
+								leftIcon={<FaRegPaperPlane />}
+							>
+								Reply
+							</Button>
+						) : (
+							<LoginRedirect />
+						)}
 					</Flex>
 				</Form>
 			)}

@@ -1,5 +1,5 @@
 import RegisterPage from "@/components/auth/RegisterPage";
-import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
+import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
 import withAuthPages from "@/routes/withAuthPages";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";

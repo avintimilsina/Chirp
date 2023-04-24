@@ -1,5 +1,5 @@
 import CreateTweet from "@/components/ui/CreateTweet";
-import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
+import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
 import TweetCard from "@/components/ui/TweetCard";
 import { Box, VStack } from "@chakra-ui/react";
 import {

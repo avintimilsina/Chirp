@@ -49,6 +49,7 @@ const RegisterForm = () => {
 					// updating the user profile displayName using updateProfile hook from react-firebase-hooks/auth
 					const success = await updateProfile({
 						displayName: `${values.firstName} ${values.lastName}`,
+						photoURL: `https://api.dicebear.com/6.x/adventurer/svg?seed=${values.firstName} ${values.lastName}`,
 					});
 					if (success) {
 						const emailVerification = await sendEmailVerification();

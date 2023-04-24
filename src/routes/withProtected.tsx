@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { NextPageContext } from "next";
-import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
+import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
 

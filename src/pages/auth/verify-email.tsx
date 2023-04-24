@@ -1,4 +1,4 @@
-import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
+import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
 import withProtected from "@/routes/withProtected";
 import {
 	Button,

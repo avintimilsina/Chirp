@@ -53,11 +53,7 @@ const Messages = ({ messages, currentUser, recieverValue }: MessageProps) => (
 			>
 				{/* This displays only the avatar of the reciever and not of currentUser since fromId is always of currentUser  */}
 				{message.fromId !== currentUser?.uid && (
-					<Avatar
-						mr="1"
-						src={recieverValue?.photoURL ?? "https://picsum.photos/200/300"}
-						size="sm"
-					/>
+					<Avatar mr="1" src={recieverValue?.photoURL} size="sm" />
 				)}
 				{/* If the message is from the currentUser, then display the message as blue and If the message is from the reciever, then display the message as grey */}
 				<Flex

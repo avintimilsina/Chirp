@@ -108,10 +108,7 @@ const Chat = ({ reciever }: ChatProps) => {
 				<Flex w="100%">
 					<Flex flexDirection="row" mx="3" justify="center" alignItems="center">
 						{/* If the reciever has a photoURL, then display the photoURL, else display a random image at the header of the chat box */}
-						<Avatar
-							mr="2"
-							src={recieverValue?.photoURL ?? "https://picsum.photos/200/300"}
-						/>
+						<Avatar mr="2" src={recieverValue?.photoURL} />
 
 						{/* If the reciever has a displayName, then display the displayNameat the header of the chat box */}
 						<Text fontSize="lg" fontWeight="bold">

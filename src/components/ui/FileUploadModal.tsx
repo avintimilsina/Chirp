@@ -1,4 +1,4 @@
-import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
+import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
 import {
 	Button,
 	Input,

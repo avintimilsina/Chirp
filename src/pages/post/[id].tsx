@@ -1,6 +1,6 @@
+import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
 import CommentSection from "@/components/ui/CommentSection";
 import CreateComment from "@/components/ui/CreateComment";
-import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
 import {
 	Avatar,
 	Box,
