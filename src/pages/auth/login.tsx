@@ -1,5 +1,6 @@
 import LoginPage from "@/components/auth/LoginPage";
 import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
+import withAuthPages from "@/routes/withAuthPages";
 import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -32,4 +33,4 @@ const Login = () => {
 	return <LoginPage />;
 };
 
-export default Login;
+export default withAuthPages(Login);

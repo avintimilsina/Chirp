@@ -1,5 +1,6 @@
 import RegisterPage from "@/components/auth/RegisterPage";
 import PageLoadingSpinner from "@/components/ui/PageLoadingSpinner";
+import withAuthPages from "@/routes/withAuthPages";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../../firebase";
@@ -26,4 +27,4 @@ const Register = () => {
 	return <RegisterPage />;
 };
 
-export default Register;
+export default withAuthPages(Register);

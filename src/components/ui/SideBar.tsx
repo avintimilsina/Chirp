@@ -152,7 +152,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 					label="Profile"
 					key="Profile"
 					icon={CgProfile}
-					href={`/${currentUser?.email?.split("@")[0]}`}
+					href={currentUser ? `/${currentUser?.email?.split("@")[0]}` : "/404"}
 					isActive={router.asPath === `/${currentUser?.email?.split("@")[0]}`}
 				>
 					Profile

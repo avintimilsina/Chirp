@@ -1,4 +1,5 @@
 import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
+import withAuthPages from "@/routes/withAuthPages";
 import {
 	Flex,
 	Heading,
@@ -39,4 +40,4 @@ const ForgotPassword = () => (
 	</Flex>
 );
 
-export default ForgotPassword;
+export default withAuthPages(ForgotPassword);
