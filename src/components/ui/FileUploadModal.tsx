@@ -19,6 +19,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { HiCloudUpload } from "react-icons/hi";
 import { auth, storage } from "../../../firebase";
 
+// This is the modal that pops up when you click the "Change photo" button in the AccountSetting page.
 interface FileUploadModalProps {
 	onUpload: (url: string) => void;
 	imageRef: string;
@@ -29,7 +30,11 @@ const FileUploadModal = ({ onUpload, imageRef }: FileUploadModalProps) => {
 		onOpen: onUploadFileModalOpen,
 		onClose: onUploadFileModalClose,
 	} = useDisclosure();
+
+	// This is the progress bar that shows the progress of the file upload.
 	const [fileUploadProgress, setFileUploadProgress] = useState(0);
+
+	// This is the file that is selected by the user.
 	const [selectedFile, setSelectedFile] = useState<File | undefined>();
 	const toast = useToast();
 	const [, loading, userError] = useAuthState(auth);
@@ -102,11 +107,13 @@ const FileUploadModal = ({ onUpload, imageRef }: FileUploadModalProps) => {
 											isClosable: true,
 										}),
 									async () => {
+										// When the upload is complete, get the download URL and pass it to the onUpload function where it will be used to update the user's profile picture and stored in the database as the obtained URL.
 										await getDownloadURL(ref(storage, imageRef)).then(
 											(downloadURL) => {
 												onUpload(downloadURL);
 												onUploadFileModalClose();
 												setSelectedFile(undefined);
+												// Reset the progress bar to 0.
 												setFileUploadProgress(0);
 											}
 										);

@@ -1,5 +1,6 @@
 import { Box, Heading, Text, Button } from "@chakra-ui/react";
 
+// This is the 404 page.
 const NotFound = () => (
 	<Box textAlign="center" py={10} px={6}>
 		<Heading

@@ -24,6 +24,7 @@ const ForgotPasswordForm = () => {
 				email: Yup.string().email("Invalid email address").required("Required"),
 			})}
 			onSubmit={async (values, actions) => {
+				// sendPasswordResetEmail hook from react-firebase-hooks
 				const success = await sendPasswordResetEmail(values.email);
 				actions.setSubmitting(false);
 				if (success) {

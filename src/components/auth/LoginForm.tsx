@@ -30,6 +30,7 @@ const LoginForm = () => {
 					.min(8, "At least 8 characters long")
 					.max(30, "At most 30 characters long"),
 			})}
+			// signInWithEmailAndPassword hook from react-firebase-hooks/auth
 			onSubmit={async (values, actions) => {
 				const response = await signInWithEmailAndPassword(
 					values.email,

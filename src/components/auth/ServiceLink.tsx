@@ -12,6 +12,8 @@ import { TbUnlink } from "react-icons/tb";
 import { IconType } from "react-icons";
 import { auth } from "../../../firebase";
 
+// passing google and github auth providers as props. If you want to add more services, you can add them here using || operator.
+// GoogleAuthProvider and GithubAuthProvider are firebase functions. Not from react-firebase-hooks/auth.
 interface ServiceLinkProps {
 	providerId: string;
 	serviceProvider: GoogleAuthProvider | GithubAuthProvider;
@@ -37,12 +39,14 @@ const ServiceLink = ({
 		return filtered.length > 0 ? filtered[0] : null;
 	};
 	const Icon = serviceIcon ?? TbUnlink;
+	// if user has not linked their account, show link button
 	if (filterProvider(providerId, currentUser?.providerData ?? []) === null) {
 		return (
 			<Button
 				variant="outline"
 				leftIcon={<Icon />}
 				onClick={() => {
+					// linkWithPopup is a firebase function that opens a popup window to link the account from the provider you pass in.
 					linkWithPopup(currentUser!, serviceProvider);
 				}}
 			>
@@ -59,6 +63,7 @@ const ServiceLink = ({
 				colorScheme="green"
 				leftIcon={<Icon />}
 			>
+				{/* if user has linked their account, show unlink button */}
 				Connencted as{" "}
 				{
 					filterProvider(
@@ -82,6 +87,7 @@ const ServiceLink = ({
 					colorScheme="red"
 					variant="ghost"
 					onClick={async () => {
+						// unlink is a firebase function that unlinks the account from the provider you pass in.
 						await unlink(currentUser!, providerId);
 						router.reload();
 					}}

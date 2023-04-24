@@ -47,11 +47,16 @@ import ChatBox from "../chat/ChatBox";
 import Logo from "../logo";
 import CreateTweet from "./CreateTweet";
 
+// This is the sidebar that shows up on the left side of the screen.
+// It contains the logo, the links to the home page and the account settings page, and the user's profile picture.
+// It also contains the "Chirp" button.
+// This sidebar is copied from the Chakra UI templates.
 interface LinkItemProps {
 	name: string;
 	icon: IconType;
 	href: string;
 }
+// Passing the links icons and names as props of the pages as children.
 const LinkItems: Array<LinkItemProps> = [
 	{ name: "Home", icon: FiHome, href: "/" },
 	{ name: "Account", icon: MdOutlineManageAccounts, href: "/setting" },
@@ -69,6 +74,7 @@ const SideBar = ({ children }: { children: ReactNode }) => {
 				onClose={() => onClose}
 				display={{ base: "none", md: "flex" }}
 			/>
+			{/* This is the drawer that shows up when the user clicks the menu button on the top left corner in mobile view. */}
 			<Drawer
 				autoFocus={false}
 				isOpen={isOpen}
@@ -88,11 +94,8 @@ const SideBar = ({ children }: { children: ReactNode }) => {
 					<Box ml={{ base: 0, md: 60 }} p="4" flexGrow="1">
 						{children}
 					</Box>
+					{/* This is the chat box displayed on the right side of the screen. */}
 					<ChatBox />
-					{/* <VStack>
-
-					<Chat reciever="hyMaHGxcBZa6UdJCxe4iK6TvcK33" />
-					</VStack> */}
 				</HStack>
 			</Box>
 		</HStack>
@@ -134,6 +137,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 			</Flex>
 			<VStack w="full">
 				{LinkItems.map((link) => (
+					// Maps all the links to the NavItem component.
 					<NavItem
 						label={link.name}
 						key={link.name}
@@ -164,7 +168,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 			>
 				Chirp
 			</Button>
-
+			{/* This modal lets user create a chirp from anywhere in the app thats why it is place at the sidebar. */}
 			<Modal isOpen={isOpen} onClose={modalOnClose} size="xl">
 				<ModalOverlay />
 				<ModalContent>
@@ -194,6 +198,7 @@ interface NavItemProps extends LinkProps {
 const NavItem = (props: NavItemProps) => {
 	const { icon, isActive, label, href, ...rest } = props;
 	return (
+		// Lights up the sidebar NavItem when the user is on that page using _activeLink component.
 		<Link
 			style={{ textDecoration: "none" }}
 			_focus={{ boxShadow: "none" }}
@@ -261,7 +266,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => (
 		<Box />
 	</Flex>
 );
-
+// This component is used to display the profile of the currentUser in the sidebar and lets the user sign out of the app using the Menu pop up.
 const SideBarProfile = () => {
 	const [currentUser, loading, error] = useAuthState(auth);
 	const [signOut] = useSignOut(auth);
@@ -311,6 +316,7 @@ const SideBarProfile = () => {
 								<BsThreeDots />
 							</Box>
 						</HStack>
+						{/* This is the menu pop up that lets the user sign out of the app. */}
 					</MenuButton>
 					<MenuList
 						p="0"
@@ -327,6 +333,7 @@ const SideBarProfile = () => {
 							colorScheme="red"
 							variant="ghost"
 							onClick={async () => {
+								// signOut() hook react-firebase-hooks/auth
 								const success = await signOut();
 								if (success) {
 									if (!toast.isActive("login")) {
@@ -347,6 +354,7 @@ const SideBarProfile = () => {
 			</Flex>
 		);
 	}
+	// If the user is not logged in, login and signup button is displayed in the sidebar instead of the profile where each button redirects to login page and signup page respectively.
 	return (
 		<VStack>
 			<Button

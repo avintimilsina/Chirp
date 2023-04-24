@@ -7,6 +7,7 @@ import {
 	useColorModeValue,
 } from "@chakra-ui/react";
 
+// This is the forgot password page.
 const ForgotPassword = () => (
 	<Flex
 		minH="100vh"

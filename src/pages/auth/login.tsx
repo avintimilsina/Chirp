@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../../firebase";
 
+// This is the login page.
 const Login = () => {
 	const toast = useToast();
 	const router = useRouter();

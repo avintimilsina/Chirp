@@ -2,6 +2,7 @@ import { ColorModeScript } from "@chakra-ui/react";
 import { Html, Head, Main, NextScript } from "next/document";
 import theme from "@/config/theme";
 
+// This is the document page. This is where the head of the page and links are defined.
 const Document = () => (
 	<Html lang="en">
 		<Head>

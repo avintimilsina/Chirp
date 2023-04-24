@@ -34,6 +34,7 @@ import FileUploadModal from "../ui/FileUploadModal";
 import PageLoadingSpinner from "../ui/PageLoadingSpinner";
 
 const AccountSetting = () => {
+	// Service Links for Google and Github are from firebase/auth package and not from react-firebase hooks.
 	const googleProvider = new GoogleAuthProvider();
 	const githubProvider = new GithubAuthProvider();
 	const [currentUser, userLoading, userError] = useAuthState(auth);
@@ -68,10 +69,14 @@ const AccountSetting = () => {
 			onSubmit={async (values, actions) => {
 				if (values.name !== currentUser?.displayName) {
 					const success = await updateProfile({ displayName: values.name });
+
+					// If the update is successful, redirect to the user's profile page where the new name will be displayed.
 					if (success) {
 						router.push(`/${currentUser?.email?.split("@")[0]}`);
 					}
 				}
+
+				// Checks if the bio, cover photo or location has changed. If it has, update the database using setDoc from firebase/firestore.
 				if (
 					values.bio !== value?.bio ||
 					values.coverPhoto !== value?.coverPhoto ||
@@ -152,6 +157,7 @@ const AccountSetting = () => {
 										}
 									/>
 									<Box>
+										{/* The FileUploadModal component is used to upload images to firebase storage for profile picture and cover picture of the currentUser */}
 										<FileUploadModal
 											onUpload={async (url) => {
 												await updateProfile({ photoURL: url });
@@ -204,6 +210,8 @@ const AccountSetting = () => {
 										aria-label="locate"
 										icon={<BiCurrentLocation size="24" />}
 										onClick={() => {
+											// If the user allows the browser to access their location, get the city name using the getCityName function and set the location field to the city name.
+											// getCurrentPosition is a function from the geolocation API.
 											if (navigator?.geolocation) {
 												navigator.geolocation.getCurrentPosition(
 													async (location) => {
@@ -233,6 +241,8 @@ const AccountSetting = () => {
 						</FieldGroup>
 						<FieldGroup title="Connect accounts">
 							<HStack width="full">
+								{/* The ServiceLink component is used to connect the users account with other services like GitHub, Google. */}
+								{/* Here the providerId, serviceProvider, serviceName and serviceIcon props are passed to the ServiceLink component. */}
 								<ServiceLink
 									providerId="github.com"
 									serviceProvider={githubProvider}
@@ -271,7 +281,7 @@ export default AccountSetting;
 interface FieldGroupProps extends StackProps {
 	title?: string;
 }
-
+// The FieldGroup component is used to display the form fields in a group.
 const FieldGroup = (props: FieldGroupProps) => {
 	const { title, children, ...flexProps } = props;
 	return (
@@ -296,6 +306,7 @@ FieldGroup.defaultProps = {
 	title: "",
 };
 
+// The LanguageSelect component is used to display the language options in a select field but currently it only has one option and has no functionality.
 const LanguageSelect = (props: SelectProps) => (
 	<FormControl id="language">
 		<FormLabel>Display Language</FormLabel>
@@ -305,6 +316,8 @@ const LanguageSelect = (props: SelectProps) => (
 	</FormControl>
 );
 
+// getCityName is an async function that takes the latitude and longitude of the user and returns the city name using the bigdatacloud API.
+// Copy pasted from the internet.
 const getCityName = async (lat: number, lng: number) => {
 	const res = await fetch(
 		`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`

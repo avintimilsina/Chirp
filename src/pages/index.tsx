@@ -46,6 +46,7 @@ const postConverter: FirestoreDataConverter<Tweet> = {
 	},
 };
 const HomePage: NextPage = () => {
+	// This query will fetch all the chirps from the database and order the chirps according to their createdAt timestamp.
 	const [values, loading, error] = useCollectionData(
 		query(
 			collection(db, "chirps").withConverter(postConverter),
@@ -66,6 +67,7 @@ const HomePage: NextPage = () => {
 		<Box width="full" maxW="2xl">
 			<CreateTweet />
 			<VStack width="full" alignItems="flex-start" gap={2}>
+				{/* Displays all the chirps present in the database. */}
 				{values?.map((tweet) => (
 					<TweetCard key={tweet.id} tweet={tweet as Tweet} />
 				))}

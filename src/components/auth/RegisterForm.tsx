@@ -40,11 +40,13 @@ const RegisterForm = () => {
 					.max(30, "At most 30 characters long"),
 			})}
 			onSubmit={async (values, actions) => {
+				// createUserWithEmailAndPassword hook from react-firebase-hooks/auth
 				const response = await createUserWithEmailAndPassword(
 					values.email,
 					values.password
 				);
 				if (response) {
+					// updating the user profile displayName using updateProfile hook from react-firebase-hooks/auth
 					const success = await updateProfile({
 						displayName: `${values.firstName} ${values.lastName}`,
 					});

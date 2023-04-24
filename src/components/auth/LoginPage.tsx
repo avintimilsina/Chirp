@@ -35,7 +35,7 @@ const LoginPage = () => {
 				>
 					<Stack spacing={4}>
 						<LoginForm />
-
+						{/* Sign in With Google hook from react firebase hooks */}
 						<Button
 							variant="outline"
 							colorScheme="blue"

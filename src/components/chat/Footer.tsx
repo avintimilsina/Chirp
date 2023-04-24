@@ -22,6 +22,7 @@ const Footer = ({
 			_focus={{
 				borderColor: "blue.500",
 			}}
+			// If the user presses the "enter" key, then the handleSendMessage function is called
 			onKeyPress={(e) => {
 				if (e.key === "Enter") {
 					handleSendMessage();
@@ -39,6 +40,7 @@ const Footer = ({
 				bg: "blue.700",
 			}}
 			icon={<ArrowRightIcon />}
+			// If the inputMessage is empty, then the send button is disabled
 			disabled={inputMessage.trim().length <= 0}
 			onClick={handleSendMessage}
 		/>

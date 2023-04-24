@@ -32,6 +32,7 @@ import { GoCalendar } from "react-icons/go";
 import { Tweet } from ".";
 import { auth, db } from "../../firebase";
 
+//! Doesnot know how this converter works.
 const postConverter: FirestoreDataConverter<Tweet> = {
 	toFirestore(): DocumentData {
 		return {};
@@ -55,12 +56,17 @@ const ProfilePage = () => {
 	const router = useRouter();
 	const { username } = router.query;
 	const [, userloading] = useAuthState(auth);
+
+	// This query is used to get the user from the users collection where the username of the user is equal to the username in the url.
 	const [value] = useCollectionData(
 		query(collection(db, "users"), where("username", "==", username ?? "-")),
 		{
 			snapshotListenOptions: { includeMetadataChanges: true },
 		}
 	);
+
+	// This query is used to get all the posts from the chirps collection where the userId of the author of the post is equal to the userId of the user.
+	//! Error is occuring in this query if a unregistered user tries to access the profile page.
 	const [values, loading, error] = useCollectionData(
 		query(
 			collection(db, "chirps").withConverter(postConverter),
@@ -77,6 +83,7 @@ const ProfilePage = () => {
 	if (error) {
 		return <PageLoadingSpinner />;
 	}
+	// If the user does not exist then display the 404 page.
 	if (value?.length === 0) {
 		return (
 			<Box textAlign="center" py={10} px={6}>
@@ -112,6 +119,7 @@ const ProfilePage = () => {
 	}
 	return (
 		<>
+			{/* Displaying the profile page of currentUser if the username in the url is equal to the username of the currentUser. */}
 			<Card width="full" maxW="3xl" mb={3}>
 				<Flex
 					mb={8}
@@ -182,6 +190,7 @@ const ProfilePage = () => {
 									@{value?.[0].email?.split("@")[0]}
 								</Text>
 							</HStack>
+							{/* If the user has bio then display the bio. */}
 							{value?.[0].bio && (
 								<HStack
 									spacing={3}
@@ -192,6 +201,7 @@ const ProfilePage = () => {
 									<Text fontSize="medium">{value?.[0].bio}</Text>
 								</HStack>
 							)}
+							{/* If the user has location then display the location. */}
 							{value?.[0].location && (
 								<HStack
 									spacing={3}
@@ -227,6 +237,7 @@ const ProfilePage = () => {
 					</Box>
 				</Flex>
 			</Card>
+			{/* Displays all the chirps created by the user. */}
 			<VStack width="full" alignItems="flex-start" gap={2}>
 				{values?.map((tweet) => (
 					<TweetCard key={tweet.id} tweet={tweet as Tweet} />

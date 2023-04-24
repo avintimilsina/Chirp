@@ -28,6 +28,7 @@ const CreateTweet = () => {
 					.max(280, "Chirp is too long"),
 			})}
 			onSubmit={async (values, actions) => {
+				// Add a new document with a generated id with the values of the user and the content of the chirp inside the chirps collection in the database.
 				const docRef = await addDoc(collection(db, "chirps"), {
 					author: {
 						userId: currentUser?.uid,
@@ -56,6 +57,7 @@ const CreateTweet = () => {
 			}}
 		>
 			{(props: FormikProps<any>) => (
+				// Create a simple form with a textarea for the user to type their chirp in and a button to submit the chirp to be displayed in the HomePage.
 				<Form>
 					<HStack gap={2} alignItems="flex-start" my={2}>
 						<Avatar

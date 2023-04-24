@@ -29,10 +29,12 @@ const RegisterPage = () => (
 				p={8}
 			>
 				<Stack spacing={4}>
+					{/* Calling the RegisterForm component here: */}
 					<RegisterForm />
 					<Stack>
 						<Text align="center">
 							Already a user?{" "}
+							{/* if you already have an account, you can login here. */}
 							<Link href="/auth/login" color="blue.400">
 								Login
 							</Link>

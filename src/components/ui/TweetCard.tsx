@@ -33,10 +33,11 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { FiFeather } from "react-icons/fi";
 import { auth, db } from "../../../firebase";
 
+// This recieves the tweet object from the CreateTweet component.
 interface TweetCardProps {
 	tweet: {
 		id: string;
-		images: string[];
+		// images: string[];
 		content: string;
 		createdAt: string;
 		author: {
@@ -49,8 +50,10 @@ interface TweetCardProps {
 }
 const TweetCard = ({ tweet }: TweetCardProps) => {
 	const [currentUser] = useAuthState(auth);
+	// Counts the number of comments on a chirp.
 	const [commentCount, setCommentCount] = useState(0);
 	const router = useRouter();
+	// This query is used to get all the feathers from the feathers collection where the postId of the feather is equal to the postId of the post or chirp.
 	const [value, valueLoading] = useCollectionData(
 		query(
 			collection(db, "feathers"),
@@ -60,9 +63,12 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 			snapshotListenOptions: { includeMetadataChanges: true },
 		}
 	);
+	// This is used to check if the current user has already feathered the chirp or not.
+	// If the current user has already feathered the chirp then the feather button will glow blue else is grey.
 	const userWhoLiked = value?.map((item) => item.userId);
 	useEffect(() => {
 		const callThisNow = async () => {
+			// This query is used to get the number of comments on a chirp.
 			const snapshot = await getCountFromServer(
 				query(
 					collectionGroup(db, "comments"),
@@ -78,6 +84,7 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 		<Card maxW="3xl" width="full">
 			<CardHeader>
 				<Flex gap={4}>
+					{/* Opens up the profile page of the user who created the chirp when clicked on the avatar, displayName or the username */}
 					<Flex
 						as={Link}
 						href={`/${tweet.author.username}`}
@@ -101,6 +108,7 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 					/>
 				</Flex>
 			</CardHeader>
+			{/* Opens up the individual chirp page when the user clicks on the chirp to view and add comments */}
 			<CardBody py="0" as={Link} legacyBehavior href={`/post/${tweet.id}`}>
 				<Text px="6" mb="4">
 					{tweet.content}
@@ -142,11 +150,13 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 							/>
 						}
 						onClick={async () => {
+							// Deletes the feather from the feathers collection if the current user has already feathered the chirp.
 							if (userWhoLiked?.includes(currentUser?.uid)) {
 								await deleteDoc(
 									doc(db, "feathers", `${tweet.id}-${currentUser?.uid}`)
 								);
 							} else {
+								// Sets the feather in the feathers collection if the current user has not already feathered the chirp.
 								await setDoc(
 									doc(db, "feathers", `${tweet.id}-${currentUser?.uid}`),
 									{
@@ -157,6 +167,7 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 							}
 						}}
 					>
+						{/* Displays the feathers count on the chirp. */}
 						{value?.length ? value.length : 0}
 					</Button>
 				)}

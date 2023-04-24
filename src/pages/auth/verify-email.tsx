@@ -17,6 +17,7 @@ import {
 } from "react-firebase-hooks/auth";
 import { auth } from "../../../firebase";
 
+// This is the verify email page.
 const VerifyEmail = () => {
 	const router = useRouter();
 	const [user, loading, error] = useAuthState(auth);
@@ -26,6 +27,8 @@ const VerifyEmail = () => {
 	if (error) {
 		return <PageLoadingSpinner />;
 	}
+	// Checks in case the user is already verified or not.
+	// emailVerified is a property of the user object that is returned from firebase.
 	if (user?.emailVerified) {
 		router.push("/");
 		return <PageLoadingSpinner />;
@@ -44,6 +47,7 @@ interface VerifyEmailPageProps {
 	user: User;
 }
 const VerifyEmailPage = ({ user }: VerifyEmailPageProps) => {
+	// useSendEmailVerification is a hook from react-firebase-hooks/auth that sends a verification email to the user if they are not verified.
 	const [sendEmailVerification] = useSendEmailVerification(auth);
 	const toast = useToast();
 	const router = useRouter();
@@ -83,6 +87,8 @@ const VerifyEmailPage = ({ user }: VerifyEmailPageProps) => {
 				>
 					{user.email}
 				</Center>
+				{/* Checks if the email is verified. If it is, it will redirect the user to
+				the home page. If not, it will keep the user in the verification page. */}
 				<Button
 					colorScheme="green"
 					onClick={async () => {
@@ -98,6 +104,7 @@ const VerifyEmailPage = ({ user }: VerifyEmailPageProps) => {
 							<Button
 								variant="link"
 								onClick={async () => {
+									// sendEmailVerification is a function from react-firebase-hooks/auth that sends a verification email to the user if they are not verified.
 									const emailVerification = await sendEmailVerification();
 									if (emailVerification) {
 										toast({

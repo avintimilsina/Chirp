@@ -26,11 +26,13 @@ import {
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../../../firebase";
 
+// Used to display the time in relative time format (e.g. from now).
 dayjs.extend(relativeTime);
 
 interface CommentSectionProps {
 	postId: string;
 }
+//! Doesnot know how this works.
 const commentConverter: FirestoreDataConverter<CommentProps["comment"]> = {
 	toFirestore(): DocumentData {
 		return {};
@@ -48,6 +50,9 @@ const commentConverter: FirestoreDataConverter<CommentProps["comment"]> = {
 		};
 	},
 };
+
+// This query is used to get all the comments from the comments collection inside the chirps collection where the postId of the comment is equal to the postId of the post or chirp.
+// Then it orders the comments by the createdAt field in descending order.
 const CommentSection = ({ postId }: CommentSectionProps) => {
 	const [values, loading, error] = useCollectionData(
 		query(
@@ -73,6 +78,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
 			<CardBody>
 				<Stack divider={<StackDivider />} spacing="4">
 					{values?.map((comment) => (
+						// Displays all the comments of the post.
 						<Comment
 							key={comment.id}
 							comment={{
@@ -109,9 +115,10 @@ interface CommentProps {
 const Comment = ({ comment }: CommentProps) => (
 	<HStack alignItems="flex-start">
 		<Avatar
-			name="Avin"
+			name={comment.author.name}
 			src={comment.author.photoURL}
 			size="sm"
+			// When the currentUser clicks on the avatar, it redirects to the commenter's profile page.
 			as={Link}
 			href={`/${comment.author.username}`}
 		/>
@@ -122,6 +129,9 @@ const Comment = ({ comment }: CommentProps) => (
 				alignItems="center"
 				gap="2"
 			>
+				{/* Displays the commenter's name and username and the time when the comment was posted. */}
+				{/* When the currentUser clicks on the displayName or username, it redirects to the commenter's profile page. */}
+
 				<Heading
 					size="sm"
 					textTransform="uppercase"
@@ -146,6 +156,8 @@ const Comment = ({ comment }: CommentProps) => (
 				</Text>
 			</Stack>
 			<Text pt="2">{comment.content}</Text>
+
+			{/* Comment posted time is formatted in the following format: HH:mm A · MMM D, YYYY(e.g. 12:00 PM · Jan 1, 2021) */}
 			<Text pt="2" fontSize="sm" color="blackAlpha.700">
 				{comment?.createdAt &&
 					dayjs(comment.createdAt.seconds * 1000).format(

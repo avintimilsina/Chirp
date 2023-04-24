@@ -32,6 +32,7 @@ const CreateComment = ({ postId }: CreateCommentProps) => {
 					.max(280, "Chirp is too long"),
 			})}
 			onSubmit={async (values, actions) => {
+				// Add a new document with a generated id with the values of the commenter and the content of the comment inside the comments collection inside the chirps collection where the postId of the comment is equal to the postId of the post or chirp.
 				const docRef = await addDoc(
 					collection(db, "chirps", postId, "comments"),
 					{
@@ -65,6 +66,7 @@ const CreateComment = ({ postId }: CreateCommentProps) => {
 		>
 			{(props: FormikProps<any>) => (
 				<Form>
+					{/* Same as the CreateTweet component as it is used to create a comment. */}
 					<HStack gap={2} alignItems="flex-start" my={2}>
 						<Avatar
 							name={currentUser?.displayName ?? "User"}

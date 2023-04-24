@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../firebase";
 
+// NPogress is a progress bar that shows up on the top of the page when the page is loading.
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
@@ -21,6 +22,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 	useEffect(() => {
 		const setUser = async () => {
 			if (currentUser) {
+				// If the user is logged in, then set the user's data in the database under the users collection and merges the data with the data obtained from the AccountSetting page where the user can add their location, bio, change their profile and coverphoto and more in the same "users" collection.
 				await setDoc(
 					doc(db, "users", currentUser?.uid),
 					{

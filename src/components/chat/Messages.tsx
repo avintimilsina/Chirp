@@ -3,6 +3,7 @@ import { User } from "firebase/auth";
 import { DocumentReference } from "firebase/firestore";
 import { useEffect, useRef } from "react";
 
+// Here the messages prop is passed in from the Chat component.
 export interface MessageProps {
 	messages: {
 		createdAt: { seconds: number; nanoseconds: number };
@@ -20,6 +21,10 @@ export interface MessageProps {
 	};
 }
 
+// This component is used to scroll to the bottom of the messages to see the latest message.
+// No idea how it works, but it works when I copied it.
+// Have no idea about useRef hook.
+//! But it seems it is not working properly.
 const AlwaysScrollToBottom = () => {
 	const elementRef = useRef();
 	useEffect(() => (elementRef as any)?.current?.scrollIntoView());
@@ -33,6 +38,9 @@ const Messages = ({ messages, currentUser, recieverValue }: MessageProps) => (
 		flexDirection="column-reverse"
 		p="3"
 	>
+		{/* It maps through the array of messages between the currentUser and the reciever */}
+
+		{/* If the message is from the currentUser, then display the message on the right side of the chat box and If the message is from the reciever, then display the message on the left side of the chat box using ternary operator in the justify attribute */}
 		{messages.map((message) => (
 			<Flex
 				key={message.text}
@@ -42,6 +50,7 @@ const Messages = ({ messages, currentUser, recieverValue }: MessageProps) => (
 					message.fromId !== currentUser?.uid ? "flex-start" : "flex-end"
 				}
 			>
+				{/* This displays only the avatar of the reciever and not of currentUser since fromId is always of currentUser  */}
 				{message.fromId !== currentUser?.uid && (
 					<Avatar
 						mr="1"
@@ -49,6 +58,7 @@ const Messages = ({ messages, currentUser, recieverValue }: MessageProps) => (
 						size="sm"
 					/>
 				)}
+				{/* If the message is from the currentUser, then display the message as blue and If the message is from the reciever, then display the message as grey */}
 				<Flex
 					bg={message.fromId === currentUser?.uid ? "blue.500" : "gray.100"}
 					color={message.fromId === currentUser?.uid ? "white" : "black"}
@@ -60,11 +70,7 @@ const Messages = ({ messages, currentUser, recieverValue }: MessageProps) => (
 					direction="column"
 					borderRadius="12"
 				>
-					{/* <Text fontWeight="bold">
-						{message.fromId === currentUser?.uid
-							? currentUser.displayName
-							: recieverValue.displayName}
-					</Text> */}
+					{/* !IMP word break is not working and the size of the window changes if a long message is typed */}
 					<Text wordBreak={message.text.length > 5 ? "break-all" : "normal"}>
 						{message.text}
 					</Text>

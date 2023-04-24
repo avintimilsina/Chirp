@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../../firebase";
 
+// This is the register page.
 const Register = () => {
 	const router = useRouter();
 	const [user, loading, error] = useAuthState(auth);
