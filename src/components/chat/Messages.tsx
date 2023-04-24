@@ -24,7 +24,6 @@ export interface MessageProps {
 // This component is used to scroll to the bottom of the messages to see the latest message.
 // No idea how it works, but it works when I copied it.
 // Have no idea about useRef hook.
-//! But it seems it is not working properly.
 const AlwaysScrollToBottom = () => {
 	const elementRef = useRef();
 	useEffect(() => (elementRef as any)?.current?.scrollIntoView());
@@ -41,6 +40,8 @@ const Messages = ({ messages, currentUser, recieverValue }: MessageProps) => (
 		{/* It maps through the array of messages between the currentUser and the reciever */}
 
 		{/* If the message is from the currentUser, then display the message on the right side of the chat box and If the message is from the reciever, then display the message on the left side of the chat box using ternary operator in the justify attribute */}
+		<AlwaysScrollToBottom />
+
 		{messages.map((message) => (
 			<Flex
 				key={message.text}
@@ -77,7 +78,6 @@ const Messages = ({ messages, currentUser, recieverValue }: MessageProps) => (
 				</Flex>
 			</Flex>
 		))}
-		<AlwaysScrollToBottom />
 	</Flex>
 );
 
