@@ -142,14 +142,14 @@ const Comment = ({ comment }: CommentProps) => (
 				</Heading>
 				<Text
 					fontSize="sm"
-					color="blackAlpha.700"
+					color="gray.500"
 					as={Link}
 					href={`/${comment.author.username}`}
 					_hover={{ textDecoration: "none" }}
 				>
 					@{comment.author.username}
 				</Text>
-				<Text fontSize="sm" color="blackAlpha.700">
+				<Text fontSize="sm" color="gray.500">
 					{comment?.createdAt &&
 						dayjs(comment.createdAt.seconds * 1000).fromNow()}
 				</Text>
@@ -157,7 +157,7 @@ const Comment = ({ comment }: CommentProps) => (
 			<Text pt="2">{comment.content}</Text>
 
 			{/* Comment posted time is formatted in the following format: HH:mm A · MMM D, YYYY(e.g. 12:00 PM · Jan 1, 2021) */}
-			<Text pt="2" fontSize="sm" color="blackAlpha.700">
+			<Text pt="2" fontSize="sm" color="gray.500">
 				{comment?.createdAt &&
 					dayjs(comment.createdAt.seconds * 1000).format(
 						"HH:mm A · MMM D, YYYY"

@@ -6,6 +6,7 @@ import {
 	FormLabel,
 	HStack,
 	Textarea,
+	useColorModeValue,
 	useToast,
 } from "@chakra-ui/react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
@@ -23,6 +24,7 @@ interface CreateCommentProps {
 const CreateComment = ({ postId }: CreateCommentProps) => {
 	const [currentUser] = useAuthState(auth);
 	const toast = useToast();
+	const textBoxBgColor = useColorModeValue("white", "gray.700");
 
 	return (
 		<Formik
@@ -90,7 +92,7 @@ const CreateComment = ({ postId }: CreateCommentProps) => {
 										placeholder="Chirp Your Reply"
 										variant="unstyled"
 										rows={1}
-										bg="white"
+										bg={textBoxBgColor}
 										fontSize="lg"
 										borderBottom="none"
 										focusBorderColor="transparent"
@@ -104,7 +106,6 @@ const CreateComment = ({ postId }: CreateCommentProps) => {
 						{currentUser ? (
 							<Button
 								colorScheme="teal"
-								color="white"
 								isLoading={props.isSubmitting}
 								type="submit"
 								borderRadius="3xl"

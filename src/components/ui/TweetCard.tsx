@@ -55,6 +55,7 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 	const [currentUser] = useAuthState(auth);
 	// Counts the number of comments on a chirp.
 	const [commentCount, setCommentCount] = useState(0);
+	const [commentLoading, setCommentLoading] = useState(true);
 	const router = useRouter();
 	// This query is used to get all the feathers from the feathers collection where the postId of the feather is equal to the postId of the post or chirp.
 	const [value, valueLoading] = useCollectionData(
@@ -79,6 +80,7 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 				)
 			);
 			setCommentCount(snapshot.data().count);
+			setCommentLoading(false);
 			setCopiedURL(`https://chirpyy.vercel.app/post/${tweet.id}`);
 		};
 		callThisNow();
@@ -101,7 +103,7 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 
 						<Box>
 							<Heading size="sm">{tweet.author.name}</Heading>
-							<Text color="blackAlpha.700">@{tweet.author.username}</Text>
+							<Text color="gray.500">@{tweet.author.username}</Text>
 						</Box>
 					</Flex>
 					<IconButton
@@ -118,7 +120,7 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 				<Box px="6" mb="4">
 					<Text mb="4">{tweet.content}</Text>
 					{router.pathname === "/post/[id]" && (
-						<Text fontSize="smaller" color="blackAlpha.700" p="0">
+						<Text fontSize="smaller" color="gray.500" p="0">
 							{tweet?.createdAt &&
 								dayjs(tweet.createdAt.seconds * 1000).format(
 									"HH:mm A · MMM D, YYYY"
@@ -184,16 +186,22 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 						{value?.length ? value.length : 0}
 					</Button>
 				)}
-				<Button
-					flex="1"
-					variant="ghost"
-					leftIcon={<BiChat />}
-					onClick={() => {
-						router.push(`/post/${tweet.id}`);
-					}}
-				>
-					{commentCount}
-				</Button>
+				{commentLoading ? (
+					<Button flex="1" variant="ghost">
+						<Spinner size="sm" />
+					</Button>
+				) : (
+					<Button
+						flex="1"
+						variant="ghost"
+						leftIcon={<BiChat />}
+						onClick={() => {
+							router.push(`/post/${tweet.id}`);
+						}}
+					>
+						{commentCount}
+					</Button>
+				)}
 
 				<Button
 					flex="1"

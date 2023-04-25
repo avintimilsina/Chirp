@@ -158,7 +158,6 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 				>
 					Profile
 				</NavItem>
-				<ThemeSelector />
 			</VStack>
 			<Button
 				onClick={onOpen}
@@ -184,6 +183,8 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 				</ModalContent>
 			</Modal>
 			<Spacer />
+
+			<ThemeSelector />
 			<Box mb="5">
 				<SideBarProfile />
 			</Box>

@@ -6,6 +6,7 @@ import {
 	FormLabel,
 	HStack,
 	Textarea,
+	useColorModeValue,
 	useToast,
 } from "@chakra-ui/react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
@@ -18,7 +19,7 @@ import { auth, db } from "../../../firebase";
 const CreateTweet = () => {
 	const [currentUser] = useAuthState(auth);
 	const toast = useToast();
-
+	const textBoxBgColor = useColorModeValue("whitesmoke", "gray.700");
 	return (
 		<Formik
 			initialValues={{ content: "" }}
@@ -81,8 +82,8 @@ const CreateTweet = () => {
 										{...field}
 										placeholder="Chirp Away!"
 										variant="unstyled"
-										rows={6}
-										bg="white"
+										rows={4}
+										bg={textBoxBgColor}
 										p={4}
 										fontSize="lg"
 										borderBottom="none"
@@ -96,7 +97,6 @@ const CreateTweet = () => {
 					<Flex width="full" justifyContent="flex-end">
 						<Button
 							colorScheme="teal"
-							color="white"
 							isLoading={props.isSubmitting}
 							type="submit"
 							mt={2}
