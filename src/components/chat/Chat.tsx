@@ -103,6 +103,7 @@ const Chat = ({ reciever }: ChatProps) => {
 			top="0"
 			right="0"
 			borderLeftRadius="xl"
+			maxWidth="xs"
 		>
 			<Flex w="100%" h="90%" flexDir="column">
 				<Flex w="100%">

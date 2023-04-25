@@ -1,13 +1,15 @@
-import { Box, Card, Flex, Spinner, VStack } from "@chakra-ui/react";
+import { Card, Flex, Spinner, VStack } from "@chakra-ui/react";
 import { collection, query } from "firebase/firestore";
 import { useRouter } from "next/router";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { db } from "../../../firebase";
+import { auth, db } from "../../../firebase";
 import Chat from "./Chat";
 import ChatList from "./ChatList";
 
 const ChatBox = () => {
 	const router = useRouter();
+	const [currentUser] = useAuthState(auth);
 
 	// gets all the users from the users collection using the useCollectionData hook.
 	const [values, loading, error] = useCollectionData(
@@ -32,24 +34,27 @@ const ChatBox = () => {
 			as={Card}
 			p="2"
 			h="100vh"
-			justify="center"
+			// justify="center"
 			align="center"
 			position="fixed"
+			overflowY="scroll"
 			top="0"
 			right="0"
 			borderLeftRadius="xl"
+			maxWidth="xs"
 		>
-			<VStack gap="1">
-				<Box>
-					{/* Passing information about all the users present in the database with displayName, photoURL and user id */}
-					{values?.map((value) => (
+			<VStack alignItems="flex-start">
+				{/* Passing information about all the users present in the database with displayName, photoURL and user id */}
+				{values?.map((value) => {
+					if (currentUser?.uid === value.uid) return null;
+					return (
 						<ChatList
 							displayName={value.displayName}
 							photoURL={value.photoURL}
 							uid={value.uid}
 						/>
-					))}
-				</Box>
+					);
+				})}
 			</VStack>
 		</Flex>
 	);

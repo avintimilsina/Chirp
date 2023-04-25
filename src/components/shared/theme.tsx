@@ -1,7 +1,7 @@
 import { Button, Fade, useColorMode } from "@chakra-ui/react";
 import { BsMoon, BsSun } from "react-icons/bs";
 
-export const ThemeSelector = () => {
+const ThemeSelector = () => {
 	const { colorMode, toggleColorMode } = useColorMode();
 
 	return (
