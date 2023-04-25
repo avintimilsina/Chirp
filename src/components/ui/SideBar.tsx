@@ -46,6 +46,7 @@ import { auth } from "../../../firebase";
 import ChatBox from "../chat/ChatBox";
 import Logo from "../logo";
 import CreateTweet from "./CreateTweet";
+import ThemeSelector from "../shared/theme";
 
 // This is the sidebar that shows up on the left side of the screen.
 // It contains the logo, the links to the home page and the account settings page, and the user's profile picture.
@@ -157,6 +158,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 				>
 					Profile
 				</NavItem>
+				<ThemeSelector />
 			</VStack>
 			<Button
 				onClick={onOpen}

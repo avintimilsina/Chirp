@@ -14,6 +14,7 @@ import {
 	Text,
 	useClipboard,
 } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import {
 	collection,
 	collectionGroup,
@@ -40,7 +41,7 @@ interface TweetCardProps {
 		id: string;
 		// images: string[];
 		content: string;
-		createdAt: string;
+		createdAt: { nanoseconds: number; seconds: number };
 		author: {
 			userId: string;
 			name: string;
@@ -112,10 +113,17 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 				</Flex>
 			</CardHeader>
 			{/* Opens up the individual chirp page when the user clicks on the chirp to view and add comments */}
+
 			<CardBody py="0" as={Link} legacyBehavior href={`/post/${tweet.id}`}>
-				<Text px="6" mb="4">
-					{tweet.content}
-				</Text>
+				<Box px="6" mb="4">
+					<Text mb="4">{tweet.content}</Text>
+					<Text fontSize="smaller" color="blackAlpha.700" p="0">
+						{tweet?.createdAt &&
+							dayjs(tweet.createdAt.seconds * 1000).format(
+								"HH:mm A · MMM D, YYYY"
+							)}
+					</Text>
+				</Box>
 			</CardBody>
 			{/* <Image
 				objectFit="cover"
