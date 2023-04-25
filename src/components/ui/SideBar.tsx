@@ -37,7 +37,6 @@ import { ReactNode } from "react";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { IconType } from "react-icons";
 import { BiLogOut } from "react-icons/bi";
-import { BsThreeDots } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { FaRegPaperPlane } from "react-icons/fa";
 import { FiHome, FiMenu } from "react-icons/fi";
@@ -45,8 +44,8 @@ import { MdOutlineManageAccounts } from "react-icons/md";
 import { auth } from "../../../firebase";
 import ChatBox from "../chat/ChatBox";
 import Logo from "../logo";
-import CreateTweet from "./CreateTweet";
 import ThemeSelector from "../shared/theme";
+import CreateTweet from "./CreateTweet";
 
 // This is the sidebar that shows up on the left side of the screen.
 // It contains the logo, the links to the home page and the account settings page, and the user's profile picture.
@@ -315,9 +314,6 @@ const SideBarProfile = () => {
 									@{currentUser?.email?.split("@")[0]}
 								</Text>
 							</VStack>
-							<Box display={{ base: "none", md: "flex" }}>
-								<BsThreeDots />
-							</Box>
 						</HStack>
 						{/* This is the menu pop up that lets the user sign out of the app. */}
 					</MenuButton>

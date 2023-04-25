@@ -1,3 +1,4 @@
+import { EditIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import {
 	Avatar,
 	Box,
@@ -6,13 +7,24 @@ import {
 	CardBody,
 	CardFooter,
 	CardHeader,
+	Divider,
 	Flex,
 	Heading,
 	Icon,
-	IconButton,
+	Menu,
+	MenuButton,
+	MenuItem,
+	MenuList,
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalHeader,
+	ModalOverlay,
 	Spinner,
 	Text,
 	useClipboard,
+	useDisclosure,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import {
@@ -34,6 +46,8 @@ import { BiChat, BiShare } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FiFeather } from "react-icons/fi";
 import { auth, db } from "../../../firebase";
+import ConfirmationModal from "./ConfirmationModal";
+import CreateTweet from "./CreateTweet";
 
 // This recieves the tweet object from the CreateTweet component.
 interface TweetCardProps {
@@ -70,6 +84,8 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 	// This is used to check if the current user has already feathered the chirp or not.
 	// If the current user has already feathered the chirp then the feather button will glow blue else is grey.
 	const userWhoLiked = value?.map((item) => item.userId);
+	const { isOpen, onOpen, onClose: modalOnClose } = useDisclosure();
+
 	useEffect(() => {
 		const callThisNow = async () => {
 			// This query is used to get the number of comments on a chirp.
@@ -106,12 +122,62 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 							<Text color="gray.500">@{tweet.author.username}</Text>
 						</Box>
 					</Flex>
-					<IconButton
-						variant="ghost"
-						colorScheme="gray"
-						aria-label="See menu"
-						icon={<BsThreeDotsVertical />}
-					/>
+					<Menu placement="start-start">
+						<MenuButton>
+							<BsThreeDotsVertical />
+						</MenuButton>
+						<MenuList p="0" m="0" minW="0" w="200px">
+							{currentUser?.uid === tweet.author.userId ? (
+								<>
+									<MenuItem
+										as={Button}
+										onClick={onOpen}
+										p="0"
+										variant="ghost"
+										leftIcon={<EditIcon />}
+									>
+										Edit
+										<Modal isOpen={isOpen} onClose={modalOnClose} size="xl">
+											<ModalOverlay />
+											<ModalContent>
+												<ModalHeader>
+													<ModalCloseButton />
+												</ModalHeader>
+
+												<ModalBody>
+													<CreateTweet
+														defaultValues={tweet}
+														modalOnClose={modalOnClose}
+													/>
+												</ModalBody>
+											</ModalContent>
+										</Modal>
+									</MenuItem>
+									<Divider />
+
+									<MenuItem p="0" m="0">
+										<ConfirmationModal
+											onSuccess={async () => {
+												await deleteDoc(doc(db, "chirps", tweet.id));
+											}}
+											headerText="Delete Chirp"
+											bodyText="Are you sure you want to delete this chirp?"
+										/>
+									</MenuItem>
+								</>
+							) : (
+								<MenuItem
+									as={Button}
+									p="0"
+									m="0"
+									variant="ghost"
+									leftIcon={<WarningTwoIcon />}
+								>
+									Report
+								</MenuItem>
+							)}
+						</MenuList>
+					</Menu>
 				</Flex>
 			</CardHeader>
 			{/* Opens up the individual chirp page when the user clicks on the chirp to view and add comments */}

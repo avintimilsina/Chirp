@@ -1,3 +1,4 @@
+import { Tweet } from "@/types/Tweet";
 import {
 	Avatar,
 	Button,
@@ -9,20 +10,31 @@ import {
 	useColorModeValue,
 	useToast,
 } from "@chakra-ui/react";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+	addDoc,
+	collection,
+	doc,
+	serverTimestamp,
+	updateDoc,
+} from "firebase/firestore";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaRegPaperPlane } from "react-icons/fa";
 import * as Yup from "yup";
 import { auth, db } from "../../../firebase";
 
-const CreateTweet = () => {
+interface CreateTweetProps {
+	defaultValues?: Tweet;
+	modalOnClose?: () => void;
+}
+
+const CreateTweet = ({ defaultValues, modalOnClose }: CreateTweetProps) => {
 	const [currentUser] = useAuthState(auth);
 	const toast = useToast();
 	const textBoxBgColor = useColorModeValue("whitesmoke", "gray.700");
 	return (
 		<Formik
-			initialValues={{ content: "" }}
+			initialValues={{ content: defaultValues ? defaultValues.content : "" }}
 			validationSchema={Yup.object({
 				content: Yup.string()
 					.required("Required")
@@ -30,28 +42,35 @@ const CreateTweet = () => {
 			})}
 			onSubmit={async (values, actions) => {
 				// Add a new document with a generated id with the values of the user and the content of the chirp inside the chirps collection in the database.
-				const docRef = await addDoc(collection(db, "chirps"), {
-					author: {
-						userId: currentUser?.uid,
-						name: currentUser?.displayName,
-						photoURL: currentUser?.photoURL,
-						username: currentUser?.email?.split("@")[0],
-					},
-					content: values.content,
-					createdAt: serverTimestamp(),
-				});
-				if (docRef.id) {
-					toast({
-						title: "Chirp created",
-						status: "success",
-						isClosable: true,
+				if (!defaultValues) {
+					const docRef = await addDoc(collection(db, "chirps"), {
+						author: {
+							userId: currentUser?.uid,
+							name: currentUser?.displayName,
+							photoURL: currentUser?.photoURL,
+							username: currentUser?.email?.split("@")[0],
+						},
+						content: values.content,
+						createdAt: serverTimestamp(),
 					});
+					if (docRef.id) {
+						toast({
+							title: "Chirp created",
+							status: "success",
+							isClosable: true,
+						});
+					} else {
+						toast({
+							title: "Chirp failed to create",
+							status: "error",
+							isClosable: true,
+						});
+					}
 				} else {
-					toast({
-						title: "Chirp failed to create",
-						status: "error",
-						isClosable: true,
+					await updateDoc(doc(db, "chirps", defaultValues.id ?? "-"), {
+						content: values.content,
 					});
+					modalOnClose?.();
 				}
 				actions.setSubmitting(false);
 				actions.resetForm();
@@ -105,7 +124,7 @@ const CreateTweet = () => {
 							borderRadius="3xl"
 							leftIcon={<FaRegPaperPlane />}
 						>
-							Chirp
+							{defaultValues ? "Edit" : "Chirp"}
 						</Button>
 					</Flex>
 				</Form>
@@ -114,4 +133,8 @@ const CreateTweet = () => {
 	);
 };
 
+CreateTweet.defaultProps = {
+	defaultValues: null,
+	modalOnClose: () => {},
+};
 export default CreateTweet;

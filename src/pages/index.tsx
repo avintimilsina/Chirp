@@ -1,6 +1,7 @@
-import CreateTweet from "@/components/ui/CreateTweet";
 import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
+import CreateTweet from "@/components/ui/CreateTweet";
 import TweetCard from "@/components/ui/TweetCard";
+import { Tweet } from "@/types/Tweet";
 import { Box, VStack } from "@chakra-ui/react";
 import {
 	DocumentData,
@@ -15,18 +16,6 @@ import { NextPage } from "next";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
 
-export interface Tweet {
-	id: string;
-	images: string[];
-	content: string;
-	createdAt: { seconds: number; nanoseconds: number };
-	author: {
-		userId: string;
-		name: string;
-		photoURL: string;
-		username: string;
-	};
-}
 const postConverter: FirestoreDataConverter<Tweet> = {
 	toFirestore(): DocumentData {
 		return {};

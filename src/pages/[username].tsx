@@ -13,6 +13,7 @@ import {
 
 import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
 import TweetCard from "@/components/ui/TweetCard";
+import { Tweet } from "@/types/Tweet";
 import dayjs from "dayjs";
 import {
 	DocumentData,
@@ -29,7 +30,6 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { FaEnvelope } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
 import { GoCalendar } from "react-icons/go";
-import { Tweet } from ".";
 import { auth, db } from "../../firebase";
 
 //! Doesnot know how this converter works.
