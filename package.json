@@ -17,6 +17,7 @@
 		"@chakra-ui/icons": "^2.0.18",
 		"@chakra-ui/next-js": "^2.1.2",
 		"@chakra-ui/react": "^2.5.5",
+		"@choc-ui/chakra-autocomplete": "^5.1.4",
 		"@emotion/react": "^11.10.6",
 		"@emotion/styled": "^11.10.6",
 		"@types/node": "18.15.11",
