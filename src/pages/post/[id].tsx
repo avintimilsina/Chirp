@@ -2,11 +2,11 @@ import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
 import CommentSection from "@/components/ui/CommentSection";
 import CreateComment from "@/components/ui/CreateComment";
 import TweetCard from "@/components/ui/TweetCard";
-import { Tweet } from "@/types/Tweet";
 import { Card, CardBody, VStack } from "@chakra-ui/react";
 import { doc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useDocumentData } from "react-firebase-hooks/firestore";
+import { Tweet } from "..";
 import { db } from "../../../firebase";
 
 const PostPage = () => {

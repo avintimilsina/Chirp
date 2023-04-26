@@ -32,6 +32,7 @@ import { FiMapPin } from "react-icons/fi";
 import { GoCalendar } from "react-icons/go";
 import { auth, db } from "../../firebase";
 
+//! Doesnot know how this converter works.
 const postConverter: FirestoreDataConverter<Tweet> = {
 	toFirestore(): DocumentData {
 		return {};
