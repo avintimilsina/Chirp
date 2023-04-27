@@ -18,7 +18,6 @@ const LoginRedirect = () => {
 		<>
 			<Button
 				colorScheme="teal"
-				color="white"
 				borderRadius="3xl"
 				leftIcon={<FaRegPaperPlane />}
 				onClick={onOpen}
