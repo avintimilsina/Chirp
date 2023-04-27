@@ -65,6 +65,7 @@ const LinkItems: Array<LinkItemProps> = [
 
 const SideBar = ({ children }: { children: ReactNode }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const router = useRouter();
 	const {
 		isOpen: isChatOpen,
 		onOpen: onChatOpen,
@@ -114,11 +115,13 @@ const SideBar = ({ children }: { children: ReactNode }) => {
 						{children}
 					</Box>
 					{/* This is the chat box displayed on the right side of the screen. */}
-					<Box display={{ base: "none", md: "block" }} p="0" m="0">
-						<ChatBox />
-					</Box>
 				</HStack>
 			</Box>
+			{router.asPath !== "/setting" && (
+				<Box display={{ base: "none", md: "block" }} p="0" m="0">
+					<ChatBox />
+				</Box>
+			)}
 		</HStack>
 	);
 };
@@ -191,13 +194,17 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 				Chirp
 			</Button>
 			{/* This modal lets user create a chirp from anywhere in the app thats why it is place at the sidebar. */}
-			<Modal isOpen={isOpen} onClose={modalOnClose} size="xl">
+			<Modal
+				isOpen={isOpen}
+				onClose={modalOnClose}
+				size="xl"
+				preserveScrollBarGap
+			>
 				<ModalOverlay />
 				<ModalContent>
 					<ModalHeader>
 						<ModalCloseButton />
 					</ModalHeader>
-
 					<ModalBody>
 						<CreateTweet />
 					</ModalBody>

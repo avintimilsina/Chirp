@@ -137,7 +137,12 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 										leftIcon={<EditIcon />}
 									>
 										Edit
-										<Modal isOpen={isOpen} onClose={modalOnClose} size="xl">
+										<Modal
+											isOpen={isOpen}
+											onClose={modalOnClose}
+											size="xl"
+											preserveScrollBarGap
+										>
 											<ModalOverlay />
 											<ModalContent>
 												<ModalHeader>

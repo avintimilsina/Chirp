@@ -26,7 +26,12 @@ const LoginRedirect = () => {
 			>
 				Reply
 			</Button>
-			<Modal isOpen={isOpen} onClose={modalOnClose} size="lg">
+			<Modal
+				isOpen={isOpen}
+				onClose={modalOnClose}
+				size="lg"
+				preserveScrollBarGap
+			>
 				<ModalOverlay />
 				<ModalContent bg={useColorModeValue("gray.50", "gray.800")}>
 					<ModalBody m="0">

@@ -49,7 +49,7 @@ const ConfirmationModal = ({
 				Delete
 			</Button>
 
-			<Modal isCentered isOpen={isOpen} onClose={onClose}>
+			<Modal isCentered isOpen={isOpen} onClose={onClose} preserveScrollBarGap>
 				<ModalOverlay />
 				<ModalContent>
 					<ModalHeader>{headerText}</ModalHeader>

@@ -27,7 +27,7 @@ const PostPage = () => {
 	}
 
 	return (
-		<VStack gap="2" align="left">
+		<VStack gap="2" align="left" maxW="xl">
 			<TweetCard tweet={{ ...value, id } as Tweet} />
 			<Card maxW="3xl" width="full">
 				<CardBody py="2">

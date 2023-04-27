@@ -120,7 +120,7 @@ const ProfilePage = () => {
 	return (
 		<>
 			{/* Displaying the profile page of currentUser if the username in the url is equal to the username of the currentUser. */}
-			<Card width="full" maxW="3xl" mb={3}>
+			<Card width="full" maxW="xl" mb={3}>
 				<Flex
 					mb={8}
 					direction="column"
@@ -238,7 +238,7 @@ const ProfilePage = () => {
 				</Flex>
 			</Card>
 			{/* Displays all the chirps created by the user. */}
-			<VStack width="full" alignItems="flex-start" gap={2}>
+			<VStack width="full" alignItems="flex-start" gap={2} maxW="xl">
 				{values?.map((tweet) => (
 					<TweetCard key={tweet.id} tweet={tweet as Tweet} />
 				))}
