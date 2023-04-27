@@ -30,20 +30,18 @@ const ChatBox = () => {
 		return <Spinner />;
 	}
 	return (
-		<Flex
-			as={Card}
-			p="2"
-			h="100vh"
-			// justify="center"
-			align="center"
-			position="fixed"
-			overflowY="scroll"
-			top="0"
-			right="0"
-			borderLeftRadius="xl"
-			maxWidth="xs"
-		>
-			<VStack alignItems="flex-start">
+		<Flex borderRadius="xl" transition="3s ease" w={{ base: "full", md: "60" }}>
+			<VStack
+				alignItems="flex-start"
+				position="fixed"
+				overflowY="scroll"
+				top="0"
+				right={{ base: "0", md: "44" }}
+				maxWidth="xs"
+				minW="xs"
+				h="100vh"
+				as={Card}
+			>
 				{/* Passing information about all the users present in the database with displayName, photoURL and user id */}
 				{values?.map((value) => {
 					if (currentUser?.uid === value.uid) return null;

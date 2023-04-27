@@ -1,3 +1,4 @@
+import { ChatIcon } from "@chakra-ui/icons";
 import { Link } from "@chakra-ui/next-js";
 import {
 	Avatar,
@@ -64,6 +65,11 @@ const LinkItems: Array<LinkItemProps> = [
 
 const SideBar = ({ children }: { children: ReactNode }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const {
+		isOpen: isChatOpen,
+		onOpen: onChatOpen,
+		onClose: onChatClose,
+	} = useDisclosure();
 	return (
 		<HStack
 			minH="100vh"
@@ -88,14 +94,29 @@ const SideBar = ({ children }: { children: ReactNode }) => {
 					<SidebarContent onClose={onClose} />
 				</DrawerContent>
 			</Drawer>
+			<Drawer
+				autoFocus={false}
+				isOpen={isChatOpen}
+				placement="right"
+				onClose={onChatClose}
+				returnFocusOnClose={false}
+				onOverlayClick={onChatClose}
+				size="xs"
+			>
+				<DrawerContent p="0" m="0">
+					<ChatBox />
+				</DrawerContent>
+			</Drawer>
 			<Box width="full">
-				<MobileNav onOpen={onOpen} />
+				<MobileNav onOpen={onOpen} onChatOpen={onChatOpen} />
 				<HStack alignItems="flex-start">
-					<Box ml={{ base: 0, md: 60 }} p="4" flexGrow="1">
+					<Box ml={{ base: 0, md: "96" }} p="4" flexGrow="1">
 						{children}
 					</Box>
 					{/* This is the chat box displayed on the right side of the screen. */}
-					<ChatBox />
+					<Box display={{ base: "none", md: "block" }} p="0" m="0">
+						<ChatBox />
+					</Box>
 				</HStack>
 			</Box>
 		</HStack>
@@ -115,12 +136,13 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 	return (
 		<Flex
 			direction="column"
+			left={{ base: 0, md: "36" }}
 			transition="3s ease"
 			bg={useColorModeValue("white", "gray.900")}
-			borderRight="1px"
+			border="1px"
 			px={4}
 			py={2}
-			borderRightColor={useColorModeValue("gray.200", "gray.700")}
+			borderColor={useColorModeValue("gray.200", "gray.700")}
 			w={{ base: "full", md: "60" }}
 			pos="fixed"
 			top={0}
@@ -241,8 +263,9 @@ NavItem.defaultProps = {
 
 interface MobileProps extends FlexProps {
 	onOpen: () => void;
+	onChatOpen: () => void;
 }
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => (
+const MobileNav = ({ onOpen, onChatOpen, ...rest }: MobileProps) => (
 	<Flex
 		ml={{ base: 0, md: 56 }}
 		px={{ base: 4, md: 4 }}
@@ -265,7 +288,13 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => (
 
 		<Logo h="8" display={{ base: "flex", md: "none" }} />
 
-		<Box />
+		<IconButton
+			display={{ base: "flex", md: "none" }}
+			onClick={onChatOpen}
+			variant="outline"
+			aria-label="open menu"
+			icon={<ChatIcon />}
+		/>
 	</Flex>
 );
 // This component is used to display the profile of the currentUser in the sidebar and lets the user sign out of the app using the Menu pop up.

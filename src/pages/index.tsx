@@ -53,7 +53,7 @@ const HomePage: NextPage = () => {
 		return <PageLoadingSpinner />;
 	}
 	return (
-		<Box width="full" maxW="2xl">
+		<Box width="full" maxW="xl">
 			<CreateTweet />
 			<VStack width="full" alignItems="flex-start" gap={2}>
 				{/* Displays all the chirps present in the database. */}

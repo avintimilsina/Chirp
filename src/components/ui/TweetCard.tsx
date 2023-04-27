@@ -103,7 +103,7 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 	}, [setCopiedURL, tweet.id]);
 
 	return (
-		<Card maxW="3xl" width="full">
+		<Card width="full">
 			<CardHeader>
 				<Flex gap={4}>
 					{/* Opens up the profile page of the user who created the chirp when clicked on the avatar, displayName or the username */}

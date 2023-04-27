@@ -25,7 +25,6 @@ const ChatList = ({ photoURL, displayName, uid }: ChatListProps) => {
 		// this opens up the Chat component and displays the messages between the current user and the user that was clicked on.
 		<Flex
 			direction={{ base: "column", sm: "row" }}
-			maxW="sm"
 			onClick={() => {
 				// router.push(`?chatting=${uid}`);
 				router.push({
@@ -38,7 +37,7 @@ const ChatList = ({ photoURL, displayName, uid }: ChatListProps) => {
 			<Stack>
 				<CardBody>
 					<HStack>
-						<Avatar maxW={{ base: "100%", sm: "200px" }} src={photoURL} />
+						<Avatar src={photoURL} />
 						<Box>
 							<Heading size="md">{displayName}</Heading>
 

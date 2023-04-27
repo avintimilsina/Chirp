@@ -1,4 +1,12 @@
-import { Avatar, Card, Flex, Spinner, Text } from "@chakra-ui/react";
+import { ArrowBackIcon } from "@chakra-ui/icons";
+import {
+	Avatar,
+	Card,
+	Flex,
+	IconButton,
+	Spinner,
+	Text,
+} from "@chakra-ui/react";
 import {
 	addDoc,
 	collection,
@@ -8,6 +16,7 @@ import {
 	serverTimestamp,
 	where,
 } from "firebase/firestore";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
@@ -25,6 +34,7 @@ interface ChatProps {
 }
 
 const Chat = ({ reciever }: ChatProps) => {
+	const router = useRouter();
 	// useAuthState is a react-firebase-hooks function that returns the current user that is logged in.
 	const [currentUser] = useAuthState(auth);
 
@@ -97,26 +107,37 @@ const Chat = ({ reciever }: ChatProps) => {
 			as={Card}
 			p="2"
 			h="100vh"
-			justify="center"
-			align="center"
 			position="fixed"
+			overflowY="scroll"
 			top="0"
-			right="0"
-			borderLeftRadius="xl"
+			right={{ base: "0", md: "48" }}
 			maxWidth="xs"
+			minW="xs"
 		>
-			<Flex w="100%" h="90%" flexDir="column">
-				<Flex w="100%">
-					<Flex flexDirection="row" mx="3" justify="center" alignItems="center">
-						{/* If the reciever has a photoURL, then display the photoURL, else display a random image at the header of the chat box */}
-						<Avatar mr="2" src={recieverValue?.photoURL} />
+			<Flex w="100%" h="100%" flexDir="column">
+				<Flex
+					flexDirection="row"
+					justify="center"
+					alignItems="center"
+					gap="2"
+					mt="3"
+				>
+					{/* If the reciever has a photoURL, then display the photoURL, else display a random image at the header of the chat box */}
+					<IconButton
+						icon={<ArrowBackIcon />}
+						variant="unstyled"
+						aria-label="Back to chat list"
+						size="lg"
+						onClick={() => router.back()}
+					/>
+					<Avatar src={recieverValue?.photoURL} />
 
-						{/* If the reciever has a displayName, then display the displayNameat the header of the chat box */}
-						<Text fontSize="lg" fontWeight="bold">
-							{recieverValue?.displayName}
-						</Text>
-					</Flex>
+					{/* If the reciever has a displayName, then display the displayNameat the header of the chat box */}
+					<Text fontSize="lg" fontWeight="bold" flexGrow="1">
+						{recieverValue?.displayName}
+					</Text>
 				</Flex>
+
 				<Divider />
 
 				{/* Passing the messages, currentUser, recieverValue to the Messages component */}
