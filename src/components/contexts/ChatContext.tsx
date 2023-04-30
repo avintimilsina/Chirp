@@ -1,5 +1,4 @@
-/* eslint-disable react/jsx-no-constructed-context-values */
-import React, { useContext, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 
 type ChatContextType = {
 	chatting: string | null;
@@ -17,11 +16,8 @@ const ChatProvider = ({ children }: any) => {
 	const setChat = (user: string) => {
 		setChatting(user);
 	};
-	return (
-		<ChatContext.Provider value={{ chatting, setChat }}>
-			{children}
-		</ChatContext.Provider>
-	);
+	const value = useMemo(() => ({ chatting, setChat }), [chatting]);
+	return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
 };
 
 export { ChatProvider, useChat };
