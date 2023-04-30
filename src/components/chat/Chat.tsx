@@ -16,7 +16,6 @@ import {
 	serverTimestamp,
 	where,
 } from "firebase/firestore";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
@@ -24,6 +23,7 @@ import {
 	useDocumentData,
 } from "react-firebase-hooks/firestore";
 import { auth, db } from "../../../firebase";
+import { useChat } from "../contexts/ChatContext";
 import relationGenerator from "../helpers/relationGenerator";
 import Divider from "./Divider";
 import Footer from "./Footer";
@@ -34,7 +34,6 @@ interface ChatProps {
 }
 
 const Chat = ({ reciever }: ChatProps) => {
-	const router = useRouter();
 	// useAuthState is a react-firebase-hooks function that returns the current user that is logged in.
 	const [currentUser] = useAuthState(auth);
 
@@ -72,6 +71,7 @@ const Chat = ({ reciever }: ChatProps) => {
 
 	// useState hook is used to store the input message.
 	const [inputMessage, setInputMessage] = useState("");
+	const { setChat } = useChat();
 
 	// handleSendMessage function is used to add a new document to the chats collection.
 
@@ -128,7 +128,7 @@ const Chat = ({ reciever }: ChatProps) => {
 						variant="unstyled"
 						aria-label="Back to chat list"
 						size="lg"
-						onClick={() => router.back()}
+						onClick={() => setChat("")}
 					/>
 					<Avatar src={recieverValue?.photoURL} />
 

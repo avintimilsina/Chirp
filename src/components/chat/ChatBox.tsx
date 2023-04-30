@@ -1,17 +1,16 @@
 import { Card, Flex, Spinner, VStack } from "@chakra-ui/react";
 import { collection, query } from "firebase/firestore";
-import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { auth, db } from "../../../firebase";
+import { useChat } from "../contexts/ChatContext";
 import Chat from "./Chat";
 import ChatList from "./ChatList";
 import Search from "./Search";
 
 const ChatBox = () => {
-	const router = useRouter();
 	const [currentUser] = useAuthState(auth);
-
+	const { chatting } = useChat();
 	// gets all the users from the users collection using the useCollectionData hook.
 	const [values, loading, error] = useCollectionData(
 		query(collection(db, "users")),
@@ -21,8 +20,8 @@ const ChatBox = () => {
 	);
 
 	// if the currentUser clicks on a user in the ChatList component, it will redirect to the /?chatting={clickedUserId} route and pass in the id of the user that was clicked on.
-	if (router.query.chatting) {
-		return <Chat reciever={router.query.chatting as string} />;
+	if (chatting) {
+		return <Chat reciever={chatting as string} />;
 	}
 	if (loading) {
 		return <Spinner />;

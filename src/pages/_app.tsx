@@ -1,3 +1,4 @@
+import { ChatProvider } from "@/components/contexts/ChatContext";
 import SideBar from "@/components/ui/SideBar";
 import theme from "@/config/theme";
 import "@/styles/globals.css";
@@ -46,13 +47,15 @@ const App = ({ Component, pageProps }: AppProps) => {
 
 	return (
 		<ChakraProvider theme={theme}>
-			{router.pathname.startsWith("/auth") ? (
-				<Component {...pageProps} />
-			) : (
-				<SideBar>
+			<ChatProvider>
+				{router.pathname.startsWith("/auth") ? (
 					<Component {...pageProps} />
-				</SideBar>
-			)}
+				) : (
+					<SideBar>
+						<Component {...pageProps} />
+					</SideBar>
+				)}
+			</ChatProvider>
 		</ChakraProvider>
 	);
 };

@@ -9,7 +9,7 @@ import {
 	Stack,
 	Text,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { useChat } from "../contexts/ChatContext";
 
 interface ChatListProps {
 	photoURL: string;
@@ -18,7 +18,7 @@ interface ChatListProps {
 }
 
 const ChatList = ({ photoURL, displayName, uid }: ChatListProps) => {
-	const router = useRouter();
+	const { setChat } = useChat();
 	return (
 		// here we are using the router.push method on the onClick function to redirect to the /?chatting={clickedUserId} route and pass in the id of the user that was clicked on.
 
@@ -27,10 +27,7 @@ const ChatList = ({ photoURL, displayName, uid }: ChatListProps) => {
 			direction={{ base: "column", sm: "row" }}
 			onClick={() => {
 				// router.push(`?chatting=${uid}`);
-				router.push({
-					pathname: "",
-					query: { chatting: uid },
-				});
+				setChat(uid);
 			}}
 		>
 			{/* Displaying information about all the users present in the database with displayName, photoURL and user id */}
