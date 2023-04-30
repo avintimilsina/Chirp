@@ -1,6 +1,7 @@
 import {
 	Box,
 	Button,
+	ButtonProps,
 	Modal,
 	ModalBody,
 	ModalContent,
@@ -8,23 +9,15 @@ import {
 	useColorModeValue,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { FaRegPaperPlane } from "react-icons/fa";
 import LoginPage from "../auth/LoginPage";
 
-const LoginRedirect = () => {
+const LoginRedirect = (props: ButtonProps) => {
 	const { isOpen, onOpen, onClose: modalOnClose } = useDisclosure();
 
 	return (
 		<>
-			<Button
-				colorScheme="teal"
-				borderRadius="3xl"
-				leftIcon={<FaRegPaperPlane />}
-				onClick={onOpen}
-				variant="solid"
-			>
-				Reply
-			</Button>
+			<Button onClick={onOpen} {...props} />
+
 			<Modal
 				isOpen={isOpen}
 				onClose={modalOnClose}

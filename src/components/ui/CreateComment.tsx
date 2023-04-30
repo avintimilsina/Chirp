@@ -114,7 +114,15 @@ const CreateComment = ({ postId }: CreateCommentProps) => {
 								Reply
 							</Button>
 						) : (
-							<LoginRedirect />
+							<LoginRedirect
+								colorScheme="teal"
+								isLoading={props.isSubmitting}
+								type="submit"
+								borderRadius="3xl"
+								leftIcon={<FaRegPaperPlane />}
+							>
+								Reply
+							</LoginRedirect>
 						)}
 					</Flex>
 				</Form>

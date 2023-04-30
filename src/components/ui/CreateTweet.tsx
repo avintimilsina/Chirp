@@ -22,6 +22,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { FaRegPaperPlane } from "react-icons/fa";
 import * as Yup from "yup";
 import { auth, db } from "../../../firebase";
+import LoginRedirect from "../shared/LoginRedirect";
 
 interface CreateTweetProps {
 	defaultValues?: Tweet;
@@ -114,18 +115,33 @@ const CreateTweet = ({ defaultValues, modalOnClose }: CreateTweetProps) => {
 						</Field>
 					</HStack>
 					<Flex width="full" justifyContent="flex-end">
-						<Button
-							colorScheme="teal"
-							isLoading={props.isSubmitting}
-							type="submit"
-							mt={2}
-							mb={5}
-							px={8}
-							borderRadius="3xl"
-							leftIcon={<FaRegPaperPlane />}
-						>
-							{defaultValues ? "Edit" : "Chirp"}
-						</Button>
+						{currentUser ? (
+							<Button
+								colorScheme="teal"
+								isLoading={props.isSubmitting}
+								type="submit"
+								borderRadius="3xl"
+								leftIcon={<FaRegPaperPlane />}
+								mt={2}
+								mb={5}
+								px={8}
+							>
+								{defaultValues ? "Edit" : "Chirp"}
+							</Button>
+						) : (
+							<LoginRedirect
+								colorScheme="teal"
+								isLoading={props.isSubmitting}
+								type="submit"
+								borderRadius="3xl"
+								leftIcon={<FaRegPaperPlane />}
+								mt={2}
+								mb={5}
+								px={8}
+							>
+								{defaultValues ? "Edit" : "Chirp"}
+							</LoginRedirect>
+						)}
 					</Flex>
 				</Form>
 			)}
