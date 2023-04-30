@@ -6,6 +6,7 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { auth, db } from "../../../firebase";
 import Chat from "./Chat";
 import ChatList from "./ChatList";
+import Search from "./Search";
 
 const ChatBox = () => {
 	const router = useRouter();
@@ -42,7 +43,9 @@ const ChatBox = () => {
 				h="100vh"
 				as={Card}
 			>
+				<Search />
 				{/* Passing information about all the users present in the database with displayName, photoURL and user id */}
+
 				{values?.map((value) => {
 					if (currentUser?.uid === value.uid) return null;
 					return (

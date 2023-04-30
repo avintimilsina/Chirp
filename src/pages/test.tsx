@@ -1,5 +1,5 @@
-import LoginRedirect from "@/components/shared/LoginRedirect";
+import Search from "@/components/chat/Search";
 
-const test = () => <LoginRedirect />;
+const test = () => <Search />;
 
 export default test;
