@@ -166,7 +166,7 @@ const TweetCard = ({
 									</MenuItem>
 									<Divider />
 
-									<MenuItem p="0" m="0">
+									<MenuItem p="0" m="0" as={Box}>
 										<ConfirmationModal
 											onSuccess={async () => {
 												await deleteDoc(doc(db, "chirps", tweet.id));

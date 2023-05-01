@@ -223,7 +223,7 @@ const Comment = ({ comment, postId }: CommentProps) => {
 									</MenuItem>
 									<Divider />
 
-									<MenuItem p="0" m="0">
+									<MenuItem p="0" m="0" as={Box}>
 										<ConfirmationModal
 											onSuccess={async () => {
 												await deleteDoc(
