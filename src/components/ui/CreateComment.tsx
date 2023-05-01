@@ -1,3 +1,4 @@
+import { Comment } from "@/types/Comment";
 import {
 	Avatar,
 	Button,
@@ -9,7 +10,13 @@ import {
 	useColorModeValue,
 	useToast,
 } from "@chakra-ui/react";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+	addDoc,
+	collection,
+	doc,
+	serverTimestamp,
+	updateDoc,
+} from "firebase/firestore";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaRegPaperPlane } from "react-icons/fa";
@@ -19,16 +26,22 @@ import LoginRedirect from "../shared/LoginRedirect";
 
 interface CreateCommentProps {
 	postId: string;
+	defaultValues?: Comment;
+	modalOnClose?: () => void;
 }
 
-const CreateComment = ({ postId }: CreateCommentProps) => {
+const CreateComment = ({
+	postId,
+	defaultValues,
+	modalOnClose,
+}: CreateCommentProps) => {
 	const [currentUser] = useAuthState(auth);
 	const toast = useToast();
 	const textBoxBgColor = useColorModeValue("white", "gray.700");
 
 	return (
 		<Formik
-			initialValues={{ content: "" }}
+			initialValues={{ content: defaultValues ? defaultValues.content : "" }}
 			validationSchema={Yup.object({
 				content: Yup.string()
 					.required("Required")
@@ -36,32 +49,42 @@ const CreateComment = ({ postId }: CreateCommentProps) => {
 			})}
 			onSubmit={async (values, actions) => {
 				// Add a new document with a generated id with the values of the commenter and the content of the comment inside the comments collection inside the chirps collection where the postId of the comment is equal to the postId of the post or chirp.
-				const docRef = await addDoc(
-					collection(db, "chirps", postId, "comments"),
-					{
-						author: {
-							userId: currentUser?.uid,
-							name: currentUser?.displayName,
-							photoURL: currentUser?.photoURL,
-							username: currentUser?.email?.split("@")[0],
-						},
-						content: values.content,
-						createdAt: serverTimestamp(),
-						postId,
+				if (!defaultValues) {
+					const docRef = await addDoc(
+						collection(db, "chirps", postId, "comments"),
+						{
+							author: {
+								userId: currentUser?.uid,
+								name: currentUser?.displayName,
+								photoURL: currentUser?.photoURL,
+								username: currentUser?.email?.split("@")[0],
+							},
+							content: values.content,
+							createdAt: serverTimestamp(),
+							postId,
+						}
+					);
+					if (docRef.id) {
+						toast({
+							title: "Comment posted",
+							status: "success",
+							isClosable: true,
+						});
+					} else {
+						toast({
+							title: "Comment failed to post",
+							status: "error",
+							isClosable: true,
+						});
 					}
-				);
-				if (docRef.id) {
-					toast({
-						title: "Comment posted",
-						status: "success",
-						isClosable: true,
-					});
 				} else {
-					toast({
-						title: "Comment failed to post",
-						status: "error",
-						isClosable: true,
-					});
+					await updateDoc(
+						doc(db, "chirps", postId, "comments", defaultValues.id ?? "-"),
+						{
+							content: values.content,
+						}
+					);
+					modalOnClose?.();
 				}
 				actions.setSubmitting(false);
 				actions.resetForm();
@@ -129,6 +152,10 @@ const CreateComment = ({ postId }: CreateCommentProps) => {
 			)}
 		</Formik>
 	);
+};
+CreateComment.defaultProps = {
+	defaultValues: null,
+	modalOnClose: () => {},
 };
 
 export default CreateComment;
