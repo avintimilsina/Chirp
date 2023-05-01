@@ -1,3 +1,4 @@
+import { IComment } from "@/types/Comment";
 import { EditIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import { Link } from "@chakra-ui/next-js";
 import {
@@ -40,6 +41,7 @@ import {
 	query,
 	where,
 } from "firebase/firestore";
+import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -52,6 +54,7 @@ dayjs.extend(relativeTime);
 
 interface CommentSectionProps {
 	postId: string;
+	setIsCommentCountOutdated?: (value: boolean) => void;
 }
 //! Doesnot know how this works.
 const commentConverter: FirestoreDataConverter<CommentProps["comment"]> = {
@@ -74,7 +77,10 @@ const commentConverter: FirestoreDataConverter<CommentProps["comment"]> = {
 
 // This query is used to get all the comments from the comments collection inside the chirps collection where the postId of the comment is equal to the postId of the post or chirp.
 // Then it orders the comments by the createdAt field in descending order.
-const CommentSection = ({ postId }: CommentSectionProps) => {
+const CommentSection = ({
+	postId,
+	setIsCommentCountOutdated,
+}: CommentSectionProps) => {
 	const [values, loading, error] = useCollectionData(
 		query(
 			collectionGroup(db, "comments").withConverter(commentConverter),
@@ -85,6 +91,12 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
 			snapshotListenOptions: { includeMetadataChanges: true },
 		}
 	);
+	useEffect(() => {
+		if (typeof setIsCommentCountOutdated === "function" && !loading) {
+			setIsCommentCountOutdated(true);
+		}
+	}, [setIsCommentCountOutdated, values, loading]);
+
 	if (loading) {
 		return <Spinner />;
 	}
@@ -123,17 +135,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
 };
 interface CommentProps {
 	postId: string;
-	comment: {
-		id: string;
-		content: string;
-		createdAt: { seconds: number; nanoseconds: number };
-		author: {
-			userId: string;
-			name: string;
-			photoURL: string;
-			username: string;
-		};
-	};
+	comment: IComment;
 }
 const Comment = ({ comment, postId }: CommentProps) => {
 	const [currentUser] = useAuthState(auth);
@@ -259,6 +261,10 @@ const Comment = ({ comment, postId }: CommentProps) => {
 			</Box>
 		</HStack>
 	);
+};
+
+CommentSection.defaultProps = {
+	setIsCommentCountOutdated: null,
 };
 
 export default CommentSection;

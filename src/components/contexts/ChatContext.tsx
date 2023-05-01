@@ -4,6 +4,7 @@ type ChatContextType = {
 	chatting: string | null;
 	setChat: (user: string) => void;
 };
+
 const ChatContext = React.createContext<ChatContextType>({
 	chatting: "",
 	setChat: () => {},
@@ -11,6 +12,7 @@ const ChatContext = React.createContext<ChatContextType>({
 const useChat = () => useContext(ChatContext);
 
 const ChatProvider = ({ children }: any) => {
+	// const [updateComment, setUpdateComment] = useState<boolean>(false);
 	const [chatting, setChatting] = useState<string>("");
 
 	const setChat = (user: string) => {

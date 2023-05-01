@@ -1,4 +1,4 @@
-import { Comment } from "@/types/Comment";
+import { IComment } from "@/types/Comment";
 import {
 	Avatar,
 	Button,
@@ -26,7 +26,7 @@ import LoginRedirect from "../shared/LoginRedirect";
 
 interface CreateCommentProps {
 	postId: string;
-	defaultValues?: Comment;
+	defaultValues?: IComment;
 	modalOnClose?: () => void;
 }
 

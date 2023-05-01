@@ -49,6 +49,7 @@ const ChatBox = () => {
 					if (currentUser?.uid === value.uid) return null;
 					return (
 						<ChatList
+							key={value.uid}
 							displayName={value.displayName}
 							photoURL={value.photoURL}
 							uid={value.uid}

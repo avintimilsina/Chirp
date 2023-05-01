@@ -1,3 +1,4 @@
+import { Tweet } from "@/types/Tweet";
 import { EditIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import {
 	Avatar,
@@ -39,7 +40,7 @@ import {
 } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { BiChat, BiShare } from "react-icons/bi";
@@ -51,20 +52,15 @@ import CreateTweet from "./CreateTweet";
 
 // This recieves the tweet object from the CreateTweet component.
 interface TweetCardProps {
-	tweet: {
-		id: string;
-		// images: string[];
-		content: string;
-		createdAt: { nanoseconds: number; seconds: number };
-		author: {
-			userId: string;
-			name: string;
-			photoURL: string;
-			username: string;
-		};
-	};
+	tweet: Tweet;
+	isCommentCountOutdated?: boolean;
+	setIsCommentCountOutdated?: (value: boolean) => void;
 }
-const TweetCard = ({ tweet }: TweetCardProps) => {
+const TweetCard = ({
+	tweet,
+	isCommentCountOutdated,
+	setIsCommentCountOutdated,
+}: TweetCardProps) => {
 	const { onCopy, setValue: setCopiedURL, hasCopied } = useClipboard("");
 	const [currentUser] = useAuthState(auth);
 	// Counts the number of comments on a chirp.
@@ -86,21 +82,31 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 	const userWhoLiked = value?.map((item) => item.userId);
 	const { isOpen, onOpen, onClose: modalOnClose } = useDisclosure();
 
-	useEffect(() => {
-		const callThisNow = async () => {
-			// This query is used to get the number of comments on a chirp.
-			const snapshot = await getCountFromServer(
-				query(
-					collectionGroup(db, "comments"),
-					where("postId", "==", (tweet.id as string) ?? "-")
-				)
-			);
-			setCommentCount(snapshot.data().count);
-			setCommentLoading(false);
-			setCopiedURL(`https://chirpyy.vercel.app/post/${tweet.id}`);
-		};
-		callThisNow();
+	const updateCommentCount = useCallback(async () => {
+		// This query is used to get the number of comments on a chirp.
+		const snapshot = await getCountFromServer(
+			query(
+				collectionGroup(db, "comments"),
+				where("postId", "==", (tweet.id as string) ?? "-")
+			)
+		);
+		setCommentCount(snapshot.data().count);
+		setCommentLoading(false);
+		setCopiedURL(`https://chirpyy.vercel.app/post/${tweet.id}`);
 	}, [setCopiedURL, tweet.id]);
+
+	useEffect(() => {
+		updateCommentCount();
+		if (typeof setIsCommentCountOutdated === "function") {
+			setIsCommentCountOutdated(false);
+		}
+	}, [
+		updateCommentCount,
+		setCopiedURL,
+		tweet.id,
+		setIsCommentCountOutdated,
+		isCommentCountOutdated,
+	]);
 
 	return (
 		<Card width="full">
@@ -288,4 +294,9 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
 		</Card>
 	);
 };
+TweetCard.defaultProps = {
+	isCommentCountOutdated: false,
+	setIsCommentCountOutdated: null,
+};
+
 export default TweetCard;
