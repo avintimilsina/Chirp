@@ -6,17 +6,18 @@ import {
 	Flex,
 	HStack,
 	Heading,
-	Spinner,
+	Skeleton,
+	SkeletonCircle,
 	Stack,
 	Text,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
+import { User } from "firebase/auth";
 import { collection, limit, orderBy, query, where } from "firebase/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { auth, db } from "../../../firebase";
+import { db } from "../../../firebase";
 import { useChat } from "../contexts/ChatContext";
 import relationGenerator from "../helpers/relationGenerator";
 
@@ -44,10 +45,15 @@ interface ChatListProps {
 	photoURL: string;
 	displayName: string;
 	uid: string;
+	currentUser: User | null | undefined;
 }
 
-const ChatList = ({ photoURL, displayName, uid }: ChatListProps) => {
-	const [currentUser] = useAuthState(auth);
+const ChatList = ({
+	photoURL,
+	displayName,
+	uid,
+	currentUser,
+}: ChatListProps) => {
 	const { setChat } = useChat();
 	const [lastChat, loading, error] = useCollectionData(
 		query(
@@ -60,9 +66,7 @@ const ChatList = ({ photoURL, displayName, uid }: ChatListProps) => {
 			snapshotListenOptions: { includeMetadataChanges: true },
 		}
 	);
-	if (loading) {
-		return <Spinner />;
-	}
+
 	if (error) {
 		return <div>{error.message}</div>;
 	}
@@ -84,17 +88,20 @@ const ChatList = ({ photoURL, displayName, uid }: ChatListProps) => {
 						<Avatar src={photoURL} />
 						<Box>
 							<Heading size="md">{displayName}</Heading>
-
-							<Text fontSize="xs">
-								{lastChat?.length
-									? `${lastChat?.[0].text} · ${
-											lastChat?.[0].createdAt &&
-											dayjs(
-												(lastChat?.[0].createdAt.seconds as number) * 1000
-											).fromNow()
-									  }`
-									: "Say Hi!👋"}
-							</Text>
+							{loading ? (
+								<Skeleton h="12px" w="full" my="1" />
+							) : (
+								<Text fontSize="xs">
+									{lastChat?.length
+										? `${lastChat?.[0].text} · ${
+												lastChat?.[0].createdAt &&
+												dayjs(
+													(lastChat?.[0].createdAt.seconds as number) * 1000
+												).fromNow()
+										  }`
+										: "Say Hi!👋"}
+								</Text>
+							)}
 						</Box>
 					</HStack>
 				</CardBody>
@@ -105,3 +112,23 @@ const ChatList = ({ photoURL, displayName, uid }: ChatListProps) => {
 };
 
 export default ChatList;
+
+export const ChatListSkeleton = () => (
+	<Flex direction={{ base: "column", sm: "row" }} w="full">
+		<Stack w="full">
+			<CardBody py="2">
+				<HStack>
+					<SkeletonCircle size="48px" />
+					<Box>
+						<Skeleton>
+							<Heading size="md">Avin Timilsina</Heading>
+						</Skeleton>
+
+						<Skeleton h="12px" w="full" my="1" />
+					</Box>
+				</HStack>
+			</CardBody>
+			<Divider />
+		</Stack>
+	</Flex>
+);

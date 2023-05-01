@@ -24,8 +24,9 @@ import {
 	ModalContent,
 	ModalHeader,
 	ModalOverlay,
+	Skeleton,
+	SkeletonCircle,
 	Spacer,
-	Spinner,
 	Text,
 	VStack,
 	useColorModeValue,
@@ -310,18 +311,10 @@ const SideBarProfile = () => {
 	const [signOut] = useSignOut(auth);
 	const toast = useToast();
 	if (loading) {
-		return (
-			<Flex justifyContent="center">
-				<Spinner />
-			</Flex>
-		);
+		return <SideBarProfileSkeleton />;
 	}
 	if (error) {
-		return (
-			<Flex justifyContent="center">
-				<Spinner />
-			</Flex>
-		);
+		return <Text>{error.message}</Text>;
 	}
 	if (currentUser) {
 		return (
@@ -414,3 +407,24 @@ const SideBarProfile = () => {
 		</VStack>
 	);
 };
+
+export const SideBarProfileSkeleton = () => (
+	<Flex mx="6">
+		<HStack>
+			<SkeletonCircle size="48px" />
+			<VStack
+				display={{ base: "none", md: "flex" }}
+				alignItems="flex-start"
+				spacing="1px"
+				ml="2"
+			>
+				<Skeleton>
+					<Text fontWeight="semibold">Avin Timilsina</Text>
+				</Skeleton>
+				<Skeleton>
+					<Text color="gray.600">@avintimilsina</Text>
+				</Skeleton>
+			</VStack>
+		</HStack>
+	</Flex>
+);

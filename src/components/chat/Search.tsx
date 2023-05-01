@@ -1,21 +1,15 @@
-import { FormControl, FormLabel, Spinner } from "@chakra-ui/react";
+import { FormControl, FormLabel } from "@chakra-ui/react";
 import { AsyncSelect } from "chakra-react-select";
 import { collection, query } from "firebase/firestore";
-import { useRouter } from "next/router";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../../../firebase";
+import { useChat } from "../contexts/ChatContext";
 
 const Search = () => {
-	const [values, loading, error] = useCollectionData(
-		query(collection(db, "users")),
-		{
-			snapshotListenOptions: { includeMetadataChanges: true },
-		}
-	);
-	const router = useRouter();
-	if (loading) {
-		return <Spinner />;
-	}
+	const { setChat } = useChat();
+	const [values, , error] = useCollectionData(query(collection(db, "users")), {
+		snapshotListenOptions: { includeMetadataChanges: true },
+	});
 	if (error) {
 		return <div>Error: {error.message}</div>;
 	}
@@ -33,10 +27,7 @@ const Search = () => {
 				placeholder="🔍 Search Someone"
 				closeMenuOnSelect={false}
 				onChange={(e: any) => {
-					router.push({
-						pathname: "",
-						query: { chatting: e.value },
-					});
+					setChat(e.value);
 				}}
 				size="md"
 				loadOptions={(inputValue, callback) => {

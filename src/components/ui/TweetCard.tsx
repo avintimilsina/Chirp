@@ -22,7 +22,8 @@ import {
 	ModalContent,
 	ModalHeader,
 	ModalOverlay,
-	Spinner,
+	Skeleton,
+	SkeletonCircle,
 	Text,
 	useClipboard,
 	useDisclosure,
@@ -215,6 +216,7 @@ const TweetCard = ({
 			<CardFooter
 				justify="space-between"
 				flexWrap="wrap"
+				gap="2"
 				sx={{
 					"& > button": {
 						minW: "136px",
@@ -224,9 +226,7 @@ const TweetCard = ({
 				p="4"
 			>
 				{valueLoading ? (
-					<Button flex="1" variant="ghost">
-						<Spinner size="sm" />
-					</Button>
+					<ButtonSkeleton />
 				) : (
 					<Button
 						flex="1"
@@ -264,9 +264,7 @@ const TweetCard = ({
 					</Button>
 				)}
 				{commentLoading ? (
-					<Button flex="1" variant="ghost">
-						<Spinner size="sm" />
-					</Button>
+					<ButtonSkeleton />
 				) : (
 					<Button
 						flex="1"
@@ -294,9 +292,76 @@ const TweetCard = ({
 		</Card>
 	);
 };
+
 TweetCard.defaultProps = {
 	isCommentCountOutdated: false,
 	setIsCommentCountOutdated: null,
 };
 
 export default TweetCard;
+
+export const TweetCardSkeleton = () => {
+	const router = useRouter();
+	return (
+		<Card width="full">
+			<CardHeader>
+				<Flex gap={4}>
+					{/* Opens up the profile page of the user who created the chirp when clicked on the avatar, displayName or the username */}
+					<Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
+						<SkeletonCircle size="48px" />
+
+						<Box>
+							<Skeleton>
+								<Heading size="sm">Avin Timilsina</Heading>
+							</Skeleton>
+							<Skeleton>
+								<Text color="gray.500">@avin.timilsina</Text>
+							</Skeleton>
+						</Box>
+					</Flex>
+					<BsThreeDotsVertical />
+				</Flex>
+			</CardHeader>
+			{/* Opens up the individual chirp page when the user clicks on the chirp to view and add comments */}
+
+			<CardBody py="0">
+				<Box px="6" mb="4">
+					<Skeleton>
+						<Text mb="4">
+							Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci
+							numquam, rem molestiae at harum suscipit
+						</Text>
+					</Skeleton>
+					{router.pathname === "/post/[id]" && (
+						<Skeleton>
+							<Text fontSize="smaller" color="gray.500" p="0">
+								HH:mm A · MMM D, YYYY
+							</Text>
+						</Skeleton>
+					)}
+				</Box>
+			</CardBody>
+			<CardFooter
+				justify="space-between"
+				flexWrap="wrap"
+				gap="2"
+				sx={{
+					"& > button": {
+						minW: "136px",
+					},
+				}}
+				pt="0"
+				p="4"
+			>
+				<ButtonSkeleton />
+				<ButtonSkeleton />
+				<ButtonSkeleton />
+			</CardFooter>
+		</Card>
+	);
+};
+export const ButtonSkeleton = () => (
+	<Button flex="1">
+		<Skeleton h="30px" />
+	</Button>
+);

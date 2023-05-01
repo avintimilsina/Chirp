@@ -1,6 +1,6 @@
 import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
 import CreateTweet from "@/components/ui/CreateTweet";
-import TweetCard from "@/components/ui/TweetCard";
+import TweetCard, { TweetCardSkeleton } from "@/components/ui/TweetCard";
 import { Tweet } from "@/types/Tweet";
 import { Box, VStack } from "@chakra-ui/react";
 import {
@@ -45,22 +45,28 @@ const HomePage: NextPage = () => {
 			snapshotListenOptions: { includeMetadataChanges: true },
 		}
 	);
-
-	if (loading) {
-		return <PageLoadingSpinner />;
-	}
 	if (error) {
 		return <PageLoadingSpinner />;
 	}
 	return (
 		<Box width="full" maxW="xl">
 			<CreateTweet />
-			<VStack width="full" alignItems="flex-start" gap={2}>
-				{/* Displays all the chirps present in the database. */}
-				{values?.map((tweet) => (
-					<TweetCard key={tweet.id} tweet={tweet as Tweet} />
-				))}
-			</VStack>
+
+			{loading ? (
+				<VStack width="full" alignItems="flex-start" gap={2}>
+					{Array(5)
+						.fill("twitter-skeleton")
+						.map((key, index) => (
+							<TweetCardSkeleton key={`${key}-${index + 1}`} />
+						))}
+				</VStack>
+			) : (
+				<VStack width="full" alignItems="flex-start" gap={2}>
+					{values?.map((tweet) => (
+						<TweetCard key={tweet.id} tweet={tweet as Tweet} />
+					))}
+				</VStack>
+			)}
 		</Box>
 	);
 };

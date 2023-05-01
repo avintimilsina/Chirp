@@ -1,7 +1,7 @@
 import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
 import CommentSection from "@/components/ui/CommentSection";
 import CreateComment from "@/components/ui/CreateComment";
-import TweetCard from "@/components/ui/TweetCard";
+import TweetCard, { TweetCardSkeleton } from "@/components/ui/TweetCard";
 import { Tweet } from "@/types/Tweet";
 import { Card, CardBody, VStack } from "@chakra-ui/react";
 import { doc } from "firebase/firestore";
@@ -21,20 +21,21 @@ const PostPage = () => {
 		}
 	);
 
-	if (chirpLoading) {
-		return <PageLoadingSpinner />;
-	}
 	if (chirpError) {
 		return <PageLoadingSpinner />;
 	}
 
 	return (
 		<VStack gap="2" align="left" maxW="xl">
-			<TweetCard
-				tweet={{ ...value, id } as Tweet}
-				isCommentCountOutdated={isCommentCountOutdated}
-				setIsCommentCountOutdated={setIsCommentCountOutdated}
-			/>
+			{chirpLoading ? (
+				<TweetCardSkeleton />
+			) : (
+				<TweetCard
+					tweet={{ ...value, id } as Tweet}
+					isCommentCountOutdated={isCommentCountOutdated}
+					setIsCommentCountOutdated={setIsCommentCountOutdated}
+				/>
+			)}
 			<Card maxW="3xl" width="full">
 				<CardBody py="2">
 					<CreateComment postId={id as string} />

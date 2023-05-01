@@ -21,6 +21,8 @@ import {
 	ModalContent,
 	ModalHeader,
 	ModalOverlay,
+	Skeleton,
+	SkeletonCircle,
 	Spinner,
 	Stack,
 	StackDivider,
@@ -84,7 +86,7 @@ const CommentSection = ({
 	const [values, loading, error] = useCollectionData(
 		query(
 			collectionGroup(db, "comments").withConverter(commentConverter),
-			where("postId", "==", postId),
+			where("postId", "==", postId ?? "-"),
 			orderBy("createdAt", "desc")
 		),
 		{
@@ -97,9 +99,6 @@ const CommentSection = ({
 		}
 	}, [setIsCommentCountOutdated, values, loading]);
 
-	if (loading) {
-		return <Spinner />;
-	}
 	if (error) {
 		return <Spinner />;
 	}
@@ -110,24 +109,30 @@ const CommentSection = ({
 		<Card maxW="3xl" width="full">
 			<CardBody>
 				<Stack divider={<StackDivider />} spacing="4">
-					{values?.map((comment) => (
-						// Displays all the comments of the post.
-						<Comment
-							key={comment.id}
-							postId={postId}
-							comment={{
-								id: comment.id,
-								content: comment.content,
-								createdAt: comment.createdAt,
-								author: {
-									userId: comment.author.userId,
-									name: comment.author.name,
-									photoURL: comment.author.photoURL,
-									username: comment.author.username,
-								},
-							}}
-						/>
-					))}
+					{loading
+						? Array(2)
+								.fill("comment-skeleton")
+								.map((key, index) => (
+									<CommentSkeleton key={`${key}-${index + 1}`} />
+								))
+						: values?.map((comment) => (
+								// Displays all the comments of the post.
+								<Comment
+									key={comment.id}
+									postId={postId}
+									comment={{
+										id: comment.id,
+										content: comment.content,
+										createdAt: comment.createdAt,
+										author: {
+											userId: comment.author.userId,
+											name: comment.author.name,
+											photoURL: comment.author.photoURL,
+											username: comment.author.username,
+										},
+									}}
+								/>
+						  ))}
 				</Stack>
 			</CardBody>
 		</Card>
@@ -268,3 +273,33 @@ CommentSection.defaultProps = {
 };
 
 export default CommentSection;
+
+export const CommentSkeleton = () => (
+	<HStack alignItems="flex-start">
+		<SkeletonCircle size="32px" />
+		<Box w="full">
+			<Flex justifyContent="space-between">
+				<Stack direction="row" alignItems="flex-start" gap="2">
+					<Skeleton>
+						<Heading size="sm">Avin Timilsina</Heading>
+					</Skeleton>
+					<Skeleton>
+						<Text fontSize="sm" color="gray.500">
+							@avintimilsina
+						</Text>
+					</Skeleton>
+					<Skeleton>
+						<Text fontSize="sm" color="gray.500">
+							hh:mm A · MMM D, YYYY
+						</Text>
+					</Skeleton>
+				</Stack>
+				<BsThreeDotsVertical />
+			</Flex>
+			<Skeleton mt="2">
+				<Text>Lorem, ipsum dolor</Text>
+			</Skeleton>
+			<Skeleton mt="2" w="180px" h="14px" />
+		</Box>
+	</HStack>
+);
