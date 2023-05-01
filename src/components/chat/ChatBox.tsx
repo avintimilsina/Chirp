@@ -1,4 +1,4 @@
-import { Card, Flex, Spinner, VStack } from "@chakra-ui/react";
+import { Card, Spinner, VStack } from "@chakra-ui/react";
 import { collection, query } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -20,47 +20,52 @@ const ChatBox = () => {
 	);
 
 	// if the currentUser clicks on a user in the ChatList component, it will redirect to the /?chatting={clickedUserId} route and pass in the id of the user that was clicked on.
-	if (chatting) {
-		return <Chat reciever={chatting as string} />;
+	if (chatting && !loading) {
+		return (
+			<Chat
+				reciever={chatting as string}
+				displayName={
+					values?.filter((user) => user.uid === chatting)?.[0].displayName
+				}
+				photoURL={values?.filter((user) => user.uid === chatting)?.[0].photoURL}
+			/>
+		);
 	}
 	if (error) {
 		return <Spinner />;
 	}
 	return (
-		<Flex borderRadius="xl" transition="3s ease" w={{ base: "full", md: "60" }}>
-			<VStack
-				alignItems="flex-start"
-				position="fixed"
-				overflowY="scroll"
-				top="0"
-				right={{ base: "0", md: "44" }}
-				maxWidth="xs"
-				minW="xs"
-				h="100vh"
-				as={Card}
-			>
-				<Search />
-				{/* Passing information about all the users present in the database with displayName, photoURL and user id */}
-				{loading
-					? Array(5)
-							.fill("chatList-skeleton")
-							.map((key, index) => (
-								<ChatListSkeleton key={`${key}-${index + 1}`} />
-							))
-					: values?.map((value) => {
-							if (currentUser?.uid === value.uid) return null;
-							return (
-								<ChatList
-									key={value.uid}
-									displayName={value.displayName}
-									photoURL={value.photoURL}
-									uid={value.uid}
-									currentUser={currentUser}
-								/>
-							);
-					  })}
-			</VStack>
-		</Flex>
+		<VStack
+			alignItems="flex-start"
+			position="fixed"
+			overflowY="scroll"
+			top="0"
+			right={{ base: "0", md: "44" }}
+			minW="xs"
+			h="100vh"
+			as={Card}
+		>
+			<Search />
+			{/* Passing information about all the users present in the database with displayName, photoURL and user id */}
+			{loading
+				? Array(5)
+						.fill("chatList-skeleton")
+						.map((key, index) => (
+							<ChatListSkeleton key={`${key}-${index + 1}`} />
+						))
+				: values?.map((value) => {
+						if (currentUser?.uid === value.uid) return null;
+						return (
+							<ChatList
+								key={value.uid}
+								displayName={value.displayName}
+								photoURL={value.photoURL}
+								uid={value.uid}
+								currentUser={currentUser}
+							/>
+						);
+				  })}
+		</VStack>
 	);
 };
 

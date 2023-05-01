@@ -18,10 +18,7 @@ import {
 } from "firebase/firestore";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import {
-	useCollectionData,
-	useDocumentData,
-} from "react-firebase-hooks/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 import { auth, db } from "../../../firebase";
 import { useChat } from "../contexts/ChatContext";
 import relationGenerator from "../helpers/relationGenerator";
@@ -31,9 +28,11 @@ import Messages from "./Messages";
 
 interface ChatProps {
 	reciever: string;
+	displayName: string;
+	photoURL: string;
 }
 
-const Chat = ({ reciever }: ChatProps) => {
+const Chat = ({ reciever, displayName, photoURL }: ChatProps) => {
 	// useAuthState is a react-firebase-hooks function that returns the current user that is logged in.
 	const [currentUser] = useAuthState(auth);
 
@@ -62,12 +61,12 @@ const Chat = ({ reciever }: ChatProps) => {
 	// useDocumentData is a react-firebase-hooks function that returns the data from the document you pass in.
 
 	// Here we are getting the users collection where the id is equal to the reciever id.
-	const [recieverValue, recieverLoading, recieverError] = useDocumentData(
-		doc(db, "users", reciever ?? "-"),
-		{
-			snapshotListenOptions: { includeMetadataChanges: true },
-		}
-	);
+	// const [recieverValue, recieverLoading, recieverError] = useDocumentData(
+	// 	doc(db, "users", reciever ?? "-"),
+	// 	{
+	// 		snapshotListenOptions: { includeMetadataChanges: true },
+	// 	}
+	// );
 
 	// useState hook is used to store the input message.
 	const [inputMessage, setInputMessage] = useState("");
@@ -95,24 +94,22 @@ const Chat = ({ reciever }: ChatProps) => {
 			setInputMessage("");
 		}
 	};
-	if (loading || recieverLoading) {
-		return <Spinner />;
-	}
-	if (error || recieverError) {
+
+	if (error) {
 		return <Spinner />;
 	}
 
 	return (
 		<Flex
 			as={Card}
-			p="2"
+			mx="0"
+			// p="2"
 			h="100vh"
 			position="fixed"
 			overflowY="scroll"
 			top="0"
 			right={{ base: "0", md: "48" }}
-			maxWidth="xs"
-			minW="xs"
+			maxW="xs"
 		>
 			<Flex w="100%" h="100%" flexDir="column">
 				<Flex
@@ -130,25 +127,35 @@ const Chat = ({ reciever }: ChatProps) => {
 						size="lg"
 						onClick={() => setChat("")}
 					/>
-					<Avatar src={recieverValue?.photoURL} />
+					<Avatar src={photoURL} />
 
 					{/* If the reciever has a displayName, then display the displayNameat the header of the chat box */}
 					<Text fontSize="lg" fontWeight="bold" flexGrow="1">
-						{recieverValue?.displayName}
+						{displayName}
 					</Text>
 				</Flex>
 
 				<Divider />
 
 				{/* Passing the messages, currentUser, recieverValue to the Messages component */}
-				<Messages
-					messages={values as any}
-					currentUser={currentUser}
-					recieverValue={{
-						photoURL: recieverValue?.photoURL,
-						displayName: recieverValue?.displayName,
-					}}
-				/>
+				{!loading ? (
+					<Messages
+						messages={values as any}
+						currentUser={currentUser}
+						recieverValue={{
+							photoURL,
+							displayName,
+						}}
+					/>
+				) : (
+					<Flex
+						w="100%"
+						h="80%"
+						overflowY="scroll"
+						flexDirection="column-reverse"
+						p="3"
+					/>
+				)}
 				<Divider />
 
 				{/* Footer is the chat input field where the message is typed and submitted using the handleSendMessage component and the value of the input message is updated using the setInputMessage state */}
