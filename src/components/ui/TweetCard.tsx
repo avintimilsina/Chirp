@@ -196,7 +196,7 @@ const TweetCard = ({
 
 			<CardBody py="0" as={Link} legacyBehavior href={`/post/${tweet.id}`}>
 				<Box px="6" mb="4">
-					<Text mb="4">{tweet.content}</Text>
+					<Text>{tweet.content}</Text>
 					{router.pathname === "/post/[id]" && (
 						<Text fontSize="smaller" color="gray.500" p="0">
 							{tweet?.createdAt &&
@@ -219,7 +219,7 @@ const TweetCard = ({
 				gap="2"
 				sx={{
 					"& > button": {
-						minW: "136px",
+						minW: "100px",
 					},
 				}}
 				pt="0"

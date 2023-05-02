@@ -105,14 +105,14 @@ const SideBar = ({ children }: { children: ReactNode }) => {
 				onOverlayClick={onChatClose}
 				size="xs"
 			>
-				<DrawerContent>
+				<DrawerContent p="0" m="0">
 					<ChatBox />
 				</DrawerContent>
 			</Drawer>
 			<Box width="full">
 				<MobileNav onOpen={onOpen} onChatOpen={onChatOpen} />
 				<HStack alignItems="flex-start">
-					<Box ml={{ base: 0, md: "96" }} p="4" flexGrow="1">
+					<Box ml={{ base: 0, md: "96" }} p="1" flexGrow="1">
 						{children}
 					</Box>
 					{/* This is the chat box displayed on the right side of the screen. */}
@@ -141,7 +141,6 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 		<Flex
 			direction="column"
 			left={{ base: 0, md: "36" }}
-			transition="3s ease"
 			bg={useColorModeValue("white", "gray.900")}
 			border="1px"
 			px={4}
@@ -150,7 +149,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 			w={{ base: "full", md: "60" }}
 			pos="fixed"
 			top={0}
-			h={{ base: "100vh", md: "calc(100vh - calc(100vh - 100%))" }}
+			h={{ base: "calc(100vh - calc(100vh - 100%))", md: "100vh" }}
 			gap={4}
 			{...rest}
 		>
@@ -235,9 +234,8 @@ const NavItem = (props: NavItemProps) => {
 		<Link
 			style={{ textDecoration: "none" }}
 			_focus={{ boxShadow: "none" }}
-			p={5}
+			p={3}
 			borderRadius="lg"
-			transition="all 0.3s"
 			fontSize="lg"
 			fontWeight="semibold"
 			lineHeight="1.5rem"
@@ -274,38 +272,44 @@ interface MobileProps extends FlexProps {
 	onOpen: () => void;
 	onChatOpen: () => void;
 }
-const MobileNav = ({ onOpen, onChatOpen, ...rest }: MobileProps) => (
-	<Flex
-		ml={{ base: 0, md: 56 }}
-		px={{ base: 4, md: 4 }}
-		height="20"
-		alignItems="center"
-		bg={useColorModeValue("white", "gray.900")}
-		borderBottomWidth="1px"
-		borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-		justifyContent={{ base: "space-between", md: "flex-end" }}
-		display={{ base: "flex", md: "none" }}
-		{...rest}
-	>
-		<IconButton
+const MobileNav = ({ onOpen, onChatOpen, ...rest }: MobileProps) => {
+	const router = useRouter();
+	return (
+		<Flex
+			ml={{ base: 0, md: 56 }}
+			px={{ base: 4, md: 4 }}
+			height="20"
+			alignItems="center"
+			bg={useColorModeValue("white", "gray.900")}
+			borderBottomWidth="1px"
+			borderBottomColor={useColorModeValue("gray.200", "gray.700")}
+			justifyContent={{ base: "space-between", md: "flex-end" }}
 			display={{ base: "flex", md: "none" }}
-			onClick={onOpen}
-			variant="outline"
-			aria-label="open menu"
-			icon={<FiMenu />}
-		/>
+			{...rest}
+		>
+			<IconButton
+				display={{ base: "flex", md: "none" }}
+				onClick={onOpen}
+				variant="outline"
+				aria-label="open menu"
+				icon={<FiMenu />}
+			/>
 
-		<Logo h="8" display={{ base: "flex", md: "none" }} />
-
-		<IconButton
-			display={{ base: "flex", md: "none" }}
-			onClick={onChatOpen}
-			variant="outline"
-			aria-label="open menu"
-			icon={<ChatIcon />}
-		/>
-	</Flex>
-);
+			<Logo h="8" display={{ base: "flex", md: "none" }} />
+			{router.asPath !== "/setting" ? (
+				<IconButton
+					display={{ base: "flex", md: "none" }}
+					onClick={onChatOpen}
+					variant="outline"
+					aria-label="open menu"
+					icon={<ChatIcon />}
+				/>
+			) : (
+				<p />
+			)}
+		</Flex>
+	);
+};
 // This component is used to display the profile of the currentUser in the sidebar and lets the user sign out of the app using the Menu pop up.
 const SideBarProfile = () => {
 	const [currentUser, loading, error] = useAuthState(auth);
@@ -321,21 +325,12 @@ const SideBarProfile = () => {
 		return (
 			<Flex mx="2">
 				<Menu placement="top">
-					<MenuButton
-						py="2"
-						transition="all 0.3s"
-						_focus={{ boxShadow: "none" }}
-					>
-						<HStack>
+					<MenuButton py="2" _focus={{ boxShadow: "none" }} w="full">
+						<HStack justifyContent="center" gap="2">
 							<Avatar
 								src={currentUser?.photoURL ?? "https://picsum.photos/200/300"}
 							/>
-							<VStack
-								display={{ base: "none", md: "flex" }}
-								alignItems="flex-start"
-								spacing="1px"
-								ml="2"
-							>
+							<VStack alignItems="flex-start" spacing="1px" ml="2">
 								<Text fontSize="md" fontWeight="semibold">
 									{currentUser?.displayName}
 								</Text>

@@ -79,7 +79,7 @@ const Chat = ({ reciever, displayName, photoURL }: ChatProps) => {
 	// handleSendMessage function is called when the send button is clicked and updates the database if a message is entered with the inputMessage state containing all the details like the fromId, toId, text, createdAt, from, to and relation.
 
 	const handleSendMessage = async () => {
-		if (currentUser?.uid) {
+		if (currentUser?.uid && inputMessage) {
 			await addDoc(collection(db, "chats"), {
 				fromId: currentUser?.uid,
 				toId: reciever,
@@ -103,16 +103,17 @@ const Chat = ({ reciever, displayName, photoURL }: ChatProps) => {
 		<Flex
 			as={Card}
 			mx="0"
-			h={{ base: "100vh", md: "calc(100vh - calc(100vh - 100%))" }}
+			h={{ base: "calc(100vh - calc(100vh - 100%))", md: "100vh" }}
 			position="fixed"
 			overflowY="scroll"
 			top="0"
 			right={{ base: "0", md: "48" }}
 			maxW="xs"
+			w="full"
 		>
 			<Flex
 				w="100%"
-				h={{ base: "100vh", md: "calc(100vh - calc(100vh - 100%))" }}
+				h={{ base: "calc(100vh - calc(100vh - 100%))", md: "100vh" }}
 				flexDir="column"
 			>
 				<Flex

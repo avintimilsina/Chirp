@@ -43,7 +43,7 @@ const ChatBox = () => {
 			right={{ base: "0", md: "44" }}
 			minW="xs"
 			as={Card}
-			h={{ base: "100vh", md: "calc(100vh - calc(100vh - 100%))" }}
+			h={{ base: "calc(100vh - calc(100vh - 100%))", md: "100vh" }}
 		>
 			<Search />
 			{/* Passing information about all the users present in the database with displayName, photoURL and user id */}
