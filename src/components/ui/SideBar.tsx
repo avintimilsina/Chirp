@@ -105,7 +105,7 @@ const SideBar = ({ children }: { children: ReactNode }) => {
 				onOverlayClick={onChatClose}
 				size="xs"
 			>
-				<DrawerContent p="0" m="0">
+				<DrawerContent>
 					<ChatBox />
 				</DrawerContent>
 			</Drawer>
@@ -150,7 +150,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 			w={{ base: "full", md: "60" }}
 			pos="fixed"
 			top={0}
-			h="100vh"
+			h={{ base: "100vh", md: "calc(100vh - calc(100vh - 100%))" }}
 			gap={4}
 			{...rest}
 		>
@@ -214,7 +214,8 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 			<Spacer />
 
 			<ThemeSelector />
-			<Box mb="5">
+
+			<Box>
 				<SideBarProfile />
 			</Box>
 		</Flex>
@@ -318,16 +319,15 @@ const SideBarProfile = () => {
 	}
 	if (currentUser) {
 		return (
-			<Flex mx="6">
+			<Flex mx="2">
 				<Menu placement="top">
 					<MenuButton
-						py={2}
+						py="2"
 						transition="all 0.3s"
 						_focus={{ boxShadow: "none" }}
 					>
 						<HStack>
 							<Avatar
-								size="md"
 								src={currentUser?.photoURL ?? "https://picsum.photos/200/300"}
 							/>
 							<VStack
@@ -336,7 +336,7 @@ const SideBarProfile = () => {
 								spacing="1px"
 								ml="2"
 							>
-								<Text fontSize="lg" fontWeight="semibold">
+								<Text fontSize="md" fontWeight="semibold">
 									{currentUser?.displayName}
 								</Text>
 								<Text fontSize="xs" color="gray.600">

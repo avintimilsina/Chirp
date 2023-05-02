@@ -103,15 +103,18 @@ const Chat = ({ reciever, displayName, photoURL }: ChatProps) => {
 		<Flex
 			as={Card}
 			mx="0"
-			// p="2"
-			h="100vh"
+			h={{ base: "100vh", md: "calc(100vh - calc(100vh - 100%))" }}
 			position="fixed"
 			overflowY="scroll"
 			top="0"
 			right={{ base: "0", md: "48" }}
 			maxW="xs"
 		>
-			<Flex w="100%" h="100%" flexDir="column">
+			<Flex
+				w="100%"
+				h={{ base: "100vh", md: "calc(100vh - calc(100vh - 100%))" }}
+				flexDir="column"
+			>
 				<Flex
 					flexDirection="row"
 					justify="center"

@@ -1,4 +1,3 @@
-import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
 import CreateTweet from "@/components/ui/CreateTweet";
 import TweetCard, { TweetCardSkeleton } from "@/components/ui/TweetCard";
 import { Tweet } from "@/types/Tweet";
@@ -46,7 +45,7 @@ const HomePage: NextPage = () => {
 		}
 	);
 	if (error) {
-		return <PageLoadingSpinner />;
+		return <p>{error.message}</p>;
 	}
 	return (
 		<Box width="full" maxW="xl">
