@@ -104,7 +104,7 @@ const AccountSetting = () => {
 					<Stack
 						spacing="4"
 						divider={<StackDivider />}
-						maxWidth="3xl"
+						maxWidth={{ base: "xs", md: "xl" }}
 						marginLeft={6}
 					>
 						<Heading size="lg" as="h1" paddingBottom="4">
