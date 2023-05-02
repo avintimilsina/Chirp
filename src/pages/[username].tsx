@@ -1,11 +1,9 @@
 import {
 	Avatar,
 	Box,
-	Button,
 	Card,
 	Flex,
 	HStack,
-	Heading,
 	Stack,
 	Text,
 	VStack,
@@ -31,6 +29,7 @@ import { FaEnvelope } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
 import { GoCalendar } from "react-icons/go";
 import { auth, db } from "../../firebase";
+import NotFound from "./404";
 
 //! Doesnot know how this converter works.
 const postConverter: FirestoreDataConverter<Tweet> = {
@@ -70,7 +69,7 @@ const ProfilePage = () => {
 	const [values, loading, error] = useCollectionData(
 		query(
 			collection(db, "chirps").withConverter(postConverter),
-			where("author.userId", "==", value?.[0].uid ?? "-")
+			where("author.userId", "==", value?.[0]?.uid ?? "-")
 		),
 		{
 			snapshotListenOptions: { includeMetadataChanges: true },
@@ -85,37 +84,7 @@ const ProfilePage = () => {
 	}
 	// If the user does not exist then display the 404 page.
 	if (value?.length === 0) {
-		return (
-			<Box textAlign="center" py={10} px={6}>
-				<Heading
-					display="inline-block"
-					as="h2"
-					size="2xl"
-					bgGradient="linear(to-r, teal.400, teal.600)"
-					backgroundClip="text"
-				>
-					404
-				</Heading>
-				<Text fontSize="18px" mt={3} mb={2}>
-					User Not Found
-				</Text>
-				<Text color="gray.500" mb={6}>
-					The user you&apos;re looking for does not seem to exist.
-				</Text>
-
-				<Button
-					colorScheme="teal"
-					bgGradient="linear(to-r, teal.400, teal.500, teal.600)"
-					color="white"
-					variant="solid"
-					onClick={() => {
-						router.push("/");
-					}}
-				>
-					Go to Home
-				</Button>
-			</Box>
-		);
+		return <NotFound />;
 	}
 	return (
 		<>

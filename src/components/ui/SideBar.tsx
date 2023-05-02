@@ -46,7 +46,7 @@ import { MdOutlineManageAccounts } from "react-icons/md";
 import { auth } from "../../../firebase";
 import ChatBox from "../chat/ChatBox";
 import Logo from "../logo";
-import ThemeSelector from "../shared/theme";
+import ThemeSelector from "../shared/ThemeSelector";
 import CreateTweet from "./CreateTweet";
 
 // This is the sidebar that shows up on the left side of the screen.
@@ -112,7 +112,7 @@ const SideBar = ({ children }: { children: ReactNode }) => {
 			<Box width="full">
 				<MobileNav onOpen={onOpen} onChatOpen={onChatOpen} />
 				<HStack alignItems="flex-start">
-					<Box ml={{ base: 0, md: "96" }} p="1" flexGrow="1">
+					<Box ml={{ base: 0, md: "433px" }} p="1" flexGrow="1">
 						{children}
 					</Box>
 					{/* This is the chat box displayed on the right side of the screen. */}
@@ -140,13 +140,14 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 	return (
 		<Flex
 			direction="column"
-			left={{ base: 0, md: "36" }}
+			left={{ base: 0, md: "44" }}
 			bg={useColorModeValue("white", "gray.900")}
 			border="1px"
 			px={4}
 			py={2}
 			borderColor={useColorModeValue("gray.200", "gray.700")}
-			w={{ base: "full", md: "60" }}
+			w={{ base: "full", md: "2xs" }}
+			minW="2xs"
 			pos="fixed"
 			top={0}
 			h={{ base: "calc(100vh - calc(100vh - 100%))", md: "100vh" }}

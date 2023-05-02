@@ -106,8 +106,9 @@ const Chat = ({ reciever, displayName, photoURL }: ChatProps) => {
 			h={{ base: "calc(100vh - calc(100vh - 100%))", md: "100vh" }}
 			position="fixed"
 			overflowY="scroll"
+			p="0"
 			top="0"
-			right={{ base: "0", md: "48" }}
+			right={{ base: "0", md: "40" }}
 			maxW="xs"
 			w="full"
 		>

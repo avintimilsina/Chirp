@@ -36,7 +36,7 @@ const PostPage = () => {
 					setIsCommentCountOutdated={setIsCommentCountOutdated}
 				/>
 			)}
-			<Card maxW="3xl" width="full">
+			<Card maxW="xl" width="full">
 				<CardBody py="2">
 					<CreateComment postId={id as string} />
 				</CardBody>

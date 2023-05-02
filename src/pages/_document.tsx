@@ -26,6 +26,16 @@ const Document = () => (
 			/>
 			<link rel="manifest" href="/site.webmanifest" />
 			<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+			<link rel="preconnect" href="https://fonts.googleapis.com" />
+			<link
+				rel="preconnect"
+				href="https://fonts.gstatic.com"
+				crossOrigin="anonymous"
+			/>
+			<link
+				href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+				rel="stylesheet"
+			/>
 			<meta name="msapplication-TileColor" content="#da532c" />
 			<meta name="theme-color" content="#ffffff" />
 		</Head>

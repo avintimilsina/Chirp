@@ -40,8 +40,9 @@ const ChatBox = () => {
 			position="fixed"
 			overflowY="scroll"
 			top="0"
-			right={{ base: "0", md: "44" }}
+			right={{ base: "0", md: "40" }}
 			minW="xs"
+			maxW="xs"
 			as={Card}
 			h={{ base: "calc(100vh - calc(100vh - 100%))", md: "100vh" }}
 		>
