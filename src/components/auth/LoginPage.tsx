@@ -7,7 +7,9 @@ import {
 	Stack,
 	Text,
 	useColorModeValue,
+	useToast,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { FcGoogle } from "react-icons/fc";
 import { auth } from "../../../firebase";
@@ -18,6 +20,8 @@ interface LoginPageProps {
 }
 const LoginPage = ({ isInModal }: LoginPageProps) => {
 	const [signInWithGoogle] = useSignInWithGoogle(auth);
+	const router = useRouter();
+	const toast = useToast();
 
 	return (
 		<Flex
@@ -48,10 +52,22 @@ const LoginPage = ({ isInModal }: LoginPageProps) => {
 						<Button
 							variant="outline"
 							colorScheme="blue"
-							onClick={async () => {
-								await signInWithGoogle();
-							}}
 							leftIcon={<FcGoogle />}
+							onClick={async () => {
+								const response = await signInWithGoogle();
+
+								if (response) {
+									router.push("/");
+									if (!toast.isActive("login")) {
+										toast({
+											title: `Successfully logged in`,
+											status: "success",
+											isClosable: true,
+											id: "login",
+										});
+									}
+								}
+							}}
 						>
 							Sign-in with Google
 						</Button>
