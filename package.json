@@ -26,7 +26,7 @@
 		"chakra-react-select": "^4.6.0",
 		"dayjs": "^1.11.7",
 		"eslint": "8.41.0",
-		"firebase": "^9.19.1",
+		"firebase": "^9.22.0",
 		"formik": "^2.2.9",
 		"framer-motion": "^10.12.8",
 		"nanoid": "^4.0.2",
