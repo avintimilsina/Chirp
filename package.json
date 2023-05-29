@@ -27,7 +27,7 @@
 		"dayjs": "^1.11.7",
 		"eslint": "8.41.0",
 		"firebase": "^9.22.0",
-		"formik": "^2.2.9",
+		"formik": "^2.4.0",
 		"framer-motion": "^10.12.8",
 		"nanoid": "^4.0.2",
 		"next": "13.4.4",
