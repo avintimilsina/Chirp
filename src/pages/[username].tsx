@@ -167,7 +167,15 @@ const ProfilePage = () => {
 									_dark={{ color: "gray.200" }}
 									my={3}
 								>
-									<Text fontSize="medium">{value?.[0].bio}</Text>
+									<Text
+										fontSize="medium"
+										textOverflow="ellipsis!"
+										maxW="lg"
+										overflow="hidden"
+										noOfLines={4}
+									>
+										{value?.[0].bio}
+									</Text>
 								</HStack>
 							)}
 							{/* If the user has location then display the location. */}

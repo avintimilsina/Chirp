@@ -65,6 +65,7 @@ const AccountSetting = () => {
 			validationSchema={Yup.object({
 				name: Yup.string().required("Required"),
 				email: Yup.string().email("Invalid email address").required("Required"),
+				bio: Yup.string().max(255, "Must be 255 characters or less"),
 			})}
 			onSubmit={async (values, actions) => {
 				if (values.name !== currentUser?.displayName) {
@@ -114,8 +115,11 @@ const AccountSetting = () => {
 							<VStack spacing="4" width="full">
 								<Field name="name">
 									{({ field, form }: any) => (
-										<FormControl>
+										<FormControl
+											isInvalid={form.errors.name && form.touched.name}
+										>
 											<FormLabel>Name</FormLabel>
+
 											<Input {...field} type="text" maxLength={255} />
 											<FormErrorMessage>{form.errors.name}</FormErrorMessage>
 										</FormControl>
@@ -136,10 +140,13 @@ const AccountSetting = () => {
 									)}
 								</Field>
 								<Field name="bio">
-									{({ field }: any) => (
-										<FormControl>
+									{({ form, field }: any) => (
+										<FormControl
+											isInvalid={form.errors.bio && form.touched.bio}
+										>
 											<FormLabel>Bio</FormLabel>
 											<Textarea {...field} rows={5} />
+											<FormErrorMessage>{form.errors.bio}</FormErrorMessage>
 										</FormControl>
 									)}
 								</Field>
