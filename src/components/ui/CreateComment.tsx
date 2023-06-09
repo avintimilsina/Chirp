@@ -18,6 +18,7 @@ import {
 	updateDoc,
 } from "firebase/firestore";
 import { Field, Form, Formik, FormikProps } from "formik";
+import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaRegPaperPlane } from "react-icons/fa";
 import * as Yup from "yup";
@@ -38,6 +39,7 @@ const CreateComment = ({
 	const [currentUser] = useAuthState(auth);
 	const toast = useToast();
 	const textBoxBgColor = useColorModeValue("white", "gray.700");
+	const router = useRouter();
 
 	return (
 		<Formik
@@ -49,6 +51,22 @@ const CreateComment = ({
 			})}
 			onSubmit={async (values, actions) => {
 				// Add a new document with a generated id with the values of the commenter and the content of the comment inside the comments collection inside the chirps collection where the postId of the comment is equal to the postId of the post or chirp.
+
+				if (!currentUser?.emailVerified) {
+					router.replace(
+						{
+							pathname: "/auth/verify-email",
+							query: {
+								redirect: router.pathname,
+							},
+						},
+						undefined,
+						{
+							shallow: true,
+						}
+					);
+					return;
+				}
 				if (!defaultValues) {
 					const docRef = await addDoc(
 						collection(db, "chirps", postId, "comments"),

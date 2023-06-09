@@ -18,6 +18,7 @@ import {
 	updateDoc,
 } from "firebase/firestore";
 import { Field, Form, Formik, FormikProps } from "formik";
+import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaRegPaperPlane } from "react-icons/fa";
 import * as Yup from "yup";
@@ -33,6 +34,8 @@ const CreateTweet = ({ defaultValues, modalOnClose }: CreateTweetProps) => {
 	const [currentUser] = useAuthState(auth);
 	const toast = useToast();
 	const textBoxBgColor = useColorModeValue("whitesmoke", "gray.700");
+	const router = useRouter();
+
 	return (
 		<Formik
 			initialValues={{ content: defaultValues ? defaultValues.content : "" }}
@@ -43,6 +46,22 @@ const CreateTweet = ({ defaultValues, modalOnClose }: CreateTweetProps) => {
 			})}
 			onSubmit={async (values, actions) => {
 				// Add a new document with a generated id with the values of the user and the content of the chirp inside the chirps collection in the database.
+
+				if (!currentUser?.emailVerified) {
+					router.replace(
+						{
+							pathname: "/auth/verify-email",
+							query: {
+								redirect: router.pathname,
+							},
+						},
+						undefined,
+						{
+							shallow: true,
+						}
+					);
+					return;
+				}
 				if (!defaultValues) {
 					const docRef = await addDoc(collection(db, "chirps"), {
 						author: {
