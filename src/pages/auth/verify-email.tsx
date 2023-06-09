@@ -1,5 +1,4 @@
 import PageLoadingSpinner from "@/components/shared/PageLoadingSpinner";
-import withProtected from "@/routes/withProtected";
 import {
 	Button,
 	Center,
@@ -127,4 +126,4 @@ const VerifyEmailPage = ({ user }: VerifyEmailPageProps) => {
 	);
 };
 
-export default withProtected(VerifyEmail);
+export default VerifyEmail;

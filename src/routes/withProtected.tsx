@@ -35,6 +35,22 @@ const withProtected = (Component: any) =>
 			return <PageLoadingSpinner />;
 		}
 
+		if (!currentUser.emailVerified) {
+			router.replace(
+				{
+					pathname: "/auth/verify-email",
+					query: {
+						redirect: router.pathname,
+					},
+				},
+				undefined,
+				{
+					shallow: true,
+				}
+			);
+			return <PageLoadingSpinner />;
+		}
+
 		return <Component {...props} />;
 	};
 
