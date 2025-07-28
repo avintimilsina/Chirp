@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Check out the repository
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       # Update the license file
       - name: Update License
         run: |
