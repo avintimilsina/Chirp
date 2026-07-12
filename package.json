@@ -29,7 +29,7 @@
 		"firebase": "^9.22.0",
 		"formik": "^2.4.1",
 		"framer-motion": "^10.12.8",
-		"nanoid": "^4.0.2",
+		"nanoid": "^5.0.0",
 		"next": "13.4.6",
 		"nprogress": "^0.2.0",
 		"react": "18.2.0",
